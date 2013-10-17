@@ -1,0 +1,44 @@
+*{padding:0;margin:0;list-style:none;}
+body{background:#abcdef}
+.mb{clear:both;height:10px}
+#title{font-size:40px;width:800px;margin:10px auto;text-align:center;}
+
+#content{width:800px;height:510px;margin:0 auto;text-align:center;background:gray}
+
+#toolbox{width:780px;height:100px;margin:0 auto;}
+#toolbox ul li{border-right:1px solid red;float:left;width:155px;height:100px;margin-top:10px;background:#ccc}
+#image ul{text-align:left;padding:10px}
+#image ul li{height:10px;width:100px;border:0;list-style:none}
+#image ul button {border:1px double gray;background:#ccc}
+#image ul button:hover {border:1px double #fff;background:#ccc}
+
+#tool ul,#shape ul{padding:10px}
+#tool ul li,#shape ul li{width:40px;height:20px;border:1px solid gray;float:left}
+#tool ul li:hover,#shape ul li:hover{width:40px;height:20px;border:1px solid #fff;float:left}
+#tool img,#shape img{width:20px;height:20px;}
+
+#size ul{width:100px;height:65px;margin-top:15px;margin-left:15px}
+#size ul li{width:100px;height:10px;padding:2px;border:0;margin:0;float:none;border:1px solid #ccc;}
+#size ul li:hover{width:100px;height:10px;padding:2px;float:none;margin:0;border:1px solid #f90;background:#ff0}
+#size ul li img{display:block}
+
+#color ul{height:65px;margin-top:15px;margin-left:10px;}
+#color ul li{height:20px;width:20px;display:inline-block;margin:3px;border:1px solid #000}
+#color ul li:hover{height:20px;width:20px;display:inline-block;margin:3px;border:1px solid #f90}
+#color #red{background:red}
+#color #green{background:green}
+#color #blue{background:blue}
+#color #yellow{background:yellow}
+#color #white{background:white}
+#color #black{background:black}
+#color #pink{background:pink}
+#color #purple{background:purple}
+#color #cyan{background:#ABCDEF}
+#color #orange{background:orange}
+
+
+#canvas{background:#fff;}
+#canvas:hover{cursor:crosshair}
+
+
+#copyright{width:800px;height:100px;margin:0 auto;text-align:center;}

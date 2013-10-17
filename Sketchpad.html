@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="canvas.css" type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+		<header id="title">html5画板</header>
+		<div class="mb"></div>
+		<section id="content">
+			<header id="toolbox">
+				<ul>
+					<li id="image">
+						<h4>功能</h4>
+						<hr />
+						<ul>
+							<li>
+								<form action="" id="form" method="post" target="_blank">
+									<input type="hidden" name="imgdata" id="imgdata" value="" />
+									<button id="save" type="button">保存</button>
+								</form>
+								</li>
+							<li><button onclick="clearAll(1)" id="clear">清除</button></li>
+						</ul>
+					</li>
+					<li id="tool">
+						<h4>工具</h4>
+						<hr />
+						<ul>
+							<li onclick="brush(2)" id="brush"><img src="images/Brush.png" ></li>
+							<li onclick="eraser(3)" id="eraser"><img src="images/Eraser.png" ></li>
+							<li onclick="paint(4)" id="paint"><img src="images/Paint.png" ></li>
+							<li onclick="straw(5)" id="straw"><img src="images/Straw.png" ></li>
+							<li onclick="text(6)" id="text"><img src="images/text.png" ></li>
+							<li onclick="magnifier(7)" id="magnifier"><img src="images/Magnifier.png" ></li>
+						</ul>
+					</li>
+					<li id="shape">
+						<h4>形状</h4>
+						<hr />
+						<ul>
+							<li onclick="line(8)" id="line"><img src="images/line.png"></li>
+							<li onclick="arc(9)" id="arc"><img src="images/arc.png"></li>
+							<li onclick="rect(10)" id="rect"><img src="images/rect.png"></li>
+							<li onclick="poly(11)" id="poly"><img src="images/poly.png"></li>
+							<li onclick="arcFill(12)" id="arcFill"><img src="images/arcfill.png"></li>
+							<li onclick="rectFill(13)" id="rectFill"><img src="images/rectfill.png"></li>
+						</ul>
+					</li>
+					<li id="size">
+						<h4>大小</h4>
+						<hr />
+						<ul>
+							<li onclick="setWidth(0)" id="width_1"><img src="images/line1px.png"></li>
+							<li onclick="setWidth(1)" id="width_3"><img src="images/line3px.png"></li>
+							<li onclick="setWidth(2)" id="width_5"><img src="images/line5px.png"></li>
+							<li onclick="setWidth(3)" id="width_8"><img src="images/line8px.png"></li>
+						</ul>
+					</li>
+					<li id="color">
+						<h4>颜色</h4>
+						<hr />
+						<ul>
+							<li id="red" onclick="setColor(this,0)"></li>
+							<li id="green" onclick="setColor(this,1)"></li>
+							<li id="blue" onclick="setColor(this,2)"></li>
+							<li id="yellow" onclick="setColor(this,3)"></li>
+							<li id="white" onclick="setColor(this,4)"></li>
+							<li id="black" onclick="setColor(this,5)"></li>
+							<li id="pink" onclick="setColor(this,6)"></li>
+							<li id="purple" onclick="setColor(this,7)"></li>
+							<li id="cyan" onclick="setColor(this,8)"></li>
+							<li id="orange" onclick="setColor(this,9)"></li>
+							
+						</ul>
+					</li>
+				</ul>
+			</header>
+			<div class="mb"></div>
+			<canvas id="canvas" width="780" height="380">画布</canvas>
+			<script src="canvas.js"></script>
+			<div class="mb"></div>
+			<footer id="status"></footer>
+		</section>
+		<div class="mb"></div>
+		<footer id="copyright">
+			<small>CopyRight By Others</small>
+		</footer>
+	</body>
+</html>
