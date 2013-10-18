@@ -92,7 +92,7 @@ ul, menu, dir {
 	color: #cfcfcf;
 	font-weight: 200px;
 	height: 20px;
-	left: 0;
+	left: 200px;
 	margin: 0 auto;
 	position: absolute;
 	top: auto;
@@ -171,6 +171,20 @@ h1 {
 	margin: 20px 0 0 4px;
 	padding: 0 4px 15px 0;
 }
+.r-display {
+	float: right;
+	height: auto;
+	margin: 20px 0 0 4px;
+	padding: 0 4px 15px 0;
+}
+
+.r-slogan {
+	float: right;
+	width: 400px;
+	height: auto;
+	margin: 0;
+	padding: 60px 0;
+}
 
 .f60-b {
 	font-size: 60px;
@@ -184,5 +198,20 @@ h1 {
 	font-size: 14px;
 	line-height: 22px;
 	color: #000;
+	padding: 0 4px;
+}
+
+.f64-w {
+	font-size: 64px;
+	margin-left: -2px;
+	line-height: 76px;
+	color: #fff;
+	vertical-align: baseline;
+}
+
+.f14-w {
+	font-size: 14px;
+	line-height: 22px;
+	color: #fff;
 	padding: 0 4px;
 }
