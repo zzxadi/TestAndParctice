@@ -1,0 +1,38 @@
+body{font: 12px/1 "Microsoft YaHei", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Helvetica, Arial, sans-serif;color: #333;}
+a{color:#6c6c6c;}
+a:hover{color:#a21c1d;}
+.hide{display:none;}
+.wrapper-1190{width: 1200px;margin-left: auto;margin-right: auto;padding: 0 5px;}
+
+.page-wrapper{height: 35px;width: 100%;background:#edebec;}
+.quick-menu{float: right;}
+.quick-menu li{float: left;height: 25px;line-height: 25px;padding: 5px 10px;color: #6c6c6c;position: relative;z-index: 10002;}
+.quick-menu a{display: inline-block;}
+a.qmhd-menu{position: relative;z-index: 10002;padding: 1px 24px; 1px; 9px;}
+.quick-menu li.current a.qmhd-menu{border: solid #ccc;border-width: 1px 1px 0 1px;background: #fff;padding: 0 23px 0 8px;}
+a.qmhd-menu i,a.qmhd-menu .cart-icon,.qmsmore-icon{background: url(images/com-pic.png) no-repeat;}
+a.qmhd-menu i{font-size: 0;line-height: 0;width: 8px;height: 4px;position: absolute;;top: 12px;right: 8px;background-position: 0 0;}
+a.qmhd-menu:hover i{background-position: -15px 0;}
+a.qmhd-menu em{display: inline-block;}
+a.qmhd-menu .qmpd-num{color: #8f0100;font-weight: bold;padding: 0px 5px;}
+a.qmhd-menu .cart-icon{width: 20px;height: 16px;background-position:-32px 0px;vertical-align: middle;}
+
+div.qmhd-menu,.qm-allcategory-hide{position: absolute;z-index: 10001;background: #fff;top: 30px;display: none;}
+div.qmhd-menu{padding:8px;border:1px solid #ccc;}
+.qm-mine div.qmhd-menu,.qm-favorite div.qmhd-menu{width: 80px;left: 10px;}
+.qm-sitemap div.qmhd-menu{width: 120px;right: 10px;_right:9px;}
+.qm-cart div.qmhd-menu{width: 400px;left: 10px;}
+.qm-allcategory-hide{width: 100%;left: 0px;border:solid #ccc;border-width: 1px 0px 1px 0px;overflow: hidden;padding: 10px 0px;}
+
+a.look-cart{padding: 0px 8px;border:1px solid #620000;background: #a21c1d;color: #fff;margin-left: 10px;}
+a.look-cart:hover{color: #fff;}
+.qm-sitemap dt{color: #a21c1d;font-weight: bold;}
+.qm-sitemap dd{border-bottom:1px dashed #ccc;}
+.qm-sitemap dd a{display:inline-block;width:50px;margin-left: 5px;}
+.qms-more{margin: 5px 5px 0px 5px;}
+.qmsmore-icon{width: 14px;height: 14px;background-position:-55px 0px;margin-left: 5px;}
+.qm-allcgtcnt{padding: 10px 20px;margin-left: 20px;}
+.qm-allcgtcnt dl{float: left;width: 180px;margin-right: 40px;}
+.qm-allcgtcnt dl dt{color: #a21c1d;font-weight: bold;border-bottom: 1px dashed #ccc;padding: 8px 0px;}
+.qm-allcgtcnt dl dd{padding: 5px 0px;}
+.qm-allcgtcnt dl dd a{color: #6c6c6c;margin: 0px 10px 0px 0px;display: inline-block;height: 22px;line-height: 22px;}

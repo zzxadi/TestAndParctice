@@ -1,0 +1,60 @@
+/**
+ * 初始化HTML标签及常用类型
+ * @kivenhan
+ * www.shopnc.net
+ * Apr-01-2012
+ **/
+
+/* ===============
+ * 重新定义Html元素
+ * =============== */
+html, body, div, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, pre, form, p, blockquote, fieldset, input { padding: 0; margin: 0;}
+h1, h2, h3, h4, h5, h6, pre, code, address, caption, cite, code, em, strong, table, th, td { font-size: 1em; font-style: normal; font-weight: normal;}
+strong { font-weight: bold;}
+ul, ol { list-style: none outside none;}
+fieldset, img { border: medium none; border: 0px;  padding: 0px; margin: 0px;}
+caption, th {  text-align: left;}
+table { border-collapse: collapse; border-spacing: 0;}
+body { background: none repeat scroll 0 0 #FFF; color: #333333; font: 12px/1  "Microsoft YaHei", "Lucida Grande", "Lucida Sans Unicode", Tahoma, Helvetica, Arial,  sans-serif;}
+input, select, textarea { font: 12px/1 Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;}
+a { outline: medium none;}
+a:link, a:visited, a:active { text-decoration: none;}
+a:hover { text-decoration: underline;}
+i, cite, em { font-style: normal;}
+
+input,button,select,textarea{outline:none}
+html{ -webkit-text-size-adjust: none;}
+html {min-height:101%; } 
+
+
+/* Clearfix,避免因子元素浮动而导致的父元素高度缺失能问题 */
+	.clearfix:after { clear: both; content: "."; display: block; height: 0; line-height: 0; visibility: hidden;}
+	.clearfix { display: inline-block;}
+	html[xmlns] .clearfix { display: block;}
+	*html .clearfix{height:1%;}
+	*+html .clearfix{height:1%;}
+
+time { color: #777;}
+
+
+/* ==========================
+ * 为旧版本浏览器格式化Html5元素
+ * ========================== */
+article, aside, dialog, footer, header, section, footer, nav, figure, menu { display:block; }
+/*文字排版
+******************************/
+.f12 { font-size:12px;}
+.f13 { font-size:13px;}
+.f14 { font-size:14px;}
+.f16 { font-size:16px;}
+.f20 { font-size:20px;}
+.fb { font-weight:bold;}
+.fn { font-weight:normal;}
+.t2 { text-indent:2em;}
+.lh150 { line-height:150%}
+.lh180 { line-height:180%}
+.lh200 { line-height:200%}
+.unl { text-decoration:underline;}
+.no_unl { text-decoration:none;}
+.noborder { border-style:none!important; border-width: 0!important ;}
+.clear { clear: both; height: 0; font-size: 0; line-height:0; }
