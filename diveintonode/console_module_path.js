@@ -1,5 +1,6 @@
 console.log(module.paths);
 /**
+output:
 [ 'C:\\Users\\zhangzx\\Documents\\GitHub\\TestAndParctice\\diveintonode\\node_mo
 dules',
   'C:\\Users\\zhangzx\\Documents\\GitHub\\TestAndParctice\\node_modules',
