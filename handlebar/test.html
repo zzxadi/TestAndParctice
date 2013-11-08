@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Handlebar Test</title>
+	<script src="Handlebars.js"></script>
+</head>
+<body>
+	<div id="content-placeholder"></div>
+	<script id="some-template" type="text/x-handlebars-template">
+		<table>
+			<thead>
+				<th>Username</th>
+				<th>Real Name</th>
+				<th>Email</th>
+			</thead>
+			<tbody>
+				{{#users}}
+				<tr>
+					<td>{{username}}</td>
+					<td>{{firstName}} {{lastName}}</td>
+					<td>{{email}}</td>
+				</tr>
+				{{/users}}
+			</tbody>
+		</table>
+	</script>
+	<script>
+		var source   = document.getElementById('some-template').innerHTML;
+		var template = Handlebars.compile(source);
+		var data = { users: [
+			{username: "alan", firstName: "Alan", lastName: "Johnson", email: "alan@test.com" },
+			{username: "allison", firstName: "Allison", lastName: "House", email: "allison@test.com" },
+			{username: "ryan", firstName: "Ryan", lastName: "Carson", email: "ryan@test.com" }
+			]};
+			document.getElementById('content-placeholder').innerHTML = template(data);
+		</script>
+	</body>
+	</html>
