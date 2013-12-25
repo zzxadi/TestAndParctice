@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>offsetHeight</title>
+</head>
+<body>
+	<div style="border: 2px solid #f00; width: 600px; height: 500px; margin: 10px auto 0 auto;" onclick="alert(this.clientHeight);alert(this.offsetHeight);">
+		
+	</div>
+	<SCRIPT>
+		function fnCheckScroll(){
+			var iNewHeight = oDiv.scrollHeight;
+			alert("The value of the scrollHeight property is: "
+				+ iNewHeight);
+		}
+	</SCRIPT>
+	<DIV ID=oDiv STYLE="overflow:scroll; height=100;
+	width=250; text-align:left">
+	:
+</DIV>
+<INPUT TYPE=button VALUE="Check scrollHeight"
+onclick="fnCheckScroll();alert(oDiv.clientHeight);alert(oDiv.offsetHeight);">
+</body>
+</html>
