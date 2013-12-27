@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Test</title>
+	<script>
+		(function( window, undefined ){
+			var $;
+
+			$ = function( selector ){
+				return new $.prototype.init( selector );
+			}
+
+			$.prototype = {
+				init : function( selector ){
+					if( selector === undefined ){
+						this.length = 0;
+						return this;
+					}
+					if( selector.nodeType === 1 ){
+						this[0] = selector;
+					}
+					else{
+						this[0] = document.getElementById( selector );
+					}
+					this.length = 1;
+				},
+				css : function( name, value ){
+					this[0].style[name] = value;
+					return this;
+				},
+				hide : function(){
+					var self = this;
+					setTimeout(function(){
+						self[0].style.display = "none";
+					}, 250);
+					return this;
+				}
+			}
+
+			$.prototype.init.prototype = $.prototype;
+
+			// If there is a window object, that at least has a document property,
+			// define jQuery and $ identifiers
+			if ( typeof window === "object" && typeof window.document === "object" ) {
+				 window.$ = $;
+			}
+		})( window );
+	</script>
+</head>
+<body>
+	<div id="container">3 second I will hide</div>
+	<script>
+	  $('container').css('color', 'red').hide();
+	</script>
+</body>
+</html>
