@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Data</title>
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script>
+		$(function(){
+			var Countries = function () {};
+
+			Countries.prototype = {
+				_items: [],
+				_getData: function( success ){
+					var items = [
+						{ id: 0, name: 'china'},
+						{ id: 1, name: 'japan'},
+						{ id: 2, name: 'america'}
+					];
+
+					$.extend( this._items, items );
+
+					success( items );
+				},
+				//Events
+				on_selected: $.Callbacks(),
+				on_inserted: $.Callbacks(),
+				//Methods
+				select: function(){
+					var self = this;
+					this._getData( function( items ){
+						self.on_selected.fire( {
+							sender: self,
+							items: items
+						} );
+					} );
+				},
+				insert: function( item ){
+					var self = this;
+					this._items.push( item );
+					self.on_inserted.fire( {
+						sender: self,
+						item: item
+					} );
+				}
+			}
+
+			var countries = new Countries();
+			countries.on_selected.add( function( args ){
+				 $(args.items).each( function(){
+				 	$('#countries').append( '<option value=' + this.id + '>' + this.name + '</option>' );
+				 } )
+			} );
+			countries.on_inserted.add( function( args ){
+				$('#countries').append($('<option selected="selected">').attr('value', args.item.id).text(args.item.name));
+			} );
+
+			var id = 10;
+			$('#btnAdd').on('click', function(){
+				countries.insert( {id: ++id, name: $('#countryName').val() } );
+			});
+
+			countries.select();
+			
+		});
+	</script>
+</head>
+<body>
+	<select id="countries"></select>
+	<div>
+		<input type="text" id="countryName">
+		<input type="button" id="btnAdd" value="添加">
+	</div>
+</body>
+</html>
