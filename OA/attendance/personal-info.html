@@ -1,0 +1,229 @@
+<!doctype html>
+<!--[if IE 6]>
+<html id="ie6" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html dir="ltr" lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>百分百OA</title>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/module.js"></script>
+<link type="text/css" href="/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/css/module.css" rel="stylesheet" />
+<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+<script type="text/javascript">
+function tabContent(obj){
+	var index = $(obj).parent().index();
+	$(".tab_content").eq(index).show().siblings(".tab_content").hide();
+	$(obj).parent().addClass("cur").siblings().removeClass("cur")
+}
+$(document).ready(function(e) {
+	loadHtml("headerId","/include/header.html");
+	loadHtml("left_menu_content","/include/leftmenu.html");
+	loadHtml("footerId","/include/footer.html");
+});
+</script>
+</head>
+
+<body>
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>个人信息查询</span></div>
+<div class="main">
+	<div class="clearfix">
+		<div class="content_box">
+			<div class="content">
+				<div class="page_title">个人信息查询</div>
+				<div class="complaint_main">
+					<ul class="complaint_title">
+						<li class="cur"><a onClick="tabContent(this)" href="javascript:;">综合数据</a></li>
+						<li><a onClick="tabContent(this)" href="javascript:;">工单申请记录</a></li>
+						<li><a onClick="tabContent(this)" href="javascript:;">个人信息</a></li>
+					</ul>
+					<div class="tab_content cb" style="display:block;">
+						<div class="order_index_status"><strong>剩余假期信息</strong></div>
+						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
+							<thead>
+								<tr>
+									<th>调休假</th>
+									<th>年休假</th>
+									<th>全年剩余病假</th>
+									<th>本月剩余可迟到次数</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>32小时</td>
+									<td>5天</td>
+									<td>5天</td>
+									<td>2次</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="order_index_status mt10"><strong>正在审批的工单申请</strong></div>
+						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
+							<thead>
+								<tr>
+									<th>申请类型</th>
+									<th>申请时间</th>
+									<th>起始时间</th>
+									<th>结束时间</th>
+									<th>当前审批人</th>
+									<th>审核状态</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>调休</td>
+									<td>2014-02-13</td>
+									<td>2014-02-14 09:00</td>
+									<td>2014-02-14 18:30</td>
+									<td>刘金城</td>
+									<td>正在审核</td>
+								</tr>
+								<tr>
+									<td>加班</td>
+									<td>2014-02-13</td>
+									<td>2014-02-15 09:00</td>
+									<td>2014-02-15 18:30</td>
+									<td>刘金城</td>
+									<td>正在审核</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="order_index_status mt10"><strong>正在审批的忘打卡申请</strong></div>
+						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
+							<thead>
+								<tr>
+									<th>申请时间</th>
+									<th>忘打卡时间</th>
+									<th>当前审批人</th>
+									<th>审核状态</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>2014-02-13</td>
+									<td>2014-02-14 09:00</td>
+									<td>刘金城</td>
+									<td>正在审核</td>
+								</tr>
+								<tr>
+									<td>2014-02-13</td>
+									<td>2014-02-15 09:00</td>
+									<td>刘金城</td>
+									<td>正在审核</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="tab_content cb">
+						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
+							<thead>
+								<tr>
+									<th>申请类型</th>
+									<th>申请时间</th>
+									<th>上一审批人</th>
+									<th>当前审批人</th>
+									<th>审核状态</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>调休</td>
+									<td>2014-02-13</td>
+									<td>刘金城</td>
+									<td>张剑</td>
+									<td>正在审核</td>
+									<td><a href="#">查看详细</a></td>
+								</tr>
+								<tr>
+									<td>调休</td>
+									<td>2014-02-13</td>
+									<td>刘金城</td>
+									<td>张剑</td>
+									<td>正在审核</td>
+									<td><a href="#">查看详细</a></td>
+								</tr>
+								<tr>
+									<td>调休</td>
+									<td>2014-02-13</td>
+									<td>刘金城</td>
+									<td>张剑</td>
+									<td>正在审核</td>
+									<td><a href="#">查看详细</a></td>
+								</tr>
+								<tr>
+									<td>调休</td>
+									<td>2014-02-13</td>
+									<td>刘金城</td>
+									<td>张剑</td>
+									<td>正在审核</td>
+									<td><a href="#">查看详细</a></td>
+								</tr>
+								<tr>
+									<td>调休</td>
+									<td>2014-02-13</td>
+									<td>刘金城</td>
+									<td>张剑</td>
+									<td>正在审核</td>
+									<td><a href="#">查看详细</a></td>
+								</tr>
+								<tr>
+									<td>调休</td>
+									<td>2014-02-13</td>
+									<td>刘金城</td>
+									<td>张剑</td>
+									<td>正在审核</td>
+									<td><a href="#">查看详细</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="tab_content cb">
+						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
+							<thead>
+								<tr>
+									<th>姓名</th>
+									<th>手机号码</th>
+									<th>电子邮箱</th>
+									<th>入职时间</th>
+									<th>所属部门</th>
+									<th>职位</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>陈翔</td>
+									<td>18038192222</td>
+									<td>chenx@digione.cn</td>
+									<td>2012-02-02</td>
+									<td>信息技术部</td>
+									<td>需求</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="menu">
+			<div class="aside">
+				<h2 class="aside_title">DIGIONE</h2>
+				<div id="left_menu_content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footerId"></div>
+</body>
+</html>

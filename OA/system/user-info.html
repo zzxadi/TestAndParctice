@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>人员管理</title>
+	<link rel="stylesheet" type="text/css" href="/css/base.css">
+	<link rel="stylesheet" type="text/css" href="/css/module.css">
+	<link rel="stylesheet" type="text/css" href="/css/buyer.css">
+	<script type="text/javascript" src="/js/common.js"></script>
+	<script type="text/javascript" src="/js/module.js"></script>
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript">
+		var params = {
+			currentPage: 1			//页码
+		}
+		var GLOBAL = {
+			pageCount: 0					//记录数量
+		}
+
+		$(document).ready(function() {
+			loadHtml("headerId","/include/header.html");
+			loadHtml("left_menu_content","/include/leftmenu.html");
+			loadHtml("footerId","/include/footer.html");
+
+			bindEvent();
+			loadUserInfo();
+		});
+
+		function bindEvent(){
+			$('.page_main').on('click', '#addUser', addUser)
+						   .on('click', '#orderSearch', searchForm);
+		}
+
+		function loadUserInfo(currentPage, tag){
+			var	username = $.trim($('#username').val()),
+				email = $.trim($('#email').val()),
+				roleId = $('#roleId').val(),
+				pageSize  = 2,
+				param = [];
+
+			if(tag == 'searchForm'){
+				if(username){
+					param.push('username='+username);				
+				}
+				if(email){
+					param.push('email='+email);
+				}
+				if(roleId != ''){
+					param.push('roleId='+roleId);
+				}
+			}
+
+			currentPage = currentPage?currentPage:1;
+			params.currentPage = currentPage;
+			param.push('currentPage='+currentPage);
+			param.push('pageSize='+pageSize);
+			ajax({
+				url: '/php/action/UserInfo.php',
+				type: 'get',
+				data: param.join('&'),
+				dataType: 'json',
+				success: loadUserInfoSuccess
+			})
+		}
+
+		function loadUserInfoSuccess(data){
+			var html = [],
+				records = data.Entity.list;
+
+			for(var i = 0, len = records.length; i < len; i++){
+				var record = records[i];
+				html.push('<tr>');
+				html.push('<td>'+record.userName+'</td>');
+				html.push('<td>'+(record.roleId == 0 ? '普通员工' : '管理者')+'</td>');
+				html.push('<td>'+record.loginName+'</td>');
+				html.push('<td>'+record.mobile+'</td>');
+				html.push('<td>'+record.email+'</td>');
+				html.push('<td>'+(record.sex == 0 ? '男' : '女')+'</td>');
+				html.push('<td>'+record.departmentType+'</td>');
+				html.push('<td>'+record.positionName+'</td>');
+				html.push('<td><a href="javascript:void(0)" onclick="modifyUserInfo('+record.id+')" id="modifyUserInfo" class="ablue">修改</a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="freezeUserInfo("'+record.id+')" id="freezeUserInfo" class="ablue">冻结</a></td>');
+				html.push('</tr>');
+			}
+			if(records.length == 0){
+				html.push('<tr><td colspan="9">暂无数据</td></tr>');
+			}
+
+			$('#tbody').html(html.join(''));
+			GLOBAL['pageCount'] = data.Entity.pagetotal;
+			params.currentPage = data.Entity.page;	//当前页
+			updatePageInfo();
+		}
+
+		function modifyUserInfo(id){
+			locationHref('user-mng.html?id='+id);
+		}
+
+		function freezeUserInfo(id){
+			
+		}
+
+		function searchForm(){	
+			loadUserInfo(1, 'searchForm');			
+		}
+
+		function addUser(){
+			locationHref('user-mng.html');
+		}
+
+		/****分页开始****/
+		function goPage(pageNo){
+			var pattern = /\d+/;
+			if(!pattern.test(parseInt(pageNo))) return;
+			if(pageNo<1){
+				return;
+			}
+			if(pageNo>GLOBAL['pageCount']){
+				return;	
+			}
+			loadUserInfo(pageNo);
+		}
+		function updatePageInfo(){
+			if(GLOBAL['pageCount'] < 2) {$(".main_pagination").hide(); return;}else{
+				$(".main_pagination").show();
+			}
+			var html=[];
+			var i=1;
+			var j=5;
+			if(GLOBAL['pageCount']>=5){
+				i=(params['currentPage']+2)<=GLOBAL['pageCount']?((params['currentPage']-2>=1)?(params['currentPage']-2):1):(GLOBAL['pageCount']-4);
+				j=i+4;
+			}
+			else{
+				j=GLOBAL['pageCount'];
+			}
+			if(params['currentPage'] == 1)	{ html.push('<span class="page_prev">&lt;&lt; 上一页</span>');}
+			else{ html.push('<a onclick="goPage('+(params['currentPage']-1)+')" href="javascript:void(0);" class="page_prev">&lt;&lt; 上一页</a>');	}
+			for(;i<=j;i++){
+				if(i==params['currentPage']){
+					html.push('<a href="javascript:void(0);" class="bg_on">');
+					html.push(i);
+					html.push('</a>');
+				}
+				else{
+					html.push('<a onclick="goPage(');
+					html.push(i);
+					html.push(');" href="javascript:void(0);" >');
+					html.push(i);
+					html.push('</a>');
+				}
+			}
+			if(params['currentPage'] == GLOBAL['pageCount'])	{html.push('<span class="page_next">下一页 &gt;&gt;</span>');	}
+			else {html.push('<a onclick="goPage('+(params['currentPage']+1)+')" href="javascript:void(0);" class="page_next">下一页 &gt;&gt;</a>');}
+			$("#pageItem").html(html.join(''));
+			$("#pageCount").html(GLOBAL['pageCount']);
+		}
+		/****分页结束****/
+	</script>
+</head>
+<body>
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="main clearfix">
+	<div class="clearfix">
+	<div class="content_box">
+		<div class="content">
+			<div class="page_title">人员管理</div>
+			<div class="page_main">
+				<form method="get">
+					<div class="main_search">
+						<dl>
+							<dt>姓名：</dt>
+							<dd><input type="text" class="txt grid-10" name="username" id="username" maxlength="20"/></dd>
+						</dl>
+						<dl>
+							<dt>电子邮箱：</dt>
+							<dd><input type="text" class="txt grid-14" name="email" id="email" maxlength="20"/></dd>
+						</dl>
+						<dl>
+							<dt>角色：</dt>
+							<dd><select class="select" id="roleId"><option value="">--请选择--</option><option value="0">普通员工</option><option value="1">管理者</option></select></dd>
+						</dl>
+						 <p class="main_search_btn"><input type="button" value="搜索" class="mybtn btn_search" id="orderSearch" />
+						                  <input type="button" class="mybtn" value="新增用户" id="addUser" /></p>
+					</div>
+					<!--搜索结束-->
+				</form>
+				<div class="order_index">
+                   <table  class="simple_table" cellpadding="0" cellspacing="0" width="100%">
+                       <thead>
+                          <tr>
+                             <th>姓名</th>
+                             <th>角色</th>
+                             <th>登录名</th>
+                             <th>手机号码</th>
+                             <th>电子邮箱</th>
+                             <th>性别</th>
+                             <th>部门</th>
+                             <th>职位</th>
+                             <th>操作</th>
+                          </tr>
+                       </thead>
+                       <tbody id="tbody">
+                       </tbody>
+                   </table>
+			    </div>
+			     <!-- 分页开始 -->
+                   <dl class="main_pagination">
+		                 <dd class="pagination">
+                         <span id="pageItem"></span>
+                         <span class="page_no">共<span id="pageCount"></span>页 到第<input id="pageObj" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onclick="goPage($.trim($('#pageObj').val()));" /></span>
+                      </dd>
+                   </dl>
+                 <!-- 分页结束 -->  
+		</div>
+	</div>
+	</div>
+		<div class="menu">
+		<div class="aside">
+			<h2 class="aside_title">DIGIONE</h2>
+			<div id="left_menu_content"></div>
+		</div>
+	</div>
+	</div>
+</div>
+<div id="footerId"></div>	
+</body>
+</html>

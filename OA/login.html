@@ -1,0 +1,74 @@
+<!doctype html>
+<!--[if IE 6]>
+<html id="ie6" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html dir="ltr" lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>百分之百数码科技有限公司OA系统</title>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<link type="text/css" href="css/base.css" rel="stylesheet" />
+<style type="text/css">
+html,body{height:100%;margin:0;background:url(/images/base/oa_login_bg.jpg) center center fixed; min-height:630px;}
+.top{ height:50px; background:url(/images/base/ie6_top.png) repeat; padding-left:30px; box-shadow:0 0 3px rgba(0,0,0,0.3);}
+.bottom{ position:fixed; height:50px; width:100%; bottom:0; background:url(/images/base/ie6_top.png) repeat; line-height:50px; font-size:16px; color:#FFF; text-align:right; _position:absolute;_top:expression(eval(document.documentElement.height-50)); box-shadow:0 0 3px rgba(0,0,0,0.3);}
+.login_box{ width:573px; height:358px; position:absolute; right:249px; top:50%;}
+.login_inner{ position:relative; top:-50%; background-color:#eee; height:100%; box-shadow:0 0 5px rgba(0,0,0,0.3);}
+.login{ padding:0 35px; color:#59aaf6;}
+.login h1{ font-size:32px; padding:30px 0 20px; line-height:1;}
+.line{ line-height:0; overflow:hidden; height:1px; background-color:#d5d5d5; border-bottom:1px solid #fff; margin-bottom:10px;}
+.inputarea{ padding:15px 0; line-height:40px; height:40px; position:relative; font-size:21px;}
+.warningTips{ position:absolute; font-size:14px;left:160px; top:52px; color:#F00;}
+.inputarea label{ width:155px; float:left; line-height:40px; font-size:20px; text-align:right; padding-right:5px;}
+.input{ border:none; padding:5px 10px; height:28px; line-height:28px; font-size:20px; color:#333; border:1px solid #fff;}
+.warning{ border:1px solid #F00; box-shadow:0px 0px 3px rgba(255,0,0,1);}
+.button{ border:none; width:205px; height:55px; line-height:55px; text-align:center; background-color:#fcaf5d; color:#FFF; font-size:24px; cursor:pointer;}
+.btnarea{ padding:20px 0 20px 160px;}
+</style>
+<!--[if IE 6]>
+<script src="/js/DD_belatedPNG_0.0.8a-min.js" mce_src="/js/DD_belatedPNG_0.0.8a-min.js"></script>
+<script type="text/javascript">
+DD_belatedPNG.fix('img,.top,.bottom'); 
+</script>
+<![endif]-->
+</head>
+
+<body>
+<div class="top">
+	<a href="/"><img src="/images/base/oa_login_logo.png" width="180" height="50"></a>
+</div>
+<div class="login_box">
+	<div class="login_inner">
+		<div class="login">
+			<h1>登录</h1>
+			<div class="line"></div>
+			<form method="post">
+				<div class="inputarea">
+					<label>邮箱账号：</label>
+					<input type="text" class="input grid-11" />
+					@digione.cn
+					<p class="warningTips">邮箱账号不能为空！</p>
+				</div>
+				<div class="inputarea">
+					<label>邮箱密码：</label>
+					<input type="password" class="input grid-26 warning" />
+					<p class="warningTips">邮箱账号不能为空！</p>
+				</div>
+				<div class="btnarea">
+					<input type="button" class="button" value="登录" />
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="bottom"><p style="padding-right:20px;">© 2006-2014深圳市百分之百数码科技有限公司 版权所有 粤ICP备11026723号-3</p></div>
+</body>
+</html>

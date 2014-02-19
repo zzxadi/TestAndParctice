@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>人员管理</title>
+	<link rel="stylesheet" type="text/css" href="/css/base.css">
+	<link rel="stylesheet" type="text/css" href="/css/module.css">
+	<link rel="stylesheet" type="text/css" href="/css/buyer.css">
+	<link rel="stylesheet" type="text/css" href="/css/timepicker.css">
+	<script type="text/javascript" src="/js/common.js"></script>
+	<script type="text/javascript" src="/js/module.js"></script>
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/timepicker.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			loadHtml("headerId","/include/header.html");
+			loadHtml("left_menu_content","/include/leftmenu.html");
+			loadHtml("footerId","/include/footer.html");
+
+			bindEvent();
+			$('#indTime').datepicker({dateFormat: 'yy-mm-dd',constrainInput:true,maxDate: new Date()});
+		});
+
+		function bindEvent(){
+			$('.user_form').on('blur', '#username', validate.validateUsername)
+						   .on('blur', '#loginname', validate.validateLoginname)
+						   .on('blur', '#mobile', validate.validateMobile)
+						   .on('blur', '#email', validate.validateEmail)
+						   .on('blur', '#dept', validate.validateDept)
+						   .on('blur', '#position', validate.validatePosition)
+						   .on('click', '#submit', submitForm)
+						   .on('click', '#reset', resetForm);
+		}
+
+		var validate = (function(){
+			return {
+				validateUsername : function(){
+					var username = $.trim($('#username').val()),
+						$usernameMsg = $('#usernameMsg');
+
+					if(!username){
+						$usernameMsg.html('姓名不能为空').attr('class', 'error');
+						return false;
+					}
+					$usernameMsg.html('').attr('class', 'right');
+					return true;
+				},
+				validateLoginname : function(){
+					var loginname = $.trim($('#loginname').val()),
+						$loginnameMsg = $('#loginnameMsg');
+
+					if(!loginname){
+						$loginnameMsg.html('登录名不能为空').attr('class', 'error');
+						return false;
+					}
+					$loginnameMsg.html('').attr('class', 'right');
+					return true;
+				},
+				validateMobile : function(){
+					var mobile = $.trim($('#mobile').val()),
+						$mobileMsg = $('#mobileMsg'),
+						mobileReg = /^13\d{9}|15[012356789]\d{8}|18\d{9}$/;
+
+					if(!mobileReg.test(mobile)){
+						$mobileMsg.html('手机号码格式不正确').attr('class', 'error');
+						return false;
+					}
+					$mobileMsg.html('').attr('class', 'right');
+					return true;
+				},
+				validateEmail : function(){
+					var email = $.trim($('#email').val()),
+						$emailMsg = $('#emailMsg');
+
+					if(!email){
+						$emailMsg.html('电子邮箱不能为空').attr('class', 'error');
+						return false;
+					}
+					$emailMsg.html('').attr('class', 'right');
+					return true;					
+				},
+				validateDept : function(){
+					var dept = $.trim($('#dept').val()),
+						$deptMsg = $('#deptMsg');
+
+					if(!dept){
+						$deptMsg.html('部门不能为空').attr('class', 'error');
+						return false;
+					}
+					$deptMsg.html('').attr('class', 'right');
+					return true;					
+				},
+				validatePosition : function(){
+					var position = $.trim($('#position').val()),
+						$positionMsg = $('#positionMsg');
+
+					if(!position){
+						$positionMsg.html('职位不能为空').attr('class', 'error');
+						return false;
+					}
+					$positionMsg.html('').attr('class', 'right');
+					return true;					
+				}
+			}				
+		})();
+
+		function submitForm(){
+			var param = [];
+
+			ajax({
+				url:'/php/action/UserInfo.php',
+				type:'post',//非必须.默认get
+				data:param.join('&'),
+				dataType:'json',//非必须.默认text
+				success:function(){
+					
+				}
+			})
+		}
+
+		function resetForm(){
+			$('.user_form dd span').html('').attr('class', '');
+		}
+	</script>
+</head>
+<body>
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="main">
+	<div class="clearfix">
+		<div class="content_box">
+			<div class="content">
+				<div class="page_title">人员管理</div>
+				<div class="page_main">
+					<form method="post" class="user_form">
+						<dl>
+							<dt><em class="cred">*</em>角色：</dt>
+							<dd><select class="select"><option value="0" selected>普通员工</option><option value="1">管理者</option></select></dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>姓名：</dt>
+							<dd><input type="text" name="username" class="txt grid-20" id="username" autocomplete="off"><span id="usernameMsg"></span></dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>登录名：</dt>
+							<dd><input type="text" name="loginname" class="txt grid-20" id="loginname"><span id="loginnameMsg"></span></dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>手机号码：</dt>
+							<dd><input type="text" name="mobile" class="txt grid-20" id="mobile" maxlength="11"><span id="mobileMsg"></span></dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>电子邮箱：</dt>
+							<dd><input type="text" name="email" class="txt grid-20" id="email"><span id="emailMsg"></span></dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>性别：</dt>
+							<dd><input type="radio" name="sex" value="0" checked>男&nbsp;&nbsp;<input type="radio" name="sex" value="1">女</dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>部门：</dt>
+							<dd><input type="text" name="dept" class="txt grid-20" id="dept"><span id="deptMsg"></span></dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>职位：</dt>
+							<dd><input type="text" name="position" class="txt grid-20" id="position"><span id="positionMsg"></span></dd>
+						</dl>
+						<dl>
+							<dt><em class="cred">*</em>入职时间：</dt>
+							<dd><input type="text" class="txt grid-20" id="indTime" /> <span id="indTimeMsg"></span></dd>
+						</dl>
+						<p><input type="submit" class="mybtn btn" value="提交" id="submit"><input type="reset" id="reset" class="btn reset" value="重置"></p>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="menu">
+			<div class="aside">
+				<h2 class="aside_title">DIGIONE</h2>
+				<div id="left_menu_content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footerId"></div>	
+</body>
+</html>

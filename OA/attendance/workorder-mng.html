@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>填写工单</title>
+<link type="text/css" href="/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/css/module.css" rel="stylesheet" />
+<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+<link href="/css/timepicker.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/module.js"></script>
+<script type="text/javascript" src="/js/timepicker.js"></script>
+<script type="text/javascript">
+var GLOBAL_PARAM = {
+	g_boxId : $.trim(getUrlParam("boxId")),
+	operateLogo : $.trim(getUrlParam("operateLogo"))
+};
+/*保存工单*/
+function saveWorkOrder(operateFlag){
+	var param = '',method = '';
+	if(operateFlag == 'leaveTrip'){
+		param = leaveTripParam();
+		method = 'addLeaveTrip';
+	}
+	ajax({
+		url:'/php/action/WorkOrderAction.php',
+		type: 'post',
+		data: 'method='+method+'&'+param,
+		dataType: 'json',
+		async: true,
+		cache: false,
+		timeout: 30000,
+		error: function(){},
+		success: function(data){
+			if(data.MsgCode == 1){
+				close_box();
+			}
+		}
+	});
+	//close_box();
+}
+function leaveTripParam(){
+	var auditId = $('#leaveAuditId').val();
+	var leaveTimeBegin = $('#leaveTimeBegin').val();
+	var leaveTimeEnd = $('#leaveTimeEnd').val();
+	var reason = $('input[name=reason]:checked').val();
+	var remark = $('#remark').val();
+	
+	var param = [];
+	param.push('auditId='+auditId);
+	param.push('leaveTimeBegin='+leaveTimeBegin);
+	param.push('leaveTimeEnd='+leaveTimeEnd);
+	param.push('reason='+reason);
+	param.push('remark='+remark);
+	
+	return param.join('&');
+}
+/*关闭弹框*/
+function close_box(){
+	if(GLOBAL_PARAM.g_boxId!=''&&parent&&parent.closeBox)parent.closeBox(GLOBAL_PARAM.g_boxId);
+}
+/*加载时间控件*/
+function loadTimeInput(){
+	$('#leaveTimeBegin').datetimepicker({
+		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:00',constrainInput:true,
+		showButtonPanel:false,showTime:false
+	});
+	$('#leaveTimeEnd').datetimepicker({
+		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:59',constrainInput:true,
+		showButtonPanel:false,showTime:false
+	});
+	$('#overtimeBegin').datetimepicker({
+		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:59',constrainInput:true,
+		showButtonPanel:false,showTime:false
+	});
+	$('#overtimeEnd').datetimepicker({
+		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:59',constrainInput:true,
+		showButtonPanel:false,showTime:false
+	});
+	$('#forgetCardTime').datepicker({dateFormat: 'yy-mm-dd',constrainInput:true});
+}
+function loadInitEvent(){
+	//DIV加载
+	if(GLOBAL_PARAM.operateLogo == 'leaveTrip'){
+		$('.workorder_leave').show();
+	}else if(GLOBAL_PARAM.operateLogo == 'overtimeRequest'){
+		$('.workorder_overtime').show();
+	}else if(GLOBAL_PARAM.operateLogo == 'forgetCard'){
+		$('.workorder_forget_card').show();
+	}
+	//选择时间时间(上午/下午)
+	$('input[name=forgetCard]').click(function(){
+		if($(this).val()==1){
+			 $('#arriveTime')[0].checked = true;
+			 $('#leaveTime')[0].checked = false;
+			 $('#arriveTimeStr')[0].disabled = false;
+			 $('#leaveTimeStr')[0].disabled = true;
+		}else if($(this).val()==2){
+			$('#leaveTime')[0].checked = true;
+			$('#arriveTime')[0].checked = false; 
+			$('#leaveTimeStr')[0].disabled = false;
+			$('#arriveTimeStr')[0].disabled = true;
+		}
+	});
+}
+/*加载页面信息*/
+$(function(){
+	loadTimeInput();
+	loadInitEvent();
+});
+</script>
+</head>
+
+<body>
+<div class="workorder_mng">
+<!-- 请假/出差单开始 -->
+   <div class="workorder_leave hide">
+    <dl>
+    	<dt><span class="cred">*</span>审批人：</dt>
+    	<dd>
+    		<select id="leaveAuditId" class="txt grid-12">
+	    		<option value="1">张三</option>
+	    		<option value="2">李四</option>
+	    		<option value="3">王五</option>
+    		</select>
+    	</dd>
+    </dl>
+   	<dl>
+   		<dt><span class="cred">*</span>离岗时间：</dt>
+    	<dd><input type="text" id="leaveTimeBegin" class="txt grid-12" />
+			至
+			<input type="text" id="leaveTimeEnd" class="txt grid-12" />
+			<span>共8小时（1天）</span>
+			&nbsp;&nbsp;<span id="leaveTimeErr" class="cred"></span>
+		</dd>
+	</dl>
+	<dl>
+	   	<dt><span class="cred">*</span>事由：</dt>
+	   	<dd>
+   			<input type="radio" value="1" id="reason_1" name="reason"><label for="reason_1">事假</label>
+   			<input type="radio" value="2" id="reason_2" name="reason"><label for="reason_2">病假</label>
+   			<input type="radio" value="3" id="reason_3" name="reason"><label for="reason_3">调休</label>
+   			<input type="radio" value="4" id="reason_4" name="reason"><label for="reason_4">婚嫁</label>
+   			<input type="radio" value="5" id="reason_5" name="reason"><label for="reason_5">产假</label>
+   			<input type="radio" value="6" id="reason_6" name="reason"><label for="reason_6">计生假</label>
+   			<input type="radio" value="7" id="reason_7" name="reason"><label for="reason_7">年休假</label>
+   			<input type="radio" value="8" id="reason_8" name="reason"><label for="reason_8">丧假</label><br/>
+   			<input type="radio" value="9" id="reason_9" name="reason"><label for="reason_9">工伤假</label>
+   			<input type="radio" value="10" id="reason_10" name="reason"><label for="reason_10">其他假</label>
+   		</dd>
+   </dl>
+   <dl>
+      <dt>备注：</dt>
+      <dd><textarea type="text" id="remark" class="txt grid-45" rows="2"></textarea></dd>
+   </dl>
+   <p class="workorder_save_button">
+   	<input id="saveButton" type="button" onclick="saveWorkOrder('leaveTrip')" class="mybtn" value="提交" />
+   	<input id="resetButton" type="button" onclick="close_box()" class="mybtn btn_cancel" value="取消" />
+   	<span id="promptMessage" class="cred"></span>
+   </p>
+   </div>
+<!-- 请假/出差单结束 -->
+<!-- 加班申请单开始 -->          
+   <div class="workorder_overtime hide">
+    <dl>
+    	<dt><span class="cred">*</span>审批人：</dt>
+    	<dd>
+    		<select id="overtimeAuditId" class="txt grid-12">
+	    		<option value="1">张三</option>
+	    		<option value="2">李四</option>
+	    		<option value="3">王五</option>
+    		</select>
+    	</dd>
+    </dl>
+   	<dl>
+      <dt><span class="cred">*</span>申请加班原因：</dt>
+      <dd><textarea type="text" id="overtimeReason" class="txt grid-45" rows="2"></textarea></dd>
+   	</dl>
+   	<dl>
+   		<dt><span class="cred">*</span>申请加班时间：</dt>
+    	<dd><input type="text" id="overtimeBegin" class="txt grid-12" />
+			至
+			<input type="text" id="overtimeEnd" class="txt grid-12" />
+			<span>共8小时（1天）</span>
+			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
+		</dd>
+	</dl>
+	<p class="workorder_save_button">
+   		<input id="saveButton" type="button" onclick="saveWorkOrder('overtimeRequest')" class="mybtn" value="提交" />
+   		<input id="resetButton" type="button" onclick="close_box()" class="mybtn btn_cancel" value="取消" />
+   		<span id="promptMessage" class="cred"></span>
+   	</p>
+   </div>
+<!-- 加班申请单结束 -->
+<!-- 忘打卡开始 -->          
+   <div class="workorder_forget_card hide">
+    <dl>
+    	<dt><span class="cred">*</span>审批人：</dt>
+    	<dd>
+    		<select id="forgetCardAuditId" class="txt grid-12">
+	    		<option value="1">张三</option>
+	    		<option value="2">李四</option>
+	    		<option value="3">王五</option>
+    		</select>
+    	</dd>
+    </dl>
+   	<dl>
+   		<dt><span class="cred">*</span>忘刷卡时间：</dt>
+    	<dd><input type="text" id="forgetCardTime" class="txt grid-12" />
+    		<input type="radio" value="1" id="morning" name="forgetCard"><label for="morning">上午</label>
+    		<input type="radio" value="2" id="afternoon" name="forgetCard"><label for="afternoon">下午</label>
+			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
+		</dd>
+	</dl>
+   	<dl>
+   		<dt><span class="cred">*</span>情况说明：</dt>
+    	<dd>
+    		<input type="checkbox" class="txt" disabled="disabled" value="1" id="arriveTime" name="condition"><label for="arriveTime">到岗时间：</label>
+    		<input type="text" class="txt grid-10" id="arriveTimeStr" disabled="disabled" />
+    		<input type="checkbox" class="txt" disabled="disabled" value="2" id="leaveTime" name="condition"><label for="leaveTime">离岗时间：</label>
+    		<input type="text" class="txt grid-10" id="leaveTimeStr" disabled="disabled"/><span class="gray"> 请填写具体时间(XX时XX分)</span>
+			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
+		</dd>
+	</dl>
+	<dl>
+      <dt>备注：</dt>
+      <dd><textarea type="text" id="forgetCardRemark" class="txt grid-45" rows="2"></textarea></dd>
+   	</dl>
+   	<p class="workorder_save_button">
+   		<input id="saveButton" type="button" onclick="saveWorkOrder('forgetCard')" class="mybtn" value="提交" />
+   		<input id="resetButton" type="button" onclick="close_box()" class="mybtn btn_cancel" value="取消" />
+   		<span id="promptMessage" class="cred"></span>
+   	</p>
+   </div>
+<!-- 忘打卡结束 -->
+</div>
+<div class="workorder_instruction">
+	<h4>说明：</h4>
+	<dl><dt>1、</dt><dd>员工请假1天以内（含1天），由部门经理审批；请假1天以上3天（含）以下的，由分管领导审批；请假超过3天的由总经理审批；</dd></dl>
+	<dl><dt>2、</dt><dd>经理级人员请假1天（含）以下的由分管领导审批，1天以上的由总经理审批；</dd></dl>
+	<dl><dt>3、</dt><dd>公司管理层的请假由总经理审批；</dd></dl>
+	<dl><dt>4、</dt><dd>除事假、病假、出差外，其他假期须由人力资源部审核后再报相关领导审批，避免与相关规定冲突；</dd></dl>
+	<dl><dt>5、</dt><dd>此表在完成审批流程后由申请人交人力资源部据以考勤。</dd></dl>
+</div>
+</body>
+</html>

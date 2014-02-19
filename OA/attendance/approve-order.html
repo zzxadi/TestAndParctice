@@ -1,0 +1,223 @@
+<!doctype html>
+<!--[if IE 6]>
+<html id="ie6" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html dir="ltr" lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/module.js"></script>
+<link type="text/css" href="/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/css/module.css" rel="stylesheet" />
+<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+<script type="text/javascript">
+var params = {
+	currentPage: 1			//页码
+}
+var GLOBAL = {
+	pageCount: 0					//记录数量
+}
+function showContactionQQBox(){
+	showBox('工单审批',"contactionQQBox");
+}
+function tabContent(k){
+	$(k).parent().addClass("cur").siblings().removeClass("cur");
+}
+/****分页开始****/
+function goPage(pageNo){
+	var pattern = /\d+/;
+	if(!pattern.test(parseInt(pageNo))) return;
+	if(pageNo<1){
+		return;
+	}
+	if(pageNo>GLOBAL['pageCount']){
+		return;	
+	}
+	getOrderList(pageNo);
+}
+function updatePageInfo(){
+	if(GLOBAL['pageCount'] < 2) {$(".main_pagination").hide(); return;}else{
+		$(".main_pagination").show();
+	}
+	var html=[];
+	var i=1;
+	var j=5;
+	if(GLOBAL['pageCount']>=5){
+		i=(params['currentPage']+2)<=GLOBAL['pageCount']?((params['currentPage']-2>=1)?(params['currentPage']-2):1):(GLOBAL['pageCount']-4);
+		j=i+4;
+	}
+	else{
+		j=GLOBAL['pageCount'];
+	}
+	if(params['currentPage'] == 1)	{ html.push('<span class="page_prev">&lt;&lt; 上一页</span>');}
+	else{ html.push('<a onclick="goPage('+(params['currentPage']-1)+')" href="javascript:void(0);" class="page_prev">&lt;&lt; 上一页</a>');	}
+	for(;i<=j;i++){
+		if(i==params['currentPage']){
+			html.push('<a href="javascript:void(0);" class="bg_on">');
+			html.push(i);
+			html.push('</a>');
+		}
+		else{
+			html.push('<a onclick="goPage(');
+			html.push(i);
+			html.push(');" href="javascript:void(0);" >');
+			html.push(i);
+			html.push('</a>');
+		}
+	}
+	if(params['currentPage'] == GLOBAL['pageCount'])	{html.push('<span class="page_next">下一页 &gt;&gt;</span>');	}
+	else {html.push('<a onclick="goPage('+(params['currentPage']+1)+')" href="javascript:void(0);" class="page_next">下一页 &gt;&gt;</a>');}
+	$("#pageItem").html(html.join(''));
+	$("#pageCount").html(GLOBAL['pageCount']);
+}
+/****分页结束****/
+$(document).ready(function(e) {
+	loadHtml("headerId","/include/header.html");
+	loadHtml("left_menu_content","/include/leftmenu.html");
+	loadHtml("footerId","/include/footer.html");
+});
+</script>
+</head>
+
+<body>
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="main">
+	<div class="clearfix">
+		<div class="content_box">
+			<div class="content">
+				<div class="page_title">工单审批</div>
+				<div class="page_main">
+					<ul class="complaint_title">
+						<li class="cur"><a onClick="tabContent(this)" href="javascript:;">未审批</a></li>
+						<li><a onClick="tabContent(this)" href="javascript:;">已审批</a></li>
+						<li><a onClick="tabContent(this)" href="javascript:;">全部</a></li>
+					</ul>
+					<div class="main_content">
+						<div class="page_main account_addr">
+							<div id="addressNew">
+								<table width="100%" cellspacing="0" cellpadding="0" class="simple_table">
+									<thead>
+										<tr>
+											<th width="100">申请人</th>
+											<th width="100">部门</th>
+											<th width="100">工单类型</th>
+											<th width="100">提交时间</th>
+											<th width="150">审批状态</th>
+											<th width="100">操作</th>
+										</tr>
+									</thead>
+									<tbody id="deliveryAddressList">
+										<tr>
+											<td>刘汉荣</td>
+											<td>信息技术部门</td>
+											<td>事假</td>
+											<td>2014.2.13</td>
+											<td>审批通过</td>
+											<td><a onclick="showContactionQQBox()" href="javascript:void(0);" style=" color:#63adee;">查看</a></td>
+										</tr>
+									</tbody>   
+								</table>
+								<!-- 分页开始 -->
+								<dl class="main_pagination">
+									<dd class="pagination">
+										<span id="pageItem"></span>
+										<span class="page_no">共<span id="pageCount"></span>页 到第<input id="pageObj" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onclick="goPage($.trim($('#pageObj').val()));" /></span>
+									</dd>
+								</dl>
+								<!-- 分页结束 -->
+							</div>         
+							<div class="hide" id="contactionQQBox">
+								<div style=" padding:30px 20px;">	
+									<table width="100%" cellspacing="0" cellpadding="0" class="simple_table grid-50">
+										<tr>
+											<td width="110">申请人：</td>
+											<td>陈翔&nbsp;信息技术部—产品组&nbsp;需求工程师</td>
+										</tr>
+										<tr>
+											<td width="110">申请类型：</td>
+											<td>事假</td>
+										</tr>
+										<tr>
+											<td width="110">上级审批人：</td>
+											<td>张剑</td>
+										</tr>
+										<tr>
+											<td width="110">提交时间：</td>
+											<td>2014年02月10日9:00</td>
+										</tr>
+										<tr>
+											<td width="110">忘打卡时间：</td>
+											<td>2014年02月10日9:00(忘打卡单显示)</td>
+										</tr>
+										<tr>
+											<td width="110">起始时间：</td>
+											<td>2014年02月10日9:00(忘打卡单隐藏)</td>
+										</tr>
+										<tr>
+											<td width="110">结束时间：</td>
+											<td>2014年02月10日18:30(忘打卡单隐藏)</td>
+										</tr>
+										<tr>
+											<td width="110">共计：</td>
+											<td>8小时(一天)</td>
+										</tr>
+										<tr>
+											<td width="110">备注：</td>
+											<td>个人原因</td>
+										</tr>
+										<tr>
+											<td width="110">操作：</td>
+											<td>
+												<label><input type="radio" name="state"/>&nbsp;批准</label>
+												<label><input type="radio" name="state" class="ml20"/>&nbsp;驳回</label>
+											</td>
+										</tr>
+										<tr>
+											<td width="110">审批意见：</td>
+											<td><dd><textarea class="grid-37"></textarea></dd></td>
+										</tr>
+										<tr>
+											<td width="110">下一级审批人：</td>
+											<td>
+												<select style="width:100px;">
+													<option>赵长庚</option>
+													<option>张剑</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td colspan="2">
+												<input type="button" class="mybtn btn_search" value="确定">
+												<input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>		   
+				</div>
+			</div>
+		</div>
+		<div class="menu">
+			<div class="aside">
+				<h2 class="aside_title">DIGIONE</h2>
+				<div id="left_menu_content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footerId"></div>
+</body>
+</html>

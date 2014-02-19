@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工单管理</title>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/module.js"></script>
+<link type="text/css" href="/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/css/module.css" rel="stylesheet" />
+<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+<script type="text/javascript">
+function operateWorkOrder(operateLogo){
+	var message = operateLogo == 'leaveTrip'? '请假/出差单' : (operateLogo == 'overtimeRequest' ? '加班申请单' : '忘打卡');
+	showBox(message,'/attendance/workorder-mng.html?width=680&height=430&operateLogo='+operateLogo);
+}
+$(function(){
+	loadHtml("headerId","/include/header.html");
+	loadHtml("left_menu_content","/include/leftmenu.html");
+	loadHtml("footerId","/include/footer.html");
+});
+</script>
+</head>
+
+<body>
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="main">
+	<div class="clearfix">
+		<div class="content_box">
+			<div class="content">
+				<div class="page_title">工单申请管理</div>
+				<div class="page_main">
+				<div class="workorder_operate_button">
+					<input type="button" value="请假/出差单" onclick="operateWorkOrder('leaveTrip')" class="mybtn" />
+					<input type="button" value="加班申请单" onclick="operateWorkOrder('overtimeRequest')" class="mybtn" />
+					<input type="button" value="忘打卡" onclick="operateWorkOrder('forgetCard')" class="mybtn" />
+				</div>
+				<table width="80%" cellspacing="0" cellpadding="0" class="simple_table workorder_table">
+                  <thead>
+                     <tr>
+                        <th width="100">工单类型</th>
+                        <th width="100">提交时间</th>
+                        <th width="80">状态</th>
+                        <th width="100">前处理人</th>
+                        <th width="100">当前处理人</th>
+                        <th width="70">操作</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                  	<tr>
+                  		<td>请假/出差单</td>
+                  		<td>2014-02-14</td>
+                  		<td>审批中</td>
+                  		<td>张三</td>
+                  		<td>李四</td>
+                  		<td><a href="javascript:void(0)">查看</a></td>
+               		</tr>
+                  	<tr>
+                  		<td>加班申请单</td>
+                  		<td>2014-02-14</td>
+                  		<td>审批中</td>
+                  		<td>张三</td>
+                  		<td>李四</td>
+                  		<td><a href="javascript:void(0)">查看</a></td>
+               		</tr>
+                  	<tr>
+                  		<td>忘打卡单</td>
+                  		<td>2014-02-14</td>
+                  		<td>审批中</td>
+                  		<td>张三</td>
+                  		<td>李四</td>
+                  		<td><a href="javascript:void(0)">查看</a></td>
+               		</tr>
+                  </tbody>   
+               </table>
+			</div>
+			</div>
+		</div>
+		<div class="menu">
+			<div class="aside">
+				<h2 class="aside_title">DIGIONE</h2>
+				<div id="left_menu_content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footerId"></div>
+
+</body>
+</html>

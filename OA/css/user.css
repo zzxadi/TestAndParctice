@@ -1,0 +1,13 @@
+.user_form{padding:20px 0}
+.user_form em{color:red;}
+.user_form dl{padding:4px 0}
+.user_form dt{width:180px;float:left;text-align:right;line-height:30px}
+.user_form dd{margin:0 0 0 185px}
+.user_form dd .txt{padding:6px 5px}
+.user_form dd .d_note{padding:6px 20px 0 0;line-height:20px;color:#959595}
+.user_form span{padding:0 0 0 10px;line-height:24px;color:#959595}
+.user_form span.error{padding:0 0 0 27px;background:url(/images/base/icon_error.png) no-repeat 10px 2px;color:#f35b69}
+.user_form span.right{padding:0 0 0 27px;background:url(/images/base/icon_right.png) no-repeat 10px 0;color:#77af00}
+input.btn{margin:0 10px 0 0;padding:0 40px;height:35px;border:none;background-color:#63adee;cursor:pointer;font-size:18px;color:#fff}
+input.reset{background-color:#f1f0ef;color:#000}
+.user_form p{margin-left:150px;margin-top:10px;}

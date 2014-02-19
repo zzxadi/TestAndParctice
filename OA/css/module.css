@@ -1,0 +1,66 @@
+@charset "utf-8";
+html,body{height:100%;margin:0; background-color:#fbfafa;}
+a{color: #000000;}
+a:hover{ color:#007bc7; text-decoration:underline;}
+.ablue a,a.ablue{color:#63adee;text-decoration:none;}
+.mt10{ margin-top:10px}
+.mb10{ margin-bottom:10px;}
+.ml20{ margin-left:20px;}
+.header{ height:50px; background-color:#63adee; padding-left:30px;}
+.header .welcome{color:#FFF; padding-left:30px;}
+.header a.logout{ color: #000; margin:0 4px; text-decoration:underline;}
+.header a.logout:hover{ text-decoration:underline;}
+.header .meta{ float:right; line-height:50px; padding-right:30px;}
+.header .meta a{ color:#fff; margin:0 10px;}
+.header .meta a:hover{ text-decoration:underline;}
+.select{padding:3px 5px;border:1px solid #e7e7e7;vertical-align:middle}
+.bread{ line-height:40px; padding-left:20px; color:#000;}
+.bread a{ color:#000;}
+.bread span{ color:#005bac; font-weight:bold;}
+.main{ padding:0 20px;}
+.menu{ float:left; display:inline; background-color:#F3F3F3; width: 190px; margin-left:-100%;}
+.aside_title{font-size:18px;line-height:33px;color:#fff;background-color:#63adee;text-align:center}
+.aside h4{padding:0 0 0 25px;height:30px;line-height:30px;font-size:12px;font-weight:700;border-bottom:1px solid #F3F3F3; background-color:#e3e4e4; background-image:url(../images/base/icon_menu.gif);background-position:10px 11px;background-repeat:no-repeat;cursor:pointer}
+.aside h4.on{background-position:10px -19px}
+.aside h4.cur{background-color:#fce6e6}
+.aside ul{padding:5px 0}
+.aside li{height:24px}
+.aside li a{display:block;padding:0 0 0 25px;line-height:24px;color:#000}
+.aside li.cur a,.aside li a:hover{background-color:#cae4fc;text-decoration:none;}
+.header_meta{float:right;line-height:40px;padding:10px 10px 0 0}
+.header_meta a{margin:0 2px;color:#0274e8}
+.header_meta a:hover{text-decoration:underline}
+.content_box{ background-color:#F3F3F3; float:left; width:100%;}
+.content{border:1px solid #E4E5E5; background-color:#fff; margin-left:190px;}
+.page_title{height:31px;line-height:31px;text-indent:20px;font-weight:700;border-bottom:1px solid #E3E4E4}
+.page_subtitle{height:31px;line-height:31px;text-indent:15px;font-size:12px;font-weight:700;background:#e3e4e4}
+.page_main{padding:0 10px 10px}
+.tab_content{ display:none;}
+.footer{ height:50px; line-height:50px; text-align:center;}
+
+.mybtn{background-color: #63ADEE;border: 0 none;color: #FFFFFF;cursor: pointer;font-weight: 700;height: 24px;overflow: visible;padding: 0 15px;}
+.btn_cancel, .btn_back, .btn_close, .btn_reset{background-color: #949494;}
+.txt{border: 1px solid #E7E7E7;padding: 3px 5px;vertical-align: middle;}
+.cred {color: #E84244;}
+
+/*分页*/
+.main_pagination{padding:6px 10px 5px;overflow:hidden;zoom:1;background:#f0f0f0}
+.pagination{float:right}
+.pagination a,.pagination span.page_prev,.pagination span.page_next{float:left;width:21px;height:21px;line-height:21px;background-color:#fff;color:#888;border:1px solid #ccc;text-align:center;margin:0 1px;overflow:hidden}
+.pagination a.bg_on,.pagination a:hover{border:1px solid #63adee;background-color:#63adee;color:#fff}
+.pagination a:hover{text-decoration:none;}
+.pagination span.page_prev{background:#fff url(/images/base/page.gif) no-repeat 8px 6px;text-indent:-1000px}
+.pagination a.page_prev{border:1px solid #ccc;background:#fff url(/images/base/page.gif) no-repeat 8px -24px;text-indent:-1000px}
+.pagination span.page_next{background:#fff url(/images/base/page.gif) no-repeat -26px 6px;text-indent:-1000px}
+.pagination a.page_next{border:1px solid #ccc;background:#fff url(/images/base/page.gif) no-repeat -26px -24px;text-indent:-1000px}
+.pagination a.page_prev:hover{border:1px solid #b20c00;background:#ffeee5 url(/images/base/page.gif) no-repeat 8px -54px}
+.pagination a.page_next:hover{border:1px solid #b20c00;background:#ffeee5 url(/images/base/page.gif) no-repeat -26px -54px}
+.page_no{padding:0 0 0 10px}
+.page_txt{margin:0 5px;width:30px;padding:2px 0;text-align:center;border:1px solid #ccc}
+.pagination .page_btn{width:50px;height:25px;padding:0;background-color:#63adee;border:none;font-weight:700;color:#fff;cursor:pointer;vertical-align:middle}
+/*类table 的dl*/
+.tableLike dt{ float:left; display:inline;}
+.tableLike dt { width:110px; padding:5px 0;}
+.tableLike dd { margin-left:110px; padding:5px 0;}
+
+.gray{color:#A9A9A9}

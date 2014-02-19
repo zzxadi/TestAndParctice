@@ -1,0 +1,477 @@
+2014-02-18 09:34:31 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:34:31 释放结果集
+2014-02-18 09:34:31 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 09:35:03 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:35:03 释放结果集
+2014-02-18 09:35:03 完成整个查询任务,所用时间为0.0039999485015869
+2014-02-18 09:39:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:39:51 释放结果集
+2014-02-18 09:39:51 完成整个查询任务,所用时间为0.0070009231567383
+2014-02-18 09:44:21 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:44:21 释放结果集
+2014-02-18 09:44:21 完成整个查询任务,所用时间为0.0090010166168213
+2014-02-18 09:44:28 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:44:28 释放结果集
+2014-02-18 09:44:28 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 09:44:37 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:44:37 释放结果集
+2014-02-18 09:44:37 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 09:44:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:44:51 释放结果集
+2014-02-18 09:44:51 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 09:45:36 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:45:36 释放结果集
+2014-02-18 09:45:36 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 09:45:41 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:45:41 释放结果集
+2014-02-18 09:45:41 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 09:45:59 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:45:59 释放结果集
+2014-02-18 09:45:59 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 09:46:05 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:46:05 释放结果集
+2014-02-18 09:46:05 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 09:47:59 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:47:59 释放结果集
+2014-02-18 09:47:59 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-18 09:48:07 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:48:07 释放结果集
+2014-02-18 09:48:07 完成整个查询任务,所用时间为0.18701100349426
+2014-02-18 09:48:42 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:48:42 释放结果集
+2014-02-18 09:48:42 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 09:50:33 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:50:33 释放结果集
+2014-02-18 09:50:33 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 09:50:42 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:50:42 释放结果集
+2014-02-18 09:50:42 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 09:50:52 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:50:52 释放结果集
+2014-02-18 09:50:52 完成整个查询任务,所用时间为0.0050010681152344
+2014-02-18 09:57:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:57:51 释放结果集
+2014-02-18 09:57:51 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 09:58:24 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:58:24 释放结果集
+2014-02-18 09:58:24 完成整个查询任务,所用时间为0.053003072738647
+2014-02-18 09:59:03 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 09:59:03 释放结果集
+2014-02-18 09:59:03 完成整个查询任务,所用时间为0.0090010166168213
+2014-02-18 10:00:08 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:00:08 释放结果集
+2014-02-18 10:00:08 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 10:00:45 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:00:45 释放结果集
+2014-02-18 10:00:45 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:01:05 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:01:05 释放结果集
+2014-02-18 10:01:05 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:04:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:04:51 释放结果集
+2014-02-18 10:04:51 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:06:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:06:51 释放结果集
+2014-02-18 10:06:51 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-18 10:16:26 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:16:26 释放结果集
+2014-02-18 10:16:26 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 10:17:37 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:17:37 释放结果集
+2014-02-18 10:17:37 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 10:17:38 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:17:38 释放结果集
+2014-02-18 10:17:38 完成整个查询任务,所用时间为0.0039999485015869
+2014-02-18 10:17:42 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:17:42 释放结果集
+2014-02-18 10:17:42 完成整个查询任务,所用时间为0.0060009956359863
+2014-02-18 10:17:44 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:17:44 释放结果集
+2014-02-18 10:17:44 完成整个查询任务,所用时间为0.004000186920166
+2014-02-18 10:17:48 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:17:48 释放结果集
+2014-02-18 10:17:48 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:17:59 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:17:59 释放结果集
+2014-02-18 10:17:59 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:27:50 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:27:50 释放结果集
+2014-02-18 10:27:50 完成整个查询任务,所用时间为0.0060009956359863
+2014-02-18 10:28:00 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO
+2014-02-18 10:28:00 释放结果集
+2014-02-18 10:28:00 完成整个查询任务,所用时间为0.0050010681152344
+2014-02-18 10:35:04 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where Void=0  and User_Name = 'ddd' 
+2014-02-18 10:35:04 Query Error: select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where Void=0  and User_Name = 'ddd' 
+Unknown column 'Void' in 'where clause'
+2014-02-18 10:35:04 释放结果集
+2014-02-18 10:35:04 完成整个查询任务,所用时间为0.0050010681152344
+2014-02-18 10:36:05 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where Void=0  and User_Name = 'ddd' 
+2014-02-18 10:36:05 Query Error: select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where Void=0  and User_Name = 'ddd' 
+Unknown column 'Void' in 'where clause'
+2014-02-18 10:36:05 释放结果集
+2014-02-18 10:36:05 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 10:36:07 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where Void=0  and User_Name = 'ddd' 
+2014-02-18 10:36:07 Query Error: select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where Void=0  and User_Name = 'ddd' 
+Unknown column 'Void' in 'where clause'
+2014-02-18 10:36:07 释放结果集
+2014-02-18 10:36:07 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-18 10:36:26 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = 'ddd' 
+2014-02-18 10:36:26 释放结果集
+2014-02-18 10:36:26 完成整个查询任务,所用时间为0.0059998035430908
+2014-02-18 10:37:57 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = 'ddd' 
+2014-02-18 10:37:57 释放结果集
+2014-02-18 10:37:57 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:38:00 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-18 10:38:00 释放结果集
+2014-02-18 10:38:00 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:38:04 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = 'ddd' 
+2014-02-18 10:38:04 释放结果集
+2014-02-18 10:38:04 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:39:21 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-18 10:39:21 释放结果集
+2014-02-18 10:39:21 完成整个查询任务,所用时间为0.0060009956359863
+2014-02-18 10:39:22 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = 'ddd' 
+2014-02-18 10:39:22 释放结果集
+2014-02-18 10:39:22 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:43:12 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-18 10:43:12 释放结果集
+2014-02-18 10:43:12 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:43:14 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = 'ddd' 
+2014-02-18 10:43:14 释放结果集
+2014-02-18 10:43:14 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-18 10:45:11 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-18 10:45:11 释放结果集
+2014-02-18 10:45:11 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:45:13 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = 'ddd' 
+2014-02-18 10:45:13 释放结果集
+2014-02-18 10:45:13 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:45:32 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-18 10:45:32 释放结果集
+2014-02-18 10:45:32 完成整个查询任务,所用时间为0.0050008296966553
+2014-02-18 10:45:33 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = 'ddd' 
+2014-02-18 10:45:33 释放结果集
+2014-02-18 10:45:33 完成整个查询任务,所用时间为0.0039999485015869
+2014-02-18 10:45:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name = '张三' 
+2014-02-18 10:45:51 释放结果集
+2014-02-18 10:45:51 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:46:01 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-18 10:46:01 释放结果集
+2014-02-18 10:46:01 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:46:07 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email = '123@qq.com' 
+2014-02-18 10:46:07 释放结果集
+2014-02-18 10:46:07 完成整个查询任务,所用时间为0.005000114440918
+2014-02-18 10:51:44 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-18 10:51:44 释放结果集
+2014-02-18 10:51:44 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-18 10:51:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email = 'zhangzx@digione.cn' 
+2014-02-18 10:51:51 释放结果集
+2014-02-18 10:51:51 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 02:28:20 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-19 02:28:20 释放结果集
+2014-02-19 02:28:20 完成整个查询任务,所用时间为0.045001983642578
+2014-02-19 02:28:32 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Role_ID = '1' 
+2014-02-19 02:28:32 释放结果集
+2014-02-19 02:28:32 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 02:28:36 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-19 02:28:36 释放结果集
+2014-02-19 02:28:36 完成整个查询任务,所用时间为0.0050008296966553
+2014-02-19 03:03:41 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 
+2014-02-19 03:03:41 释放结果集
+2014-02-19 03:03:41 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-19 03:24:41 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 limit 20
+2014-02-19 03:24:41 释放结果集
+2014-02-19 03:24:41 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 03:24:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 limit 20
+2014-02-19 03:24:51 释放结果集
+2014-02-19 03:24:51 完成整个查询任务,所用时间为0.0050010681152344
+2014-02-19 03:27:20 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 limit 2
+2014-02-19 03:27:20 释放结果集
+2014-02-19 03:27:20 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-19 03:28:44 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 limit 2
+2014-02-19 03:28:44 释放结果集
+2014-02-19 03:28:44 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 03:29:00 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0 limit 2
+2014-02-19 03:29:00 释放结果集
+2014-02-19 03:29:00 完成整个查询任务,所用时间为0.036001920700073
+2014-02-19 05:13:36 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:13:36 查询 select ID from USER_INFO  where 0=0  where 0=0  limit 0,2
+2014-02-19 05:13:36 Query Error: select ID from USER_INFO  where 0=0  where 0=0  limit 0,2
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where 0=0  limit 0,2' at line 1
+2014-02-19 05:13:36 释放结果集
+2014-02-19 05:13:36 完成整个查询任务,所用时间为0.041002035140991
+2014-02-19 05:14:23 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:14:23 查询 select ID from USER_INFO  where 0=0  where 0=0  limit 0,2
+2014-02-19 05:14:23 Query Error: select ID from USER_INFO  where 0=0  where 0=0  limit 0,2
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where 0=0  limit 0,2' at line 1
+2014-02-19 05:14:23 释放结果集
+2014-02-19 05:14:23 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 05:15:11 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:15:11 查询 select ID from USER_INFO  where 0=0  limit 0,2
+2014-02-19 05:15:11 释放结果集
+2014-02-19 05:15:11 完成整个查询任务,所用时间为0.022001028060913
+2014-02-19 05:19:38 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:19:38 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:19:38 释放结果集
+2014-02-19 05:19:38 完成整个查询任务,所用时间为0.0080010890960693
+2014-02-19 05:20:37 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:20:37 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:20:37 释放结果集
+2014-02-19 05:20:37 完成整个查询任务,所用时间为0.0070009231567383
+2014-02-19 05:20:54 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:20:54 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:20:54 释放结果集
+2014-02-19 05:20:54 完成整个查询任务,所用时间为0.02000093460083
+2014-02-19 05:22:39 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:22:39 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:22:39 释放结果集
+2014-02-19 05:22:39 完成整个查询任务,所用时间为0.0079998970031738
+2014-02-19 05:23:12 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:23:12 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:23:12 释放结果集
+2014-02-19 05:23:12 完成整个查询任务,所用时间为0.0090010166168213
+2014-02-19 05:23:51 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:23:51 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:23:51 释放结果集
+2014-02-19 05:23:51 完成整个查询任务,所用时间为0.0090000629425049
+2014-02-19 05:23:52 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:23:52 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 05:23:52 释放结果集
+2014-02-19 05:23:52 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 05:23:54 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:23:54 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 4,2
+2014-02-19 05:23:54 释放结果集
+2014-02-19 05:23:54 完成整个查询任务,所用时间为0.0060009956359863
+2014-02-19 05:25:33 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:25:33 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 05:25:33 释放结果集
+2014-02-19 05:25:33 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 05:25:34 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:25:34 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:25:34 释放结果集
+2014-02-19 05:25:34 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 05:25:57 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:25:57 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 05:25:57 释放结果集
+2014-02-19 05:25:57 完成整个查询任务,所用时间为0.0070009231567383
+2014-02-19 05:25:58 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:25:58 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 4,2
+2014-02-19 05:25:58 释放结果集
+2014-02-19 05:25:58 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 05:25:59 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:25:59 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 05:25:59 释放结果集
+2014-02-19 05:25:59 完成整个查询任务,所用时间为0.007000207901001
+2014-02-19 05:26:00 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:26:00 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:26:00 释放结果集
+2014-02-19 05:26:00 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-19 05:26:03 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:26:03 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 05:26:03 释放结果集
+2014-02-19 05:26:03 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 05:27:21 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:27:21 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,20
+2014-02-19 05:27:21 释放结果集
+2014-02-19 05:27:21 完成整个查询任务,所用时间为0.0070011615753174
+2014-02-19 05:27:25 查询 select ID from USER_INFO  where 0=0  and Role_ID like '1' 
+2014-02-19 05:27:25 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Role_ID like '1'  limit 0,20
+2014-02-19 05:27:25 释放结果集
+2014-02-19 05:27:25 完成整个查询任务,所用时间为0.0089998245239258
+2014-02-19 05:27:30 查询 select ID from USER_INFO  where 0=0  and User_Name like 'd'  and Role_ID like '1' 
+2014-02-19 05:27:30 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and User_Name like 'd'  and Role_ID like '1'  limit 0,20
+2014-02-19 05:27:30 释放结果集
+2014-02-19 05:27:30 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 05:27:35 查询 select ID from USER_INFO  where 0=0  and Email like '1'  and Role_ID like '1' 
+2014-02-19 05:27:35 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '1'  and Role_ID like '1'  limit 0,20
+2014-02-19 05:27:35 释放结果集
+2014-02-19 05:27:35 完成整个查询任务,所用时间为0.0080001354217529
+2014-02-19 05:27:41 查询 select ID from USER_INFO  where 0=0  and Role_ID like '1' 
+2014-02-19 05:27:41 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Role_ID like '1'  limit 0,20
+2014-02-19 05:27:41 释放结果集
+2014-02-19 05:27:41 完成整个查询任务,所用时间为0.0070011615753174
+2014-02-19 05:27:59 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 05:27:59 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 05:27:59 释放结果集
+2014-02-19 05:27:59 完成整个查询任务,所用时间为0.0070009231567383
+2014-02-19 05:28:10 查询 select ID from USER_INFO  where 0=0  and Email like '12'  and Role_ID like '1' 
+2014-02-19 05:28:10 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '12'  and Role_ID like '1'  limit 0,20
+2014-02-19 05:28:10 释放结果集
+2014-02-19 05:28:10 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 06:09:27 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 06:09:27 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,20
+2014-02-19 06:09:27 释放结果集
+2014-02-19 06:09:27 完成整个查询任务,所用时间为0.024001836776733
+2014-02-19 06:09:37 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 06:09:37 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 06:09:37 释放结果集
+2014-02-19 06:09:37 完成整个查询任务,所用时间为0.0090010166168213
+2014-02-19 06:09:39 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 06:09:39 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 06:09:39 释放结果集
+2014-02-19 06:09:39 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 06:09:40 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 06:09:40 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 4,2
+2014-02-19 06:09:40 释放结果集
+2014-02-19 06:09:40 完成整个查询任务,所用时间为0.0079998970031738
+2014-02-19 07:10:38 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:10:38 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:10:38 释放结果集
+2014-02-19 07:10:38 完成整个查询任务,所用时间为0.0079998970031738
+2014-02-19 07:10:43 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:10:43 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 07:10:43 释放结果集
+2014-02-19 07:10:43 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:10:44 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:10:44 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 4,2
+2014-02-19 07:10:44 释放结果集
+2014-02-19 07:10:44 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:12:43 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:12:43 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:12:43 释放结果集
+2014-02-19 07:12:43 完成整个查询任务,所用时间为0.0080008506774902
+2014-02-19 07:13:54 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:13:54 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:13:54 释放结果集
+2014-02-19 07:13:54 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 07:13:56 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:13:56 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 07:13:56 释放结果集
+2014-02-19 07:13:56 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:14:48 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:14:48 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:14:48 释放结果集
+2014-02-19 07:14:48 完成整个查询任务,所用时间为0.0070009231567383
+2014-02-19 07:15:54 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:15:54 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:15:54 释放结果集
+2014-02-19 07:15:54 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:16:09 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:16:09 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 07:16:09 释放结果集
+2014-02-19 07:16:09 完成整个查询任务,所用时间为0.0059998035430908
+2014-02-19 07:16:10 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:16:10 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 4,2
+2014-02-19 07:16:10 释放结果集
+2014-02-19 07:16:10 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 07:16:13 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:16:13 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:16:13 释放结果集
+2014-02-19 07:16:13 完成整个查询任务,所用时间为0.0070009231567383
+2014-02-19 07:16:16 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:16:16 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:16:16 释放结果集
+2014-02-19 07:16:16 完成整个查询任务,所用时间为0.0059998035430908
+2014-02-19 07:16:20 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:16:20 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 07:16:20 释放结果集
+2014-02-19 07:16:20 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 07:16:36 查询 select ID from USER_INFO  where 0=0  and Email like '456'  and Role_ID like '1' 
+2014-02-19 07:16:36 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '456'  and Role_ID like '1'  limit 0,20
+2014-02-19 07:16:36 释放结果集
+2014-02-19 07:16:36 完成整个查询任务,所用时间为0.0060009956359863
+2014-02-19 07:18:21 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:18:21 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:18:21 释放结果集
+2014-02-19 07:18:21 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 07:18:23 查询 select ID from USER_INFO  where 0=0  and Email like %'456'%  and Role_ID = '1' 
+2014-02-19 07:18:23 Query Error: select ID from USER_INFO  where 0=0  and Email like %'456'%  and Role_ID = '1' 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%'456'%  and Role_ID = '1'' at line 1
+2014-02-19 07:18:23 释放结果集
+2014-02-19 07:18:23 完成整个查询任务,所用时间为0.0040011405944824
+2014-02-19 07:18:32 查询 select ID from USER_INFO  where 0=0  and Email like %'123'%  and Role_ID = '1' 
+2014-02-19 07:18:32 Query Error: select ID from USER_INFO  where 0=0  and Email like %'123'%  and Role_ID = '1' 
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '%'123'%  and Role_ID = '1'' at line 1
+2014-02-19 07:18:32 释放结果集
+2014-02-19 07:18:32 完成整个查询任务,所用时间为0.0039999485015869
+2014-02-19 07:19:14 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:19:14 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:19:14 释放结果集
+2014-02-19 07:19:14 完成整个查询任务,所用时间为0.0059998035430908
+2014-02-19 07:19:17 查询 select ID from USER_INFO  where 0=0  and Email like '%123%'  and Role_ID = '1' 
+2014-02-19 07:19:17 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '%123%'  and Role_ID = '1'  limit 0,20
+2014-02-19 07:19:17 释放结果集
+2014-02-19 07:19:17 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-19 07:19:28 查询 select ID from USER_INFO  where 0=0  and Email like '%456%'  and Role_ID = '1' 
+2014-02-19 07:19:28 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '%456%'  and Role_ID = '1'  limit 0,20
+2014-02-19 07:19:28 释放结果集
+2014-02-19 07:19:28 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 07:22:08 查询 select ID from USER_INFO  where 0=0  and Email like '%456%' 
+2014-02-19 07:22:08 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '%456%'  limit 0,20
+2014-02-19 07:22:08 释放结果集
+2014-02-19 07:22:08 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 07:22:15 查询 select ID from USER_INFO  where 0=0  and Email like '%123%' 
+2014-02-19 07:22:15 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '%123%'  limit 0,20
+2014-02-19 07:22:15 释放结果集
+2014-02-19 07:22:15 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:22:19 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:22:19 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,20
+2014-02-19 07:22:19 释放结果集
+2014-02-19 07:22:19 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 07:22:40 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:22:40 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:22:40 释放结果集
+2014-02-19 07:22:40 完成整个查询任务,所用时间为0.0070011615753174
+2014-02-19 07:22:44 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:22:44 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,20
+2014-02-19 07:22:44 释放结果集
+2014-02-19 07:22:44 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:27:37 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:27:37 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:27:37 释放结果集
+2014-02-19 07:27:37 完成整个查询任务,所用时间为0.007000207901001
+2014-02-19 07:27:45 查询 select ID from USER_INFO  where 0=0  and Email like '%456%' 
+2014-02-19 07:27:45 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  and Email like '%456%'  limit 0,2
+2014-02-19 07:27:45 释放结果集
+2014-02-19 07:27:45 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 07:27:48 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:27:48 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 07:27:48 释放结果集
+2014-02-19 07:27:48 完成整个查询任务,所用时间为0.0070009231567383
+2014-02-19 07:28:36 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:28:36 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:28:36 释放结果集
+2014-02-19 07:28:36 完成整个查询任务,所用时间为0.0060009956359863
+2014-02-19 07:31:32 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:31:32 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:31:32 释放结果集
+2014-02-19 07:31:32 完成整个查询任务,所用时间为0.023001194000244
+2014-02-19 07:31:35 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:31:35 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 07:31:35 释放结果集
+2014-02-19 07:31:35 完成整个查询任务,所用时间为0.0060009956359863
+2014-02-19 07:31:36 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:31:36 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 4,2
+2014-02-19 07:31:36 释放结果集
+2014-02-19 07:31:36 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:31:44 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:31:44 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:31:44 释放结果集
+2014-02-19 07:31:44 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:31:46 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:31:46 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:31:46 释放结果集
+2014-02-19 07:31:46 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 07:32:56 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:32:56 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:32:56 释放结果集
+2014-02-19 07:32:56 完成整个查询任务,所用时间为0.0069999694824219
+2014-02-19 07:33:06 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:33:06 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:33:06 释放结果集
+2014-02-19 07:33:06 完成整个查询任务,所用时间为0.0060000419616699
+2014-02-19 07:33:08 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:33:08 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 2,2
+2014-02-19 07:33:08 释放结果集
+2014-02-19 07:33:08 完成整个查询任务,所用时间为0.0049998760223389
+2014-02-19 07:33:09 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:33:09 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 4,2
+2014-02-19 07:33:09 释放结果集
+2014-02-19 07:33:09 完成整个查询任务,所用时间为0.005000114440918
+2014-02-19 07:33:10 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:33:10 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:33:10 释放结果集
+2014-02-19 07:33:10 完成整个查询任务,所用时间为0.0059998035430908
+2014-02-19 07:50:13 查询 select ID from USER_INFO  where 0=0 
+2014-02-19 07:50:13 查询 select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO where 0=0  limit 0,2
+2014-02-19 07:50:13 释放结果集
+2014-02-19 07:50:13 完成整个查询任务,所用时间为0.0069999694824219
