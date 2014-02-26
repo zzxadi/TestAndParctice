@@ -1,10 +1,70 @@
-<h4>我的考勤</h4>
-<ul>
-	<li class="cur"><a href="/attendance/personal-info.html">个人信息查询</a></li>
-	<li><a href="/attendance/workorder-index.html">工单申请</a></li>
-	<li><a href="/attendance/approve-order.html">工单审批</a></li>
-</ul>
-<h4>系统管理</h4>
-<ul>
-	<li><a href="/system/user-info.html">人员管理</a></li>
-</ul>
+<div id="menu_inner"></div>
+<script type="text/javascript">
+function getUserMenu(){
+	var menuList = getUserTopMenu();
+	var subMenuList = getUserSubMenu();
+	var html ='';
+	for(var i=0,j=menuList.length;i<j;i++){
+		var title = '<h4 id="menu_'+menuList[i].id+'">'+menuList[i].menuName+'</h4>';
+		var menuStr = '';
+		for(var n=0,m=subMenuList.length;n<m;n++){
+			if(subMenuList[n].menuSupper == menuList[i].id){
+				menuStr += '<li id="'+subMenuList[n].menuReg+'"><a href="'+subMenuList[n].menuUrl+'">'+subMenuList[n].menuName+'</a></li>';
+			}
+		}
+		if(menuStr != ''){
+			html += title;
+			html += '<ul>';
+			html += menuStr;
+			html +='</ul>';
+		}
+	}
+	$("#menu_inner").html(html);
+}
+function getUserTopMenu(){
+	var tmpData = '';
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/SystemMenuAction.php?type=getPartMenu',//必须,不能为空
+		type:'get',//非必须.默认get
+		data:'menu_level=1&menu_supper=',//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				return;
+			}
+			tmpData = data.entity
+		}//非必须
+	});
+	return tmpData;
+}
+function getUserSubMenu(){
+	var tmpData = '';
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/UserMenuAction.php?type=getUserMenu',//必须,不能为空
+		type:'get',//非必须.默认get
+		data:'',//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode ==2){
+				locationHref('/login.html');
+				return;
+			}
+			tmpData = data.entity;
+		}//非必须
+	});
+	return tmpData;
+}
+(function(){
+	getUserMenu();
+})();
+</script>

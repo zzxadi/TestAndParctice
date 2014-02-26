@@ -1,37 +1,345 @@
 <!doctype html>
-<!--[if IE 6]>
-<html id="ie6" dir="ltr" lang="zh-CN">
-<![endif]-->
-<!--[if IE 7]>
-<html id="ie7" dir="ltr" lang="zh-CN">
-<![endif]-->
-<!--[if IE 8]>
-<html id="ie8" dir="ltr" lang="zh-CN">
-<![endif]-->
-<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
 <html dir="ltr" lang="zh-CN">
-<!--<![endif]-->
 <head>
-<meta charset="utf-8">
-<title>百分百OA</title>
-<script type="text/javascript" src="/js/jquery.min.js"></script>
-<script type="text/javascript" src="/js/common.js"></script>
-<script type="text/javascript" src="/js/module.js"></script>
-<link type="text/css" href="/css/base.css" rel="stylesheet" />
-<link type="text/css" href="/css/module.css" rel="stylesheet" />
-<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
-<script type="text/javascript">
-function tabContent(obj){
-	var index = $(obj).parent().index();
-	$(".tab_content").eq(index).show().siblings(".tab_content").hide();
-	$(obj).parent().addClass("cur").siblings().removeClass("cur")
-}
-$(document).ready(function(e) {
-	loadHtml("headerId","/include/header.html");
-	loadHtml("left_menu_content","/include/leftmenu.html");
-	loadHtml("footerId","/include/footer.html");
-});
-</script>
+	<meta charset="utf-8">
+	<title>个人信息查询</title>
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/common.js"></script>
+	<script type="text/javascript" src="/js/module.js"></script>
+	<link type="text/css" href="/css/base.css" rel="stylesheet" />
+	<link type="text/css" href="/css/module.css" rel="stylesheet" />
+	<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var params = {
+			currentPage: 1,			//页码
+			currentPage1: 1,	
+			currentPage2: 1,
+			currentPage3: 1,	
+			currentPage4: 1
+		}
+		var GLOBAL = {
+			pageCount: 0,			//记录数量
+			pageCount1: 0,					
+			pageCount2: 0,
+			pageCount3: 0,					
+			pageCount4: 0
+		}
+		function tabContent(obj){			//页面切换
+			var index = $(obj).parent().index();
+			$(".tab_content").eq(index).show().siblings(".tab_content").hide();
+			$(obj).parent().addClass("cur").siblings().removeClass("cur")
+		}
+		$(document).ready(function(e) {
+			loadHtml("headerId","/include/header.html");
+			loadHtml("left_menu_content","/include/leftmenu.html");
+			loadHtml("footerId","/include/footer.html");
+			
+			loadRemainHoliday();
+			loadPersonalInfo();
+			loadPersonalRecord();
+		});
+	
+		/****剩余假期信息****/		
+		function loadRemainHoliday(){		
+			ajax({
+				url: '/php/action/PersonalRecordAction.php?Type=5',
+				type: 'get',
+				data: '',
+				dataType: 'json',
+				success: loadRemainHolidaySuccess
+			})
+		}	
+		function loadRemainHolidaySuccess(data){		
+			checkJsonRight(data);
+			var html = '',records = data.entity.list;
+			for(var i = 0, len = records.length; i < len; i++){
+				var record = records[i];
+				if(record.vacationType==1)var remain_rest=record.remain;
+				if(record.vacationType==2)var remain_year=record.remain;
+				if(record.vacationType==3)var remain_illness=record.remain;						
+			}	
+			if(records.length == 0 || !(records.length)){			
+				html += '<tr><td colspan="4">暂无记录</td></tr>';			
+			}else{
+				html += '<tr><td>'+(remain_rest?remain_rest+"小时":"无记录")+'</td><td>'+(remain_year?remain_year+"天":"无记录")+'</td><td>'+(remain_illness?remain_illness+"天":"无记录")+'</td><td>3次</td></tr>';
+			}		
+			$('#Remain_holiday').html(html);
+		}		
+
+		/****个人信息****/		
+		function loadPersonalInfo(){
+			ajax({
+				url: '/php/action/UserInfo.php?',
+				type: 'post',
+				data: 'method=getUserById',
+				dataType: 'json',
+				success: loadPersonalInfoSuccess
+			})
+		}	
+		function loadPersonalInfoSuccess(data){	
+			checkJsonRight(data);
+			var html = null,result = data.entity.list[0];
+			if(!result) return;
+			switch(parseInt(result.departmentType)){ 			//待以后确定
+				case 1: result.departmentType ='信息技术部';break;
+				case 2: result.departmentType ='人力资源部';break;
+				case 3: result.departmentType ='财务部';break;
+				case 4: result.departmentType ='市场部';break;
+				case 5: result.departmentType ='售后部';break;
+				case 6: result.departmentType ='产品部';break;
+				default : result.departmentType ='无记录';
+			}
+			html += '<tr><td>'+result.userName+'</td><td>'+result.mobile+'</td><td>'+result.email+'</td><td>'+result.inductionTime+'</td><td>'+result.departmentType+'</td><td>'+result.positionName+'</td></tr>';						
+			$('#personal_info').html(html);
+		}
+		/****个人工单申请记录****/			
+		function loadPersonalRecord(currentPage,type){
+			var param = [];
+			currentPage = currentPage?currentPage:1;
+			params.currentPage = currentPage;
+			param.push('currentPage='+currentPage);
+			
+			if(type==1||!type){
+				param.push('pageSize='+4);
+				ajax({
+					url: '/php/action/PersonalRecordAction.php?Type=1',
+					type: 'get',
+					data: param.join('&'),
+					dataType: 'json',
+					success: loadPersonalRecordSuccess
+				})
+			}
+			if(type==2||!type){
+				param.push('pageSize='+4);
+				ajax({
+					url: '/php/action/PersonalRecordAction.php?Type=2',
+					type: 'get',
+					data: param.join('&'),
+					dataType: 'json',
+					success: PersonalForgetRecordSuccess
+				})
+			}
+			if(type==3||!type){
+				param.push('pageSize='+2);
+				ajax({
+					url: '/php/action/PersonalRecordAction.php?Type=3',
+					type: 'get',
+					data: param.join('&'),
+					dataType: 'json',
+					success: loadCurrentRecordSuccess
+				})
+			}
+			if(type==4||!type){
+				param.push('pageSize='+2);
+				ajax({
+					url: '/php/action/PersonalRecordAction.php?Type=4',
+					type: 'get',
+					data: param.join('&'),
+					dataType: 'json',
+					success: CurrentForgetRecordSuccess
+				})
+			}
+		}
+			
+		function loadCurrentRecordSuccess(data){
+			var html = '',records = data.entity.list;
+			for(var i = 0, len = records.length; i < len; i++){
+				var record = records[i];
+				if(record.type==1) record.type='加班';
+				if(record.type==2) {
+					record.type='请假';
+					record.leaveType=leaveTypeName(parseInt(record.leaveType));
+				}
+				if(record.auditStatus==1) record.auditStatus='正在审核';	
+				else record.auditStatus='未审核';	
+				html += '<tr><td>'+record.type+(record.type=="请假" ? " ("+record.leaveType+")" : "")+'</td><td>'+record.createTime+'</td><td>'+record.beginTime+'</td><td>'+record.endTime+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td></tr>';
+			}
+			if(records.length == 0){
+				html += '<tr><td colspan="6">暂无记录</td></tr>';
+			}
+			$('#Current_personal_apply').html(html);	
+			GLOBAL['pageCount3'] = data.entity.pagetotal;
+			params.currentPage3 = data.entity.page;	//当前页
+			updatePageInfo(3);
+		}		
+		
+		function CurrentForgetRecordSuccess(data){
+			var html = '',records = data.entity.list;
+			for(var i = 0, len = records.length; i < len; i++){
+				var record = records[i];
+				if(record.auditStatus==1) record.auditStatus='正在审核';	
+				else record.auditStatus='未审核';	
+				html += '<tr><td>'+record.createTime+'</td><td>'+record.forgetTime+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td></tr>';
+			}
+			if(records.length == 0){
+				html += '<tr><td colspan="4">暂无记录</td></tr>';
+			}
+			$('#Current_personal_forget').html(html);
+			GLOBAL['pageCount4'] = data.entity.pagetotal;
+			params.currentPage4 = data.entity.page;	//当前页
+			updatePageInfo(4);
+		}
+		
+		function loadPersonalRecordSuccess(data){
+			var html = '',records = data.entity.list;
+			for(var i = 0, len = records.length; i < len; i++){
+				var record = records[i];
+				if(record.type==1) record.type='加班';
+				if(record.type==2) {
+					record.type='请假';
+					record.leaveType=leaveTypeName(parseInt(record.leaveType));
+				}
+				if(record.auditStatus==1) record.auditStatus='正在审核';	
+				else if(record.auditStatus==2) record.auditStatus='审核通过';
+				else if(record.auditStatus==3) record.auditStatus='审核不通过';	
+				else record.auditStatus='未审核';	
+				html += '<tr><td>'+record.type+(record.type=="请假" ? " ("+record.leaveType+")" : "")+'</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
+			}
+			if(records.length == 0){
+				html += '<tr><td colspan="6">暂无记录</td></tr>';
+			}
+			$('#personal_apply').html(html);
+			var stA = $('#personal_apply a');
+			for(var i = 0, leng = stA.length; i < leng; i++){
+				stA[i].onclick = function(){
+					showContactionBox(records[this.rel],1);		
+				}	
+			}	
+			GLOBAL['pageCount1'] = data.entity.pagetotal;
+			params.currentPage1 = data.entity.page;	//当前页
+			updatePageInfo(1);
+		}
+		
+		function PersonalForgetRecordSuccess(data){
+			var html = '',records = data.entity.list;
+			for(var i = 0, len = records.length; i < len; i++){
+				var record = records[i];
+				if(record.type==1) record.type='上班';
+				if(record.type==2) record.type='下班';
+				if(record.auditStatus==1) record.auditStatus='正在审核';	
+				else if(record.auditStatus==2) record.auditStatus='审核通过';
+				else if(record.auditStatus==3) record.auditStatus='审核不通过';	
+				else record.auditStatus='未审核';			
+				html += '<tr><td>'+record.type+'忘打卡</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
+			}
+			if(records.length == 0){
+				html += '<tr><td colspan="6">暂无记录</td></tr>';
+			}
+			$('#personal_forget').html(html);
+			var stA = $('#personal_forget a');
+			for(var i = 0, leng = stA.length; i < leng; i++){
+				stA[i].onclick = function(){
+					showContactionBox(records[this.rel],2);		
+				}	
+			}
+			GLOBAL['pageCount2'] = data.entity.pagetotal;
+			params.currentPage2 = data.entity.page;	//当前页
+			updatePageInfo(2);
+		}
+		
+		function showContactionBox(record,type){
+			var html ='';
+			if(type==1){
+				html +='<table width="100%" cellspacing="0" cellpadding="0" class="simple_table grid-50"><tr><td width="110">申请人：</td><td>'+record.userName+'</td></tr><tr><td width="110">申请类型：</td><td>'+record.type+(record.type=="请假" ? " ("+record.leaveType+")" : "")+'</td></tr><tr><td width="110">提交时间：</td><td>'+record.createTime+'</td></tr><tr><td width="110">起始时间：</td><td>'+record.beginTime+'</td></tr><tr><td width="110">结束时间：</td><td>'+record.endTime+'</td></tr><tr><td width="110">共计时间：</td><td>'+record.totalTime+'小时</td></tr><tr><td width="110">申请说明：</td><td>'+(record.remark ? record.remark: "无记录")+'</td></tr>';
+			}if(type==2){
+				html +='<table width="100%" cellspacing="0" cellpadding="0" class="simple_table grid-50"><tr><td width="110">申请人：</td><td>'+record.userName+'</td></tr><tr><td width="110">申请类型：</td><td>'+record.type+'忘打卡</td></tr><tr><td width="110">提交时间：</td><td>'+record.createTime+'</td></tr><tr><td width="110">忘记时间：</td><td>'+record.forgetTime+'</td></tr><tr><td width="110">到/离岗时间：</td><td>'+record.inTime+'</td></tr><tr><td width="110">申请说明：</td><td>'+(record.remark ? record.remark: "无记录")+'</td></tr>';
+			}
+			if(record.previousUserid)html +='<tr><td width="110">前一审批人：</td><td>'+record.priviousUserName+'</td></tr>';
+			
+			html +='<tr><td width="110">当前审批人：</td><td>'+record.currentUserName+'</td></tr><tr><td width="110">审批意见：</td><td>'+(record.auditRemark ? record.auditRemark : "无记录")+'</td></tr><tr><td width="110">审批状态：</td><td>'+record.auditStatus+'</td></tr>';
+			
+			if(record.auditTime)html +='<tr><td width="110">审批时间：</td><td>'+record.auditTime+'</td></tr>';
+			
+			html +='<tr><td colspan="2"></td></tr><tr><td colspan="2"><input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="关闭"/></td></tr></table>';
+
+			$('#contactionBox_table').html(html);
+			if(type==1)showBox('请假/加班申请记录',"contactionBox");
+			if(type==2)showBox('忘打卡申请记录',"contactionBox");
+		}
+		
+		function leaveTypeName(leaveType){
+			var record_leaveType = '';
+			switch(leaveType){
+				case 1: record_leaveType ='事假';break;
+				case 2: record_leaveType ='病假';break;
+				case 3: record_leaveType ='调休';break;
+				case 4: record_leaveType ='婚假';break;
+				case 5: record_leaveType ='产假';break;
+				case 6: record_leaveType ='计生假';break;
+				case 7: record_leaveType ='年休假';break;
+				case 8: record_leaveType ='丧假';break;
+				case 9: record_leaveType ='工伤假';break;
+				case 10: record_leaveType ='出差';break;
+				case 11: record_leaveType ='其他假';break;
+				default :record_leaveType ='无记录';
+			}
+			return record_leaveType;
+		}
+	
+		/****分页开始****/
+		function goPage(pageNo,type){
+			var pattern = /\d+/;
+			if(!pattern.test(parseInt(pageNo))) return;
+			GLOBAL['pageCount'] = GLOBAL['pageCount'+type];	
+			if(pageNo<1){
+				return;
+			}
+			if(pageNo>GLOBAL['pageCount']){
+				return;	
+			}
+			loadPersonalRecord(pageNo,type);
+		}
+		function updatePageInfo(type){
+			
+			GLOBAL['pageCount'] = GLOBAL['pageCount'+type];
+			params['currentPage'] = params['currentPage'+type];
+
+			if(GLOBAL['pageCount'] < 2){
+				$("#main_pagination"+type).hide(); return;
+			}else{
+				$("#main_pagination"+type).show();		
+			}
+			var html=[];
+			var i=1;
+			var j=5;
+			if(GLOBAL['pageCount']>=5){
+				i=(params['currentPage']+2)<=GLOBAL['pageCount']?((params['currentPage']-2>=1)?(params['currentPage']-2):1):(GLOBAL['pageCount']-4);
+				j=i+4;
+			}
+			else{
+				j=GLOBAL['pageCount'];
+			}
+			if(params['currentPage'] == 1)	{ html.push('<span class="page_prev">&lt;&lt; 上一页</span>');}
+			else{ 
+				 	html.push('<a onclick="goPage('+(params['currentPage']-1)+','+type);
+					html.push(')" href="javascript:void(0);" class="page_prev">&lt;&lt; 上一页</a>');
+				}
+			for(;i<=j;i++){
+				if(i==params['currentPage']){
+					html.push('<a href="javascript:void(0);" class="bg_on">');
+					html.push(i);
+					html.push('</a>');
+				}
+				else{
+					html.push('<a onclick="goPage(');
+					html.push(i+','+type);
+					html.push(');" href="javascript:void(0);" >');
+					html.push(i);
+					html.push('</a>');
+				}
+			}
+			if(params['currentPage'] == GLOBAL['pageCount'])	{html.push('<span class="page_next">下一页 &gt;&gt;</span>');	}
+			else{
+					html.push('<a onclick="goPage('+(params['currentPage']+1)+','+type);
+					html.push(')" href="javascript:void(0);" class="page_next">下一页 &gt;&gt;</a>');		
+				}
+				
+			$("#pageItem"+type).html(html.join(''));
+			$("#pageCount"+type).html(GLOBAL['pageCount']);
+		
+		}
+		/****分页结束****/
+	</script>
 </head>
 
 <body>
@@ -59,16 +367,10 @@ $(document).ready(function(e) {
 									<th>本月剩余可迟到次数</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>32小时</td>
-									<td>5天</td>
-									<td>5天</td>
-									<td>2次</td>
-								</tr>
+							<tbody id="Remain_holiday">
 							</tbody>
 						</table>
-						<div class="order_index_status mt10"><strong>正在审批的工单申请</strong></div>
+						<div class="order_index_status mt10"><strong>待审批的请假/加班申请</strong></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
 							<thead>
 								<tr>
@@ -80,26 +382,18 @@ $(document).ready(function(e) {
 									<th>审核状态</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>调休</td>
-									<td>2014-02-13</td>
-									<td>2014-02-14 09:00</td>
-									<td>2014-02-14 18:30</td>
-									<td>刘金城</td>
-									<td>正在审核</td>
-								</tr>
-								<tr>
-									<td>加班</td>
-									<td>2014-02-13</td>
-									<td>2014-02-15 09:00</td>
-									<td>2014-02-15 18:30</td>
-									<td>刘金城</td>
-									<td>正在审核</td>
-								</tr>
+							<tbody id="Current_personal_apply">
 							</tbody>
 						</table>
-						<div class="order_index_status mt10"><strong>正在审批的忘打卡申请</strong></div>
+						<!-- 分页开始 -->
+                   		<dl class="main_pagination hide" id="main_pagination3">
+		                 	<dd class="pagination">
+                         	<span id="pageItem3"></span>
+                         	<span class="page_no">共<span id="pageCount3"></span>页 到第<input id="pageObj3" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj3').val()),3);" /></span>
+                      		</dd>
+                   		</dl><br/>
+                 		<!-- 分页结束 --> 
+						<div class="order_index_status mt10"><strong>待审批的忘打卡申请</strong></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
 							<thead>
 								<tr>
@@ -109,23 +403,20 @@ $(document).ready(function(e) {
 									<th>审核状态</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>2014-02-13</td>
-									<td>2014-02-14 09:00</td>
-									<td>刘金城</td>
-									<td>正在审核</td>
-								</tr>
-								<tr>
-									<td>2014-02-13</td>
-									<td>2014-02-15 09:00</td>
-									<td>刘金城</td>
-									<td>正在审核</td>
-								</tr>
+							<tbody id="Current_personal_forget">
 							</tbody>
 						</table>
+						<!-- 分页开始 -->
+                   		<dl class="main_pagination hide" id="main_pagination4">
+		                 	<dd class="pagination">
+                         	<span id="pageItem4"></span>
+                         	<span class="page_no">共<span id="pageCount4"></span>页 到第<input id="pageObj4" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj4').val()),4);" /></span>
+                      		</dd>
+                   		</dl><br/>
+                 		<!-- 分页结束 --> 
 					</div>
 					<div class="tab_content cb">
+						<div class="order_index_status mt10"><strong>请假/加班申请记录</strong></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
 							<thead>
 								<tr>
@@ -137,57 +428,40 @@ $(document).ready(function(e) {
 									<th>操作</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="personal_apply">
+							</tbody>
+						</table> 
+						<!-- 分页开始 -->
+                   		<dl class="main_pagination hide" id="main_pagination1">
+		                 	<dd class="pagination">
+                         	<span id="pageItem1"></span>
+                         	<span class="page_no">共<span id="pageCount1"></span>页 到第<input id="pageObj1" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj1').val()),1);" /></span>
+                      		</dd>
+                   		</dl><br/>
+                 		<!-- 分页结束 --> 							
+						<div class="order_index_status mt10"><strong>忘打卡申请记录</strong></div>
+						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
+							<thead>
 								<tr>
-									<td>调休</td>
-									<td>2014-02-13</td>
-									<td>刘金城</td>
-									<td>张剑</td>
-									<td>正在审核</td>
-									<td><a href="#">查看详细</a></td>
+									<th>申请类型</th>
+									<th>申请时间</th>
+									<th>上一审批人</th>
+									<th>当前审批人</th>
+									<th>审核状态</th>
+									<th>操作</th>
 								</tr>
-								<tr>
-									<td>调休</td>
-									<td>2014-02-13</td>
-									<td>刘金城</td>
-									<td>张剑</td>
-									<td>正在审核</td>
-									<td><a href="#">查看详细</a></td>
-								</tr>
-								<tr>
-									<td>调休</td>
-									<td>2014-02-13</td>
-									<td>刘金城</td>
-									<td>张剑</td>
-									<td>正在审核</td>
-									<td><a href="#">查看详细</a></td>
-								</tr>
-								<tr>
-									<td>调休</td>
-									<td>2014-02-13</td>
-									<td>刘金城</td>
-									<td>张剑</td>
-									<td>正在审核</td>
-									<td><a href="#">查看详细</a></td>
-								</tr>
-								<tr>
-									<td>调休</td>
-									<td>2014-02-13</td>
-									<td>刘金城</td>
-									<td>张剑</td>
-									<td>正在审核</td>
-									<td><a href="#">查看详细</a></td>
-								</tr>
-								<tr>
-									<td>调休</td>
-									<td>2014-02-13</td>
-									<td>刘金城</td>
-									<td>张剑</td>
-									<td>正在审核</td>
-									<td><a href="#">查看详细</a></td>
-								</tr>
+							</thead>
+							<tbody id="personal_forget">
 							</tbody>
 						</table>
+						<!-- 分页开始 -->
+                   		<dl class="main_pagination hide" id="main_pagination2">
+		                 	<dd class="pagination">
+                         	<span id="pageItem2"></span>
+                         	<span class="page_no">共<span id="pageCount2"></span>页 到第<input id="pageObj2" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj2').val()),2);" /></span>
+                      		</dd>
+                   		</dl><br/>
+                 		<!-- 分页结束 --> 	
 					</div>
 					<div class="tab_content cb">
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
@@ -201,19 +475,15 @@ $(document).ready(function(e) {
 									<th>职位</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>陈翔</td>
-									<td>18038192222</td>
-									<td>chenx@digione.cn</td>
-									<td>2012-02-02</td>
-									<td>信息技术部</td>
-									<td>需求</td>
-								</tr>
+							<tbody id="personal_info">
 							</tbody>
 						</table>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="hide" id="contactionBox">
+			<div style=" padding:30px 20px;" id="contactionBox_table">	
 			</div>
 		</div>
 		<div class="menu">

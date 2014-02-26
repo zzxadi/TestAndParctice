@@ -14,7 +14,10 @@
 <script type="text/javascript">
 var GLOBAL_PARAM = {
 	g_boxId : $.trim(getUrlParam("boxId")),
-	operateLogo : $.trim(getUrlParam("operateLogo"))
+	operateLogo : $.trim(getUrlParam("operateLogo")),
+	leaveParamFlag : false,
+	overtimeParamFlag : false,
+	forgetParamFlag : false
 };
 /*保存工单*/
 function saveWorkOrder(operateFlag){
@@ -22,6 +25,18 @@ function saveWorkOrder(operateFlag){
 	if(operateFlag == 'leaveTrip'){
 		param = leaveTripParam();
 		method = 'addLeaveTrip';
+	}else if(operateFlag == 'overtimeRequest'){
+		param = overtimeRequestParam();
+		method = 'addOvertimeRequest';
+	}else if(operateFlag == 'forgetCard'){
+		param = forgetCardParam();
+		method = 'addForgetCard';
+	}
+	if(!GLOBAL_PARAM.leaveParamFlag && !GLOBAL_PARAM.overtimeParamFlag && !GLOBAL_PARAM.forgetParamFlag){
+		$('#prompt_'+operateFlag).text('请将信息填写完整再提交.');
+		return;
+	}else{
+		$('#prompt_'+operateFlag).text('');
 	}
 	ajax({
 		url:'/php/action/WorkOrderAction.php',
@@ -33,26 +48,87 @@ function saveWorkOrder(operateFlag){
 		timeout: 30000,
 		error: function(){},
 		success: function(data){
-			if(data.MsgCode == 1){
+			if(data.msgCode != 1){ return; }
+			$('#prompt_'+operateFlag).html('操作成功.');
+			setTimeout(function(){
+				if(parent){ parent.getWorkOrderList(); parent.getWorkOrderList(1,'forget_'); }
 				close_box();
-			}
+			},1000);
 		}
 	});
-	//close_box();
 }
 function leaveTripParam(){
 	var auditId = $('#leaveAuditId').val();
 	var leaveTimeBegin = $('#leaveTimeBegin').val();
 	var leaveTimeEnd = $('#leaveTimeEnd').val();
+	var leaveTotalTime = $('#leaveTotalTime').val();
 	var reason = $('input[name=reason]:checked').val();
 	var remark = $('#remark').val();
 	
+	if(auditId && leaveTimeBegin && leaveTimeEnd && leaveTotalTime && reason){ GLOBAL_PARAM.overtimeParamFlag = true; }
+	
 	var param = [];
+	if(reason == 10){
+		var otherReason = $('#otherReason').val();
+		if(!otherReason){ GLOBAL_PARAM.overtimeParamFlag = true; }
+		param.push('otherReason='+otherReason);
+	}
+	param.push('type=2');
 	param.push('auditId='+auditId);
-	param.push('leaveTimeBegin='+leaveTimeBegin);
-	param.push('leaveTimeEnd='+leaveTimeEnd);
+	param.push('timeBegin='+leaveTimeBegin);
+	param.push('timeEnd='+leaveTimeEnd);
+	param.push('totalTime='+leaveTotalTime);
 	param.push('reason='+reason);
 	param.push('remark='+remark);
+	
+	return param.join('&');
+}
+function overtimeRequestParam(){
+	var auditId = $('#overtimeAuditId').val();
+	var overtimeReason = $('#overtimeReason').val();
+	var overtimeBegin = $('#overtimeBegin').val();
+	var overtimeEnd = $('#overtimeEnd').val();
+	var overtimeTotalTime = $('#overtimeTotalTime').val();
+	
+	if(auditId && overtimeReason && overtimeBegin && overtimeEnd && overtimeTotalTime){ GLOBAL_PARAM.forgetParamFlag = true; }
+	
+	var param = [];
+	param.push('type=1');
+	param.push('auditId='+auditId);
+	param.push('remark='+overtimeReason);
+	param.push('timeBegin='+overtimeBegin);
+	param.push('timeEnd='+overtimeEnd);
+	param.push('totalTime='+overtimeTotalTime);
+	
+	return param.join('&');
+}
+function forgetCardParam(){
+	var auditId = $('#forgetCardAuditId').val();
+	var forgetCardTime = $('#forgetCardTime').val();
+	var forgetType = $('input[name=forgetCard]:checked').val();
+	
+	var arriveTimeHour = $('#arriveTimeHour').val();
+	var arriveTimeMin = $('#arriveTimeMin').val();
+	var leaveTimeHour = $('#leaveTimeHour').val();
+	var leaveTimeMin = $('#leaveTimeMin').val();
+
+	var inTime = forgetType == 1 ? (arriveTimeHour+':'+arriveTimeMin) : (forgetType == 2 ? (leaveTimeHour+':'+leaveTimeMin) : '');
+	var forgetCardRemark = $('#forgetCardRemark').val();
+	
+	if(auditId && forgetCardTime && forgetType && inTime){ GLOBAL_PARAM.leaveParamFlag = true; }
+	
+	if(forgetType == 1){
+		if(!arriveTimeHour || !arriveTimeMin){ GLOBAL_PARAM.leaveParamFlag = false; }
+	}else if(forgetType == 2){
+		if(!leaveTimeHour || !leaveTimeMin){ GLOBAL_PARAM.leaveParamFlag = false; }
+	}
+	
+	var param = [];
+	param.push('type='+forgetType);
+	param.push('auditId='+auditId);
+	param.push('forgetTime='+forgetCardTime);
+	param.push('inTime='+inTime);
+	param.push('remark='+forgetCardRemark);
 	
 	return param.join('&');
 }
@@ -67,15 +143,15 @@ function loadTimeInput(){
 		showButtonPanel:false,showTime:false
 	});
 	$('#leaveTimeEnd').datetimepicker({
-		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:59',constrainInput:true,
+		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:00',constrainInput:true,
 		showButtonPanel:false,showTime:false
 	});
 	$('#overtimeBegin').datetimepicker({
-		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:59',constrainInput:true,
+		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:00',constrainInput:true,
 		showButtonPanel:false,showTime:false
 	});
 	$('#overtimeEnd').datetimepicker({
-		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:59',constrainInput:true,
+		dateFormat: 'yy-mm-dd',timeFormat:'HH:mm:00',constrainInput:true,
 		showButtonPanel:false,showTime:false
 	});
 	$('#forgetCardTime').datepicker({dateFormat: 'yy-mm-dd',constrainInput:true});
@@ -89,19 +165,27 @@ function loadInitEvent(){
 	}else if(GLOBAL_PARAM.operateLogo == 'forgetCard'){
 		$('.workorder_forget_card').show();
 	}
-	//选择时间时间(上午/下午)
+	//选择时间(上午/下午)
 	$('input[name=forgetCard]').click(function(){
 		if($(this).val()==1){
 			 $('#arriveTime')[0].checked = true;
 			 $('#leaveTime')[0].checked = false;
-			 $('#arriveTimeStr')[0].disabled = false;
-			 $('#leaveTimeStr')[0].disabled = true;
+			 $('#arriveTimeHour')[0].disabled = false;
+			 $('#arriveTimeMin')[0].disabled = false;
+			 $('#leaveTimeHour').val('')[0].disabled = true;
+			 $('#leaveTimeMin').val('')[0].disabled = true;
 		}else if($(this).val()==2){
 			$('#leaveTime')[0].checked = true;
 			$('#arriveTime')[0].checked = false; 
-			$('#leaveTimeStr')[0].disabled = false;
-			$('#arriveTimeStr')[0].disabled = true;
+			$('#leaveTimeHour')[0].disabled = false;
+			$('#leaveTimeMin')[0].disabled = false;
+			$('#arriveTimeHour').val('')[0].disabled = true;
+			$('#arriveTimeMin').val('')[0].disabled = true;
 		}
+	});
+	$('input[name=reason]').click(function(){
+		if($(this).val() == 10){ $('#otherReason').show(); }
+		else{ $('#otherReason').hide(); }
 	});
 }
 /*加载页面信息*/
@@ -131,7 +215,7 @@ $(function(){
     	<dd><input type="text" id="leaveTimeBegin" class="txt grid-12" />
 			至
 			<input type="text" id="leaveTimeEnd" class="txt grid-12" />
-			<span>共8小时（1天）</span>
+			<span>总时间<input type="text" id="leaveTotalTime" class="input_total_time" />小时</span>
 			&nbsp;&nbsp;<span id="leaveTimeErr" class="cred"></span>
 		</dd>
 	</dl>
@@ -148,6 +232,7 @@ $(function(){
    			<input type="radio" value="8" id="reason_8" name="reason"><label for="reason_8">丧假</label><br/>
    			<input type="radio" value="9" id="reason_9" name="reason"><label for="reason_9">工伤假</label>
    			<input type="radio" value="10" id="reason_10" name="reason"><label for="reason_10">其他假</label>
+   			<input type="text" id="otherReason" class="txt grid-12 hide" />
    		</dd>
    </dl>
    <dl>
@@ -157,7 +242,7 @@ $(function(){
    <p class="workorder_save_button">
    	<input id="saveButton" type="button" onclick="saveWorkOrder('leaveTrip')" class="mybtn" value="提交" />
    	<input id="resetButton" type="button" onclick="close_box()" class="mybtn btn_cancel" value="取消" />
-   	<span id="promptMessage" class="cred"></span>
+   	<span id="prompt_leaveTrip" class="cred"></span>
    </p>
    </div>
 <!-- 请假/出差单结束 -->
@@ -182,14 +267,14 @@ $(function(){
     	<dd><input type="text" id="overtimeBegin" class="txt grid-12" />
 			至
 			<input type="text" id="overtimeEnd" class="txt grid-12" />
-			<span>共8小时（1天）</span>
+			<span>总时间<input type="text" id="overtimeTotalTime" class="input_total_time" />小时</span>
 			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
 		</dd>
 	</dl>
 	<p class="workorder_save_button">
    		<input id="saveButton" type="button" onclick="saveWorkOrder('overtimeRequest')" class="mybtn" value="提交" />
    		<input id="resetButton" type="button" onclick="close_box()" class="mybtn btn_cancel" value="取消" />
-   		<span id="promptMessage" class="cred"></span>
+   		<span id="prompt_overtimeRequest" class="cred"></span>
    	</p>
    </div>
 <!-- 加班申请单结束 -->
@@ -216,10 +301,12 @@ $(function(){
    	<dl>
    		<dt><span class="cred">*</span>情况说明：</dt>
     	<dd>
-    		<input type="checkbox" class="txt" disabled="disabled" value="1" id="arriveTime" name="condition"><label for="arriveTime">到岗时间：</label>
-    		<input type="text" class="txt grid-10" id="arriveTimeStr" disabled="disabled" />
-    		<input type="checkbox" class="txt" disabled="disabled" value="2" id="leaveTime" name="condition"><label for="leaveTime">离岗时间：</label>
-    		<input type="text" class="txt grid-10" id="leaveTimeStr" disabled="disabled"/><span class="gray"> 请填写具体时间(XX时XX分)</span>
+    		<input type="checkbox" disabled="disabled" value="1" id="arriveTime" name="condition"><label for="arriveTime">到岗时间：</label>
+    		<input type="text" class="input_total_time" id="arriveTimeHour" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled" /> 时
+    		<input type="text" class="input_total_time" id="arriveTimeMin" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled" /> 分
+    		<input type="checkbox" disabled="disabled" value="2" id="leaveTime" name="condition"><label for="leaveTime">离岗时间：</label>
+    		<input type="text" class="input_total_time" id="leaveTimeHour" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled"/> 时
+    		<input type="text" class="input_total_time" id="leaveTimeMin" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled"/> 分
 			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
 		</dd>
 	</dl>
@@ -230,7 +317,7 @@ $(function(){
    	<p class="workorder_save_button">
    		<input id="saveButton" type="button" onclick="saveWorkOrder('forgetCard')" class="mybtn" value="提交" />
    		<input id="resetButton" type="button" onclick="close_box()" class="mybtn btn_cancel" value="取消" />
-   		<span id="promptMessage" class="cred"></span>
+   		<span id="prompt_forgetCard" class="cred"></span>
    	</p>
    </div>
 <!-- 忘打卡结束 -->

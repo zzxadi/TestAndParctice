@@ -13,6 +13,9 @@ class User{
 	private $induction_time;
 	private $create_time;
 	private $status;
+	public function setId($id){
+		$this->id = $id;
+	}
 	public function setUserName($user_name){
 		$this->user_name = $user_name;
 	}

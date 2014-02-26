@@ -10,11 +10,15 @@ class VacationRecord{
 	private $leave_type;	//请假类型：1：事假，2：病假，3：调休，4：婚嫁，5：产假，6：计生假，7：年休假，8：丧假，9：工伤假，10：出差，11：其他假
 	private $leave_name;	//选择其他：填写请假类型，别的无需填写
 	private $remark;	//备注、加班原因
-	private $audit_status;	//审核状态1：未审核，2：审核通过，3：审核不通过
+	private $audit_status;	//审核状态0：未审核，1：审核中，2：审核通过，3：审核不通过
 	private $current_userid;	//当前审核人ID
 	private $previous_userid;	//前一审核人ID
 	private $audit_time;	//审核时间
 	private $audit_remark;	//审核备注
+	
+	public function setId($id){
+		$this->id = $id;
+	}
 	public function setUserId($user_id){
 		$this->user_id = $user_id;
 	}

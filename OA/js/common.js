@@ -36,7 +36,7 @@ function ajax(stAjaxOB)
 		//等待图片为32*32的格式，所以要减去16
 		var iTop=stPosition.top+stIDOB.offsetHeight/2-16;
 		var iLeft=stPosition.left+stIDOB.offsetWidth/2-16;
-		var src='/images/module/loadingAnimation.gif';
+		var src='/images/base/loadingAnimation.gif';
 		var sImg='<img id="WaitImg'+sTime+'" style="border:0;position:';
 		if(stIDOB.tagName.toLowerCase()=="body"){
 			sImg+="fixed;top:50%;left:50%;margin-left:-16px;margin-top:-16px;";
@@ -44,7 +44,7 @@ function ajax(stAjaxOB)
 			sImg+='absolute;top:'+iTop+'px;left:'+iLeft+'px;';
 		}
 		var pathName=window.location.pathname;
-		if(pathName=='/'||pathName=='/index.html')src='/images/module/loadingAnimation_body.gif';
+		if(pathName=='/'||pathName=='/index.html')src='/images/base/loadingAnimation.gif';
 		sImg+='_position:absolute;" src="'+src+'"/>';
 		stAjaxOB.waitPicId="WaitImg"+sTime;
 		$("body").append(sImg);

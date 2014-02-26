@@ -9,6 +9,9 @@ class SystemMenu{
 	private $menu_reg;
 	private $menu_index;
 	private $menu_remark;
+	public function setId($id){
+		$this->id = $id;
+	}
 	public function setMenuName($menu_name){
 		$this->menu_name = $menu_name;
 	}

@@ -10,18 +10,139 @@
 <link type="text/css" href="/css/module.css" rel="stylesheet" />
 <link type="text/css" href="/css/buyer.css" rel="stylesheet" />
 <script type="text/javascript">
+var GLOBAL_PARAM = {
+	currentPage : 1,
+	pageSize : 5,
+	pageCount : 0,
+	forget_currentPage : 1,
+	forget_pageSize : 3,
+	forget_pageCount : 0
+};
 function operateWorkOrder(operateLogo){
 	var message = operateLogo == 'leaveTrip'? '请假/出差单' : (operateLogo == 'overtimeRequest' ? '加班申请单' : '忘打卡');
 	showBox(message,'/attendance/workorder-mng.html?width=680&height=430&operateLogo='+operateLogo);
 }
+function showDetail(id,operateLogo){
+	if(!operateLogo || !id){
+		showBox('提示信息','信息错误,请查看其他信息','alert');
+		return;
+	}
+	var message = operateLogo == 'leaveTrip'? '请假/出差单详情' : (operateLogo == 'overtimeRequest' ? '加班申请单详情' : '忘打卡详情');
+	showBox(message,'/attendance/workorder-detail.html?width=530&height=450&operateLogo='+operateLogo+'&id='+id);
+}
+function getWorkOrderList(currentPage,str){
+	str = str ? str : '';
+	currentPage = currentPage ? currentPage : 1;
+	GLOBAL_PARAM[str+'currentPage'] = currentPage;
+	var param = [];
+	var operateMethod = str ? 'forgetCardList' : 'vacationList';
+	param.push('currentPage='+currentPage);
+	param.push('pageSize='+GLOBAL_PARAM[str+'pageSize']);
+	param.push('method='+operateMethod);
+	
+	ajax({
+		waitTagId: 'workOrderList',
+		url:'/php/action/WorkOrderAction.php',
+		type: 'post',
+		data: param.join('&'),
+		dataType: 'json',
+		async: false,
+		cache: false,
+		timeout: 30000,
+		error: function(){},
+		success: getWorkOrderListSuccess
+	},str);
+}
+function getWorkOrderListSuccess(data,str){
+	checkJsonRight(data);
+	if(data.msgCode != 1){ return; }
+	var html = '',list = data.entity.list;
+	if(list.length>0){
+		if(str == 'forget_'){	//忘打卡
+			for(var i=0,len=list.length; i<len; i++){
+				var resultList = list[i],
+					type = resultList.type == 1 ? '上班' : (resultList.type == 2 ? '下班' : '暂无'),
+				    auditStatus = resultList.auditStatus == 2 ? '审核通过' : (resultList.auditStatus == 3 ? '审核不通过' : (resultList.auditStatus == 1 ? '审核中' : '未审核'));
+					priviousUserName = resultList.priviousUserName ? resultList.priviousUserName : '暂无';
+				html += '<tr><td>'+type+'</td>' + '<td>'+resultList.createTime+'</td>' + '<td>' + resultList.forgetTime+'</td>' + '<td>'+resultList.inTime+'</td>'
+						+ '<td>'+auditStatus+'</td>' + '<td>'+priviousUserName+'</td>' + '<td>'+resultList.currentUserName+'</td>'
+						+ '<td><a class="ablue" href="javascript:void(0)" onclick="showDetail('+resultList.id+',\'forgetCard\')">查看</a></td></tr>';
+			}
+		}else{
+			for(var i=0,len=list.length; i<len; i++){	//请假/出差单、加班申请单
+				var resultList = list[i],
+					type = resultList.type == 1 ? '加班' : (resultList.type == 2 ? '请假/出差' : '暂无'),
+					auditStatus = resultList.auditStatus == 2 ? '审核通过' : (resultList.auditStatus == 3 ? '审核不通过' : (resultList.auditStatus == 1 ? '审核中' : '未审核')),
+					priviousUserName = resultList.priviousUserName ? resultList.priviousUserName : '暂无',
+					oprateStr = resultList.type == 1 ? 'overtimeRequest' : (resultList.type == 2 ? 'leaveTrip' : '');
+				html += '<tr><td>'+type+'</td>' + '<td>'+resultList.createTime+'</td>' 
+						+ '<td>'+auditStatus+'</td>' + '<td>'+priviousUserName+'</td>' + '<td>'+resultList.currentUserName+'</td>'
+						+ '<td><a class="ablue" href="javascript:void(0)" onclick="showDetail('+resultList.id+',\''+oprateStr+'\')">查看</a></td></tr>';
+			}
+		}
+	}else{
+		var colspan = str == 'forget_' ? 8 : 6;
+		html = '<tr><td colspan="'+colspan+'">暂无数据</td></tr>';
+	}
+	$('#'+str+'workOrderList').html(html);
+	GLOBAL_PARAM[str+'pageCount'] = data.entity.pagetotal;
+	GLOBAL_PARAM[str+'currentPage'] = data.entity.currentpage;	//当前页
+	updatePageInfo(str);
+}
+/****分页开始****/
+function goPage(pageNo,str){
+	var pattern = /\d+/;
+	if(!pattern.test(parseInt(pageNo))) return;
+	if(pageNo<1){
+		return;
+	}
+	if(pageNo>GLOBAL_PARAM[str+'pageCount']){
+		return;	
+	}
+	getWorkOrderList(pageNo,str);
+}
+function updatePageInfo(str){
+	str = str ? str : '';
+	if(GLOBAL_PARAM[str+'pageCount'] < 2) {$('.'+str+'workOrderPage').hide(); return;}
+	else{ $('.'+str+'workOrderPage').show(); }
+	var html=[],i=1,j=5;
+	if(GLOBAL_PARAM[str+'pageCount']>=5){
+		i=(GLOBAL_PARAM[str+'currentPage']+2)<=GLOBAL_PARAM[str+'pageCount']?((GLOBAL_PARAM[str+'currentPage']-2>=1)?(GLOBAL_PARAM[str+'currentPage']-2):1):(GLOBAL_PARAM[str+'pageCount']-4);
+		j=i+4;
+	}else{
+		j=GLOBAL_PARAM[str+'pageCount'];
+	}
+	if(GLOBAL_PARAM[str+'currentPage'] == 1){ html.push('<span class="page_prev">&lt;&lt; 上一页</span>');}
+	else{ html.push('<a onclick="goPage('+(GLOBAL_PARAM[str+'currentPage']-1)+',\''+str+'\')" href="javascript:void(0);" class="page_prev">&lt;&lt; 上一页</a>'); }
+	for(;i<=j;i++){
+		if(i==GLOBAL_PARAM[str+'currentPage']){
+			html.push('<a href="javascript:void(0);" class="bg_on">');
+			html.push(i);
+			html.push('</a>');
+		}else{
+			html.push('<a onclick="goPage(');
+			html.push(i);
+			html.push(',\''+str+'\'');
+			html.push(');" href="javascript:void(0);" >');
+			html.push(i);
+			html.push('</a>');
+		}
+	}
+	if(GLOBAL_PARAM[str+'currentPage'] == GLOBAL_PARAM[str+'pageCount']){ html.push('<span class="page_next">下一页 &gt;&gt;</span>'); }
+	else {html.push('<a onclick="goPage('+(parseInt(GLOBAL_PARAM[str+'currentPage'])+1)+',\''+str+'\')" href="javascript:void(0);" class="page_next">下一页 &gt;&gt;</a>');}
+	$('#'+str+'pageItem').html(html.join(''));
+	$('#'+str+'pageCount').html(GLOBAL_PARAM[str+'pageCount']);
+}
+/****分页结束****/
 $(function(){
 	loadHtml("headerId","/include/header.html");
 	loadHtml("left_menu_content","/include/leftmenu.html");
 	loadHtml("footerId","/include/footer.html");
+	getWorkOrderList();
+	getWorkOrderList(1,'forget_');
 });
 </script>
 </head>
-
 <body>
 <div id="headerId"></div>
 <div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
@@ -36,44 +157,58 @@ $(function(){
 					<input type="button" value="加班申请单" onclick="operateWorkOrder('overtimeRequest')" class="mybtn" />
 					<input type="button" value="忘打卡" onclick="operateWorkOrder('forgetCard')" class="mybtn" />
 				</div>
-				<table width="80%" cellspacing="0" cellpadding="0" class="simple_table workorder_table">
-                  <thead>
-                     <tr>
-                        <th width="100">工单类型</th>
-                        <th width="100">提交时间</th>
-                        <th width="80">状态</th>
-                        <th width="100">前处理人</th>
-                        <th width="100">当前处理人</th>
-                        <th width="70">操作</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                  	<tr>
-                  		<td>请假/出差单</td>
-                  		<td>2014-02-14</td>
-                  		<td>审批中</td>
-                  		<td>张三</td>
-                  		<td>李四</td>
-                  		<td><a href="javascript:void(0)">查看</a></td>
-               		</tr>
-                  	<tr>
-                  		<td>加班申请单</td>
-                  		<td>2014-02-14</td>
-                  		<td>审批中</td>
-                  		<td>张三</td>
-                  		<td>李四</td>
-                  		<td><a href="javascript:void(0)">查看</a></td>
-               		</tr>
-                  	<tr>
-                  		<td>忘打卡单</td>
-                  		<td>2014-02-14</td>
-                  		<td>审批中</td>
-                  		<td>张三</td>
-                  		<td>李四</td>
-                  		<td><a href="javascript:void(0)">查看</a></td>
-               		</tr>
-                  </tbody>   
-               </table>
+				<div class="workorder_table">
+					<div class="workorder_title_status"><strong>假期记录信息</strong></div>
+					<table width="100%" cellspacing="0" cellpadding="0" class="simple_table workorder_table">
+	                  <thead>
+	                     <tr>
+	                        <th width="100">工单类型</th>
+	                        <th width="100">提交时间</th>
+	                        <th width="80">审核状态</th>
+	                        <th width="100">前处理人</th>
+	                        <th width="100">当前处理人</th>
+	                        <th width="70">操作</th>
+	                     </tr>
+	                  </thead>
+	                  <tbody id="workOrderList"></tbody>   
+	               </table>
+	               <!-- 分页开始 -->
+                   <dl class="main_pagination workOrderPage hide">
+		              <dd class="pagination">
+                         <span id="pageItem"></span>
+                         <span class="page_no">共<span id="pageCount"></span>页 到第
+                         <input id="pageObj" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 
+                         <input type="button" value="确定" class="page_btn" onclick="goPage($.trim($('#pageObj').val()));" /></span>
+                      </dd>
+                   </dl>
+                 <!-- 分页结束 --> 
+	               
+	               <div class="workorder_title_status mt10"><strong>忘打卡记录信息</strong></div>
+					<table width="100%" cellspacing="0" cellpadding="0" class="simple_table workorder_table">
+	                  <thead>
+	                     <tr>
+	                        <th width="100">忘记类型</th>
+	                        <th width="100">提交时间</th>
+	                        <th width="100">忘记时间</th>
+	                        <th width="100">到/离岗时间</th>
+	                        <th width="80">审核状态</th>
+	                        <th width="100">前处理人</th>
+	                        <th width="100">当前处理人</th>
+	                        <th width="70">操作</th>
+	                     </tr>
+	                  </thead>
+	                  <tbody id="forget_workOrderList"></tbody>   
+	               </table>
+	               <dl class="main_pagination forget_workOrderPage">
+		              <dd class="pagination">
+                         <span id="forget_pageItem"></span>
+                         <span class="page_no">共<span id="forget_pageCount"></span>页 到第
+                         <input id="forget_pageObj" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 
+                         <input type="button" value="确定" class="page_btn" onclick="goForgetPage($.trim($('#forget_pageObj').val()));" /></span>
+                      </dd>
+                   </dl>
+                 <!-- 分页结束 --> 
+               </div>
 			</div>
 			</div>
 		</div>
@@ -86,6 +221,5 @@ $(function(){
 	</div>
 </div>
 <div id="footerId"></div>
-
 </body>
 </html>

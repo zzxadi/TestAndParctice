@@ -18,7 +18,11 @@
 			loadHtml("footerId","/include/footer.html");
 
 			bindEvent();
-			$('#indTime').datepicker({dateFormat: 'yy-mm-dd',constrainInput:true,maxDate: new Date()});
+			$('#indTime').datepicker({dateFormat: 'yy-mm-dd',constrainInput:true,maxDate: new Date(),onClose: validate.validateIndTime,});
+			var id = getUrlParam('id');
+			if(id){
+				setData(id);
+			}
 		});
 
 		function bindEvent(){
@@ -26,7 +30,6 @@
 						   .on('blur', '#loginname', validate.validateLoginname)
 						   .on('blur', '#mobile', validate.validateMobile)
 						   .on('blur', '#email', validate.validateEmail)
-						   .on('blur', '#dept', validate.validateDept)
 						   .on('blur', '#position', validate.validatePosition)
 						   .on('click', '#submit', submitForm)
 						   .on('click', '#reset', resetForm);
@@ -79,17 +82,6 @@
 					$emailMsg.html('').attr('class', 'right');
 					return true;					
 				},
-				validateDept : function(){
-					var dept = $.trim($('#dept').val()),
-						$deptMsg = $('#deptMsg');
-
-					if(!dept){
-						$deptMsg.html('部门不能为空').attr('class', 'error');
-						return false;
-					}
-					$deptMsg.html('').attr('class', 'right');
-					return true;					
-				},
 				validatePosition : function(){
 					var position = $.trim($('#position').val()),
 						$positionMsg = $('#positionMsg');
@@ -100,20 +92,105 @@
 					}
 					$positionMsg.html('').attr('class', 'right');
 					return true;					
-				}
+				},
+				validateIndTime : function(){
+					var indTime = $.trim($('#indTime').val()),
+						$indTimeMsg = $('#indTimeMsg');
+
+					if(!indTime){
+						$indTimeMsg.html('入职时间不能为空').attr('class', 'error');
+						return false;
+					}
+					$indTimeMsg.html('').attr('class', 'right');
+					return true;					
+				},				
 			}				
 		})();
 
-		function submitForm(){
-			var param = [];
+		function validateData(){
+			if(!validate.validateUsername()){
+				locationHash('username');
+				return false;
+			}
+			if(!validate.validateLoginname()){
+				locationHash('loginname');
+				return false;
+			}
+			if(!validate.validateMobile()){
+				locationHash('mobile');
+				return false;
+			}
+			if(!validate.validateEmail()){
+				locationHash('email');
+				return false;
+			}
+			if(!validate.validatePosition()){
+				locationHash('position');
+				return false;
+			}
+			if(!validate.validateIndTime()){
+				locationHash('indTime');
+				return false;
+			}
+			return true;
+		}
 
+		function setData(id){
+			var param = [];
+				param.push('id='+id),
+				param.push('method=getUserById');
+			$.data(document, 'id', id);
 			ajax({
 				url:'/php/action/UserInfo.php',
 				type:'post',//非必须.默认get
 				data:param.join('&'),
 				dataType:'json',//非必须.默认text
-				success:function(){
-					
+				success:function(data){
+					var record = data.entity.list[0];
+					$('#roleId').val(record.roleId);
+					$('#username').val(record.userName);
+					$('#loginname').val(record.loginName);
+					$('#mobile').val(record.mobile);
+					$('#email').val(record.email);
+					$('#dept').val(record.departmentType)
+					$('#position').val(record.positionName);
+					$('#indTime').val(record.inductionTime);
+				}
+			})
+		}
+
+		function submitForm(){
+			if(!validateData()){
+				return false;
+			}
+			var param = [];
+			param.push('roleId='+$('#roleId').val());
+			param.push('username='+$('#username').val());
+			param.push('loginname='+$('#loginname').val());
+			param.push('mobile='+$('#mobile').val());
+			param.push('email='+$('#email').val());
+			param.push('sex='+$('input[name="sex"]:checked').val());
+			param.push('dept='+$('#dept').val());
+			param.push('position='+$('#position').val());
+			param.push('indTime='+$('#indTime').val());
+			if($.data(document, 'id')){
+				param.push('method=doModify');
+				param.push('id='+$.data(document, 'id'));
+			}
+			else{
+				param.push('method=doAdd');
+			}
+			ajax({
+				url:'/php/action/UserInfo.php',
+				type:'post',//非必须.默认get
+				data:param.join('&'),
+				dataType:'json',//非必须.默认text
+				success:function(data){
+					if(data.msgCode==1){
+						showBox('提示', '操作成功', 'alert', function(){
+							 $('#reset').click();
+						});
+					}
 				}
 			})
 		}
@@ -135,11 +212,11 @@
 					<form method="post" class="user_form">
 						<dl>
 							<dt><em class="cred">*</em>角色：</dt>
-							<dd><select class="select"><option value="0" selected>普通员工</option><option value="1">管理者</option></select></dd>
+							<dd><select class="select" id="roleId"><option value="0" selected>普通员工</option><option value="1">管理者</option></select></dd>
 						</dl>
 						<dl>
 							<dt><em class="cred">*</em>姓名：</dt>
-							<dd><input type="text" name="username" class="txt grid-20" id="username" autocomplete="off"><span id="usernameMsg"></span></dd>
+							<dd><input type="text" name="username" class="txt grid-20" id="username"><span id="usernameMsg"></span></dd>
 						</dl>
 						<dl>
 							<dt><em class="cred">*</em>登录名：</dt>
@@ -155,11 +232,16 @@
 						</dl>
 						<dl>
 							<dt><em class="cred">*</em>性别：</dt>
-							<dd><input type="radio" name="sex" value="0" checked>男&nbsp;&nbsp;<input type="radio" name="sex" value="1">女</dd>
+							<dd><input type="radio" name="sex" value="0" checked id="sex">男&nbsp;&nbsp;<input type="radio" name="sex" value="1">女</dd>
 						</dl>
 						<dl>
 							<dt><em class="cred">*</em>部门：</dt>
-							<dd><input type="text" name="dept" class="txt grid-20" id="dept"><span id="deptMsg"></span></dd>
+							<dd>
+							<select class="select" id="dept">
+								<option value="1">IT</option>
+								<option value="2">HR</option>
+							</select>
+							</dd>
 						</dl>
 						<dl>
 							<dt><em class="cred">*</em>职位：</dt>
@@ -169,7 +251,7 @@
 							<dt><em class="cred">*</em>入职时间：</dt>
 							<dd><input type="text" class="txt grid-20" id="indTime" /> <span id="indTimeMsg"></span></dd>
 						</dl>
-						<p><input type="submit" class="mybtn btn" value="提交" id="submit"><input type="reset" id="reset" class="btn reset" value="重置"></p>
+						<p><input type="button" class="mybtn btn" value="提交" id="submit"><input type="reset" id="reset" class="btn reset" value="重置"></p>
 					</form>
 				</div>
 			</div>

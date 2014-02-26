@@ -4,20 +4,23 @@ function isLogin(){
 	if($iUserID > 0)return true;
 	else return false;
 }
-function login($XXX){
-	if(!isLogin($sMobile))return false;
-	$sCookie = authcode($XXX,'ENCODE','密钥');
-	setcookie('hsq_auth',$sCookie, -86400,'/','XXXX.com');	
+function loginCookie($userId){
+	$userId = (int)($userId);
+	if(empty($userId))return false;
+	$sCookie = authcode($userId,'ENCODE','google');
+	setcookie('login_id',$sCookie,time()+3600*24,'/');
 	return true;
 }
+
 function exitLogin(){
-	setcookie('hsq_auth','', -86400,'/','XXXX.com');	
+	setcookie('login_id','', -86400,'/');	
 	return true;
 }
-function getUserID(){
+
+function getUserId(){
 	$iUserID = 0;
-	if(isset($_COOKIE["hsquid_auth"])){
-		$iUserID = (int)authcode($_COOKIE["hsquid_auth"],'DECODE','密钥');
+	if(isset($_COOKIE["login_id"])){
+		$iUserID = (int)authcode($_COOKIE["login_id"],'DECODE','google');
 	}
 	return $iUserID;
 }

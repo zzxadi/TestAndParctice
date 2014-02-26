@@ -88,11 +88,14 @@ class MysqlConn{
 		$value = '';
 		while( list($key,$val) = each($dataArray))
 			$value .= "$key = '$val',";
-		$value .= substr( $value,0,-1);
-		$sql = "update $table set $value where 1=1 and $condition";
+		$value = substr( $value,0,-1);
+		$sql = "update $table set $value where $condition";
 		$this->write_log('更新 '.$sql);
-		if(!$this->query($sql)) return false;
-			return true;
+		$this->query($sql);
+		if(mysql_affected_rows() < 1){
+			return false;
+		}
+		return true;
 	}
 	//删除
 	public function delete( $table,$condition="") {

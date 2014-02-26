@@ -81,7 +81,7 @@ function isIDArray($stID){
 }
 function jsonMake($stArray){
 	$iStatus = isArray($stArray);
-	if($iStatus == 0)return $stArray;
+	if($iStatus == 0)return '"'.$stArray.'"';
 	else if($iStatus == 1)return jsonMakeIndexArray($stArray);
 	else if($iStatus == 2)return jsonMakeKeyArray($stArray);
 }
@@ -177,23 +177,25 @@ function dataChangeName($sName){
 	return implode("",$stNewName);
 }
 function dataPrint($stInfo){
-	$iDataType = (int)$stInfo['DataType'];
-	$stEntity = $stInfo['Entity'];
-	$iMsgCode = (int)$stInfo['MsgCode'];
-	$sMsg = $stInfo['Msg'];
-	$stFieldArray = $stInfo["FieldArray"];
+	if(!isset($stInfo['dataType']))$stInfo['dataType'] = 0;
+	if(!isset($stInfo['fieldArray']))$stInfo['fieldArray'] = array();
+	$iDataType = (int)$stInfo['dataType'];
+	$stEntity = $stInfo['entity'];
+	$iMsgCode = (int)$stInfo['msgCode'];
+	$sMsg = $stInfo['msg'];
+	$stFieldArray = $stInfo["fieldArray"];
 	$sContent = "null";
 	if($iDataType == 0){
 		if($stEntity !== false){
 			$sContent = jsonMake($stEntity);	
 		}
-		echo '{"Entity":'.$sContent.',"MsgCode":'.$iMsgCode.',"Msg":"'.$sMsg.'"}';
+		echo '{"entity":'.$sContent.',"msgCode":'.$iMsgCode.',"msg":"'.$sMsg.'"}';
 	}else if($iDataType == 1){
 		if($stEntity !== false){
 			$sContent = xmlMake($stEntity);
 		}
 		header("Content-type: text/xml");
-		echo '<?xml version="1.0" encoding="utf-8"?><Root><Entity>'.$sContent.'</Entity><MsgCode>'.$iMsgCode.'</MsgCode><Msg><![CDATA['.$sMsg.']]></Msg></Root>';		
+		echo '<?xml version="1.0" encoding="utf-8"?><root><entity>'.$sContent.'</entity><msgCode>'.$iMsgCode.'</msgCode><msg><![CDATA['.$sMsg.']]></msg></root>';		
 	}
 	exit;
 }

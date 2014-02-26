@@ -6,6 +6,9 @@ a:hover{ color:#007bc7; text-decoration:underline;}
 .mt10{ margin-top:10px}
 .mb10{ margin-bottom:10px;}
 .ml20{ margin-left:20px;}
+.p10{ padding:10px;}
+.gray{color:#A9A9A9}
+.select {border: 1px solid #E7E7E7; padding: 3px 5px;vertical-align: middle;}
 .header{ height:50px; background-color:#63adee; padding-left:30px;}
 .header .welcome{color:#FFF; padding-left:30px;}
 .header a.logout{ color: #000; margin:0 4px; text-decoration:underline;}
@@ -62,5 +65,13 @@ a:hover{ color:#007bc7; text-decoration:underline;}
 .tableLike dt{ float:left; display:inline;}
 .tableLike dt { width:110px; padding:5px 0;}
 .tableLike dd { margin-left:110px; padding:5px 0;}
-
-.gray{color:#A9A9A9}
+/*权限分配*/
+.role_menu { border:1px solid #E3E4E4;}
+.role_menu .title{ line-height:32px; padding-left:20px; font-size:14px; border-bottom:1px solid #666;}
+.role_menu h4{padding:0 0 0 25px;height:30px;line-height:30px;font-size:12px;font-weight:700;border-bottom:1px solid #F3F3F3; background-color:#e3e4e4; background-image:url(../images/base/icon_menu.gif);background-position:10px 11px;background-repeat:no-repeat;cursor:pointer}
+.role_menu h4.on{background-position:10px -19px}
+.role_menu h4.cur{background-color:#fce6e6}
+.role_menu ul{padding:5px 0}
+.role_menu li{height:24px}
+.role_menu li label{display:block;padding:0 0 0 5px;line-height:24px;color:#000}
+.role_menu li.cur label,.role_menu li label:hover{background-color:#cae4fc;text-decoration:none;}

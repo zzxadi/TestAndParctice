@@ -138,7 +138,7 @@ function checkJsonRight(data){
 	//failureCode= 3-- 登录超时
 	var length=arguments.length;
 	var href='';
-	var url1='/login/login.html';
+	var url1='/login.html';
 	var url2=top.location.href;
 	var target='_top';
 	if(!data||!data.msgCode){

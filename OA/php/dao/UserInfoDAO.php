@@ -1,21 +1,30 @@
 <?php
 	class UserInfoDAO {
+		function getUserById($id){
+			$sSql = "select Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO";
+			$sCondition = " where 0=0 " . " and id = " . $id;
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql . $sCondition);
+			$stList = array();
+			while($stInfo = mysql_fetch_assoc($stResult)){
+				$stList[] = $stInfo;	
+			}
+			mysql_free_result($stResult);
+			$stReturn['list'] = $stList;
+			return $stReturn;	
+		}
 		function getUserList($stInfo){	
 			$iPage = (int)$stInfo['page'];
 			$iCount = (int)$stInfo['count'];
 			$stUsername = $stInfo['username'];
 			$stEmail = $stInfo['email'];
 			$iRoleId = (int)$stInfo['roleId'];
-			$Id = (int)$stInfo['Id'];
 			if($iPage <= 0)$iPage = 1;
 			if($iCount <= 0)$iCount = 30;
 			else if($iCount > 50)$iCount = 50;
 			$sPageCondition = " limit ".(($iPage-1)*$iCount).",".$iCount;
-			$sSql = "select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time from USER_INFO";
+			$sSql = "select id, Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time, STATUS from USER_INFO";
 			$sCondition = " where 0=0 ";
-			if(!empty($Id)){
-				$sCondition .= " and ID = '" .$Id. "' ";
-			}
 			if(!empty($stUsername)){
 				$sCondition .= " and User_Name like '%" . $stUsername . "%' ";
 			}
@@ -44,22 +53,87 @@
 			return $stReturn;	
 		}
 
-		/*function doAdd($stInfo){
+		function doAdd($stInfo){
 			$stUsername = $stInfo['username'];
+			$stLoginname = $stInfo['loginname'];
+			$stMobile = $stInfo['mobile'];
 			$stEmail = $stInfo['email'];
+			$iSex = (int)$stInfo['sex'];
+			$iDeptType = (int)$stInfo['dept'];
+			$stPosition = $stInfo['position'];
+			$stIndTime = $stInfo['indTime'];
 			$iRoleId = (int)$stInfo['roleId'];
-			$sSql = "INSERT INTO USER_INFO(Role_ID, User_Name, Login_Name, Mobile, Email, Sex, Department_Type, Position_Name, Induction_Time, CREATE_TIME) VALUES (";
-			$sSql .= $iRoleId + ', ' + $stUsername + ', ' + ', ' + $stLoginname + ', ' + $stMobile + ', ' + $stEmail + ', ' + $iSex + ', ' + $iDeptType + ', ' + $stPos + ', ' + $dInd + ', ' + date(‘Y-m-d H:i:s’) + ')';  
-			
-
+			$stPassword = sha1('000000');
+			$sSql = "INSERT INTO USER_INFO(ROLE_ID, USER_NAME, LOGIN_NAME, PASSWORD, MOBILE, EMAIL, SEX, DEPARTMENT_TYPE, POSITION_NAME, INDUCTION_TIME, CREATE_TIME, STATUS) VALUES ( ";
+			$sSql .= $iRoleId . ', "' . $stUsername . '", "' . $stLoginname . '", "' . $stPassword . '", "' . $stMobile . '", "' . $stEmail . '", ' . $iSex . ', ' . $iDeptType . ', "' . $stPosition . '", "' . $stIndTime . '", "' . date('Y-m-d H:i:s') . '", 0)'; 			
 			$stConn = new MysqlConn();
 			$stResult = $stConn->query($sSql);
-			$stList = array();
-			while($stInfo = mysql_fetch_assoc($stResult)){
-				$stList[] = $stInfo;	
+			return $stResult;	
+		}
+
+		function doModify($stInfo){
+			$id = $stInfo['id'];
+			$stUsername = $stInfo['username'];
+			$stLoginname = $stInfo['loginname'];
+			$stMobile = $stInfo['mobile'];
+			$stEmail = $stInfo['email'];
+			$iSex = (int)$stInfo['sex'];
+			$iDeptType = (int)$stInfo['dept'];
+			$stPosition = $stInfo['position'];
+			$stIndTime = $stInfo['indTime'];
+			$iRoleId = (int)$stInfo['roleId'];
+			
+			$sSql = "Update USER_INFO Set ROLE_ID=".$iRoleId.", USER_NAME='".$stUsername."', LOGIN_NAME='".$stLoginname."', ";
+			$sSql .= "MOBILE='".$stMobile."', EMAIL='".$stEmail."', SEX=".$iSex.", DEPARTMENT_TYPE=".$iDeptType.", Position_Name='".$stPosition."', Induction_Time='".$stIndTime;
+			$sSql .="' Where id=".$id;	
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql);
+			return $stResult;		
+		}
+
+		function doFreeze($id){
+			$sql = "select status from USER_INFO where id = " . $id . " limit 1";
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sql);
+			$stInfo = mysql_fetch_assoc($stResult);
+			$status = (int)$stInfo['status'];
+			if($status==0){
+				$status=1;
+			}
+			else{
+				$status=0;
+			}		
+			$sql = "update USER_INFO set STATUS = ".$status." where 0=0 and id = " . $id;
+			$stResult = $stConn->query($sql);
+			return $stResult;	
+		}
+
+		function isMobileExist($mobile){
+			$sSql = "select id from USER_INFO where 0=0 ";
+			$sCondition = " and MOBILE = ''" . $mobile ."' limit 1 ";
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql . $sCondition);
+			$isExist = (int)mysql_num_rows($stResult);
+			$result = false;
+			if($isExist == 1){
+				$result = true;
 			}
 			mysql_free_result($stResult);
-			return $stList;	
-		}*/
+			return $result;			
+		}
+
+		function isEmailExist($email){
+			$sSql = "select id from USER_INFO where 0=0 ";
+			$sCondition = " and EMAIL = ''" . $email ."' limit 1 ";
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql . $sCondition);
+			$isExist = (int)mysql_num_rows($stResult);
+			$result = false;
+			if($isExist == 1){
+				$result = true;
+			}
+			mysql_free_result($stResult);
+			return $result;	
+		}		
 	}
 ?>

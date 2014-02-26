@@ -7,11 +7,15 @@ class ForgetCard{
 	private $forget_time;	//忘记时间
 	private $in_time;	//到/离岗时间
 	private $remark;	//备注
-	private $audit_status;	//审核状态1：未审核，2：审核通过，3：审核不通过
+	private $audit_status;	//审核状态0：未审核，1：审核中，2：审核通过，3：审核不通过
 	private $current_userid;	//当前审核人ID
 	private $previous_userid;	//前一审核人ID
 	private $audit_time;	//审核时间
 	private $audit_remark;	//审核备注
+	
+	public function setId($id){
+		$this->id = $id;
+	}
 	public function setUserId($user_id){
 		$this->user_id = $user_id;
 	}
