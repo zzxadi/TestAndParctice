@@ -1,0 +1,462 @@
+<!doctype html>
+<!--[if IE 6]>
+<html id="ie6" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html dir="ltr" lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>百分百OA</title>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/module.js"></script>
+<link type="text/css" href="/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/css/module.css" rel="stylesheet" />
+<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+<script type="text/javascript">
+var menuInfo = {
+	menu_id: '',
+	menu_name : '',
+	menu_level : '',
+	menu_supper : '',
+	menu_url : '',
+	menu_def : 1,
+	menu_reg : '',
+	menu_index : '',
+	menu_remark : ''
+}
+function addMenu(menuId,menuName){
+	if(menuId){
+		$("#supperId").val(menuId);
+		$("#supperName").html(menuName);
+		showBox('添加下级菜单',"addSubMenu");
+		$("#subSubmit").val('addMenu');
+	}else{
+		showBox('添加一级菜单',"addTopMenu");
+		$("#topSubmit").val('addMenu');
+	}
+}
+function editMenu(type,menuId){
+	if(type == 'top'){
+		getSingleRecord('top','id',menuId);
+	}else if(type == 'sub'){
+		getSingleRecord('sub','id',menuId);
+	}
+}
+function getSingleRecord(type,param,paramValue){
+	if(param){
+		ajax({
+			waitTagId:'bodyId',
+			url:'/php/action/SystemMenuAction.php?type=getSingleMenu',//必须,不能为空
+			type:'get',//非必须.默认get
+			data:'paramName='+param+'&paramValue='+paramValue,//非必须,默认空字符串
+			dataType:'json',//非必须.默认text
+			async:false,//非必须.默认true
+			cache:false,//非必须.默认false
+			timeout:30000,//非必须.默认30秒
+			error:function(){}, //非必须
+			success:function(data){
+				if(data.msgCode != 1){
+					showBox('提示','获取菜单信息失败，请稍后再试！','alert');
+					return;
+				}else if(data.entity.length == 0){
+					showBox('提示','无此记录，请联系管理员！','alert');
+					return;
+				}
+				if(type=='top'){
+					showBox('编辑菜单',"addTopMenu");
+					$("#topMenuId").val(paramValue);
+					$("#topSubmit").val('updateMenu');
+					$("#topMenuName").val(data.entity[0].menuName);
+					$("#topMenuIndex").val(data.entity[0].menuIndex);
+					$("#topMenuDef").val(data.entity[0].menuDef);
+					$("#topMenuRemark").val(data.entity[0].menuRemark);
+				}else{
+					showBox('编辑菜单',"addSubMenu");
+					$("#subMenuId").val(paramValue);
+					$("#subSubmit").val('updateMenu');
+					$("#subMenuName").val(data.entity[0].menuName);
+					$("#supperId").val(data.entity[0].menuSupper);
+					$("#subMenuUrl").val(data.entity[0].menuUrl);
+					$("#subMenuReg").val(data.entity[0].menuReg);
+					$("#subMenuDef").val(data.entity[0].menuDef);
+					$("#subMenuIndex").val(data.entity[0].menuIndex);
+					$("#subMenuRemark").val(data.entity[0].menuRemark);
+				}
+			}//非必须
+		});
+	}
+}
+function paramQuery(obj){
+	var str = [];
+	for(var name in obj)
+	{
+		if(obj[name] != null && obj[name]!= undefined && obj[name]!= '')
+			str.push(name+'='+obj[name]);
+	}
+	return str.join('&')
+}
+function clearQuery(obj){
+	for(var name in obj)
+	{
+		obj[name] = '';
+	}
+	obj['menu_def'] = 1;
+	return obj;
+}
+function menuSubmit(type,submitType){
+	clearQuery(menuInfo);
+	if(type == 'top'){
+		menuInfo.menu_id = $("#topMenuId").val();
+		menuInfo.menu_name = $("#topMenuName").val();
+		menuInfo.menu_level = 1;
+		menuInfo.menu_def = $("#topMenuDef").val();
+		menuInfo.menu_index = $("#topMenuIndex").val();
+		menuInfo.menu_remark = $("#topMenuRemark").val();
+		if(!validateTopData()){return;}
+	}else if(type == 'sub'){
+		menuInfo.menu_id = $("#subMenuId").val();
+		menuInfo.menu_name = $("#subMenuName").val();
+		menuInfo.menu_level = 2;
+		menuInfo.menu_supper = $("#supperId").val();
+		menuInfo.menu_url = $("#subMenuUrl").val();
+		menuInfo.menu_reg = $("#subMenuReg").val();
+		menuInfo.menu_def = $("#subMenuDef").val();
+		menuInfo.menu_index = $("#subMenuIndex").val();
+		menuInfo.menu_remark = $("#subMenuRemark").val();
+		if(!validateSubData()){return;}
+	}else{
+		return;
+	}
+	var sType = ''
+	if(submitType == 'addMenu'){
+		sType = 'addMenu';
+	}else if(submitType == 'updateMenu'){
+		sType = 'updateMenu'
+	}else{return;}
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/SystemMenuAction.php?type='+sType,//必须,不能为空
+		type:'post',//非必须.默认get
+		data:paramQuery(menuInfo),//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				$("#topError").html("添加失败，请稍后再试！");
+				return;
+			}
+			$("#topReset").click();
+			closeBox();
+			showBox('提示','操作成功！','alert',function(){
+				getMenuList(type,menuInfo.menu_supper);
+			});
+		}//非必须
+	});
+}
+function getMenuList(type,supper){
+	var gmType = '';
+	var gmSupper = '';
+	if(type == 'top'){
+		gmType = '1';
+		gmSupper = '';
+	}else if(type == 'sub'){
+		gmType = '2';
+		gmSupper = supper;
+	}
+	else{
+		return;
+	}
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/SystemMenuAction.php?type=getPartMenu',//必须,不能为空
+		type:'get',//非必须.默认get
+		data:'menu_level='+gmType+'&menu_supper='+gmSupper,//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				$("#"+type+"MenuList").html('<tr><td colspan="5">'+data.msg+'</td></tr>');
+				return;
+			}
+			var html = '';
+			var dataList = data.entity;
+			for(var i=0,j=dataList.length;i<j;i++){
+				html += '<tr id="';
+				html += type;
+				html += '_';
+				html += dataList[i].id;
+				html += '"';
+				if(i%2 == 1){
+					html += ' class="odd" ';
+				}
+				html += '><td>';
+				html += dataList[i].menuIndex;
+				html += '</td><td>';
+				html += dataList[i].menuName;
+				html += '</td><td>';
+				html += dataList[i].menuRemark;
+				html += '</td><td>';
+				html += (dataList[i].menuDef==0?'<span class="cred">隐藏</span>':'显示');
+				html += '</td><td>';
+				html += '<a href="javascript:void(0);" onclick="editMenu(\''+type+'\','+dataList[i].id+')">编辑</a>';
+				if(dataList[i].menuLevel == 1){
+					html += '<a class="ml20" href="javascript:void(0);" onclick="addMenu('+dataList[i].id+',\''+dataList[i].menuName+'\')">添加二级菜单</a>';
+				}
+				html += '</td></tr>';
+			}
+			if(html != '')	$("#"+type+"MenuList").html(html);
+			else $("#"+type+"MenuList").html('<tr><td colspan="5">暂无数据</td></tr>');
+			if(type == 'top'){showSubMenu();}
+		}//非必须
+	});
+}
+function showSubMenu(){
+	$("#topMenuList td").click(function(e){
+		if(e.target.nodeName != "TD") return;
+		$(this).parent('tr').addClass('cur').siblings('tr').removeClass("cur");
+		var supperId = $(this).parent('tr').attr("id");
+		supperId = supperId.split('_')[1];
+		getMenuList('sub',supperId);
+	});
+}
+var validate = (function(){
+	return {
+		validateTopMenuName : function(){
+			var topMenuName = $.trim($('#topMenuName').val()),
+				$topMenuNameMsg = $('#topMenuNameMsg');
+			if(!topMenuName){
+				$topMenuNameMsg.html('菜单名不能为空').attr('class', 'error');
+				return false;
+			}
+			$topMenuNameMsg.html('').attr('class', 'right');
+			return true;
+		},
+		validateTopMenuDef : function(){
+			var topMenuDef = $.trim($('#topMenuDef').val()),
+				$topMenuDefMsg = $('#topMenuDefMsg');
+			if(!topMenuDef){
+				$topMenuDefMsg.html('请选择显示或隐藏').attr('class', 'error');
+				return false;
+			}
+			$topMenuDefMsg.html('').attr('class', 'right');
+			return true;
+		},
+		validateSubMenuName : function(){
+			var subMenuName = $.trim($('#subMenuName').val()),
+				$subMenuNameMsg = $('#subMenuNameMsg');
+			if(!subMenuName){
+				$subMenuNameMsg.html('菜单名不能为空').attr('class', 'error');
+				return false;
+			}
+			$subMenuNameMsg.html('').attr('class', 'right');
+			return true;
+		},
+		validateSubMenuUrl : function(){
+			var subMenuUrl = $.trim($('#subMenuUrl').val()),
+				$subMenuUrlMsg = $('#subMenuUrlMsg');
+			if(!subMenuUrl){
+				$subMenuUrlMsg.html('页面URL不能为空').attr('class', 'error');
+				return false;
+			}
+			$subMenuUrlMsg.html('').attr('class', 'right');
+			return true;					
+		},
+		validateSubMenuDef : function(){
+			var subMenuDef = $.trim($('#subMenuDef').val()),
+				$subMenuDefMsg = $('#subMenuDefMsg');
+			if(!subMenuDef){
+				$subMenuDefMsg.html('请选择显示或隐藏').attr('class', 'error');
+				return false;
+			}
+			$subMenuDefMsg.html('').attr('class', 'right');
+			return true;
+		}	
+	}				
+})();
+function validateTopData(){
+	if(!validate.validateTopMenuName()){
+		return false;
+	}
+	if(!validate.validateTopMenuDef()){
+		return false;
+	}
+	return true;
+}
+function validateSubData(){
+	if(!validate.validateSubMenuName()){
+		return false;
+	}
+	if(!validate.validateSubMenuUrl()){
+		return false;
+	}
+	if(!validate.validateSubMenuDef()){
+		return false;
+	}
+	return true;
+}
+$(document).ready(function(e) {
+	loadHtml("headerId","/include/header.html");
+	loadHtml("left_menu_content","/include/leftmenu.html");
+	loadHtml("footerId","/include/footer.html");
+	getMenuList('top','');
+});
+</script>
+</head>
+
+<body id="bodyId">
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>系统菜单管理</span></div>
+<div class="main">
+	<div class="clearfix">
+		<div class="content_box">
+			<div class="content">
+				<div class="page_title">系统菜单管理</div>
+				<div class="complaint_main">
+					<div class="main_search">
+						<p class="main_search_btn">
+							<input type="button" class="mybtn" value="新增一级菜单" id="addMenu" onClick="addMenu()" />
+						</p>
+					</div>
+					<div class="order_index_status mt10"><strong>一级菜单列表</strong></div>
+					<table  class="simple_table mb10" cellpadding="0" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th width="100">菜单排序</th>
+								<th width="200">菜单名</th>
+								<th>描述</th>
+								<th width="100">状态</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="topMenuList"></tbody>
+					</table>
+					<div class="order_index_status mt10"><strong>二级菜单列表</strong></div>
+					<table  class="simple_table" cellpadding="0" cellspacing="0" width="100%">
+						<thead>
+							<tr>
+								<th width="100">菜单排序</th>
+								<th width="200">菜单名</th>
+								<th>描述</th>
+								<th width="100">状态</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="subMenuList">
+							<tr><td colspan="5">请点击一级菜单以获取其下级菜单</td></tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="menu">
+			<div class="aside">
+				<h2 class="aside_title">DIGIONE</h2>
+				<div id="left_menu_content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footerId"></div>
+<div id="addTopMenu" class="hide">
+	<div class="p10" style="width:450px;">
+		<form method="post">
+			<input type="hidden" id="topMenuId" value="" />
+			<input type="hidden" id="topSubmit" value="" />
+			<dl class="tableLike">
+				<dt class="tr"><span class="cred">*</span>菜单名：</dt>
+				<dd><input type="tex" id="topMenuName" class="txt grid-10" value="" /><span id="topMenuNameMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">菜单排序：</dt>
+				<dd><input type="tex" id="topMenuIndex" class="txt grid-6" value="" /><span id="topMenuIndexMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">是否显示：</dt>
+				<dd>
+					<select id="topMenuDef" class="select">
+						<option value="1" selected="selected">显示</option>
+						<option value="0">不显示</option>
+					</select>
+					<span id="topMenuDefMsg"></span>
+				</dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">描述：</dt>
+				<dd><textarea id="topMenuRemark" class="txt"></textarea><span id="topMenuRemarkMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt></dt>
+				<dd><input type="button" class="mybtn btn_search" onClick="menuSubmit('top',$('#topSubmit').val());" value="提交"><input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/></dd>
+			</dl>
+			<button type="reset" id="topReset" value="" class="hide" />
+		</form>
+		<dl class="tableLike">
+			<dt></dt>
+			<dd class="cred" id="topError"></dd>
+		</dl>
+	</div>
+</div>
+<div id="addSubMenu" class="hide">
+	<div class="p10" style="width:450px;">
+		<form method="post">
+			<dl class="tableLike">
+				<dt class="tr">一级菜单：</dt>
+				<dd id="supperName"></dd>
+				<input type="hidden" id="supperId" value="" />
+				<input type="hidden" id="subSubmit" value="" />
+				<input type="hidden" id="subMenuId" value="" />
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr"><span class="cred">*</span>菜单名：</dt>
+				<dd><input type="tex" id="subMenuName" class="txt grid-10" /><span id="subMenuNameMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr"><span class="cred">*</span>URL：</dt>
+				<dd><input type="tex" id="subMenuUrl" class="txt grid-20" /><span id="subMenuUrlMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">权限表达式：</dt>
+				<dd><input type="tex" id="subMenuReg" class="txt grid-10" /><span id="subMenuRegMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">菜单排序：</dt>
+				<dd><input type="tex" id="subMenuIndex" class="txt grid-10" /><span id="subMenuIndexMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">是否显示：</dt>
+				<dd>
+					<select id="subMenuDef" class="select">
+						<option value="1" selected="selected">显示</option>
+						<option value="0">不显示</option>
+					</select>
+					<span id="subMenuDefMsg"></span>
+				</dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">描述：</dt>
+				<dd><textarea id="subMenuRemark" class="txt"></textarea><span id="subMenuRemarkMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt></dt>
+				<dd><input type="button" class="mybtn btn_search" onClick="menuSubmit('sub',$('#subSubmit').val());" value="提交"><input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/></dd>
+			</dl>
+			<button type="reset" id="subReset" value="" class="hide" />
+		</form>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>人员管理</title>
+	<link rel="stylesheet" type="text/css" href="/css/base.css">
+	<link rel="stylesheet" type="text/css" href="/css/module.css">
+	<link rel="stylesheet" type="text/css" href="/css/buyer.css">
+	<script type="text/javascript" src="/js/common.js"></script>
+	<script type="text/javascript" src="/js/module.js"></script>
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			loadHtml("headerId","/include/header.html");
+			loadHtml("left_menu_content","/include/leftmenu.html");
+			loadHtml("footerId","/include/footer.html");
+
+			bindEvent();
+		});	
+		var validate = (function(){
+			var passwordReg = /^\w{6,26}$/;
+			var validatePwd = {};
+			
+			validatePwd.oldPwdBlur = function(){
+				var oldPwd = $.trim($('#oldPwd').val());
+				var oldPwdMsg = $('#oldPwdMsg');
+				var result = false;
+				if(passwordReg.test(oldPwd)){
+					 oldPwdMsg.html('').attr('class','right');
+					 result = true;
+				}
+				else{
+					 oldPwdMsg.html('6-26个字符，请使用字母、数字、下划线的组合密码').attr('class','error');			 
+				}
+				 
+			   return result;
+			};
+			
+			validatePwd.newPwdBlur = function(){
+				var newPwd = $.trim($('#newPwd').val());
+				var newPwdMsg = $('#newPwdMsg');
+				var result = false;
+				if(passwordReg.test(newPwd)){
+					 newPwdMsg.html('').attr('class','right');
+					 result = true;
+				}
+				else{
+					 newPwdMsg.html('6-26个字符，请使用字母、数字、下划线的组合密码').attr('class','error');			 
+				}
+				 
+			    return result;
+			};
+			
+			validatePwd.rePwdBlur = function(){
+				var rePwd = $.trim($('#rePwd').val());
+				var newPwd = $.trim($('#newPwd').val());		
+				var rePwdMsg = $('#rePwdMsg');
+				var result = false;
+				if(passwordReg.test(rePwd) && rePwd === newPwd){
+					 rePwdMsg.html('').attr('class','right');
+					 result = true;
+				}
+				else{
+					 rePwdMsg.html('两次输入的密码不一致，请重新输入').attr('class','error');			 
+				}
+				 
+			    return result;
+			};
+			
+			return validatePwd;
+		})();
+
+		function bindEvent(){
+			$('#pwd').on('blur', '#oldPwd', validate.oldPwdBlur)
+					 .on('blur', '#newPwd', validate.newPwdBlur)
+					 .on('blur', '#rePwd', validate.rePwdBlur)
+					 .on('click', '#updatePwd', submitPwd)
+					 .on('click', '#reset', resetInput);
+		}
+
+		function submitPwd(){
+			if(!validate.oldPwdBlur()){
+				return false
+			}
+			if(!validate.newPwdBlur()){
+				return false
+			}
+			if(!validate.rePwdBlur()){
+				return false
+			}
+		    
+			updatePwd();
+		}
+
+		function updatePwd(){
+			var param=[];
+			var oldPwd=$.trim($('#oldPwd').val());
+			var newPwd=$.trim($('#newPwd').val());
+
+			param.push('oldPwd='+oldPwd);
+			param.push('newPwd='+newPwd);
+
+			ajax({
+				url:"/php/action/PasswdModifyAction.php",
+				type:'post',//非必须.默认get
+				dataType:'json',//非必须.默认text
+				data:param.join('&'),
+				async:true,//非必须.默认true
+				cache:false,//非必须.默认false
+				timeout:30000,//非必须.默认30秒秒
+				success:updatePwdSuccess//非必须
+			});	
+		}
+
+		function updatePwdSuccess(data){
+			checkJsonRight(data);
+			if(data.msgCode!=1){
+				showBox('系统提示',data.msg,'alert');
+				return;
+			}
+			showBox('系统提示',data.msg,'alert');	
+			resetInput();
+		}
+
+		function resetInput(){//清空表单
+			$('.user_form dd span').html('').attr('class', '');
+		}	
+	</script>
+</head>
+<body>
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="main">
+	<div class="clearfix">
+		<div class="content_box">
+			<div class="content">
+				<div class="page_title">修改密码</div>
+				<div class="page_main">
+				<form method="post" class="user_form" id="pwd">
+					<dl>
+	                  <dt><em class="cred">*</em>旧密码：</dt><dd><input type="password" class="txt grid-12"  id="oldPwd"/><span id="oldPwdMsg"></span></dd>
+	               </dl>
+	               <dl>
+	                  <dt><em class="cred">*</em>新密码：</dt><dd><input type="password" class="txt grid-12"  id="newPwd"/><span id="newPwdMsg"></span></dd>
+	               </dl>
+	               <dl>
+	                  <dt><em class="cred">*</em>确认密码：</dt><dd><input type="password" class="txt grid-12"  id="rePwd"/><span id="rePwdMsg"></span></dd>
+	               </dl>				 
+	               <p><input type="button" value="提交" class="mybtn btn" id="updatePwd"/><input type="reset" id="reset" class="btn reset" value="重置"/></p>
+				</form>
+				</div>
+			</div>
+		</div>
+		<div class="menu">
+			<div class="aside">
+				<h2 class="aside_title">DIGIONE</h2>
+				<div id="left_menu_content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footerId"></div>	
+</body>
+</html>

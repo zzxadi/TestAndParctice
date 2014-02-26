@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>工单明细</title>
+<link type="text/css" href="/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/css/module.css" rel="stylesheet" />
+<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+<link href="/css/timepicker.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/module.js"></script>
+<script type="text/javascript" src="/js/timepicker.js"></script>
+<script type="text/javascript">
+var GLOBAL_PARAM = {
+	g_boxId : $.trim(getUrlParam("boxId")),
+	operateLogo : $.trim(getUrlParam("operateLogo")),
+	id : $.trim(getUrlParam("id"))
+};
+/*获取工单明细*/
+function getWorkOrderDetail(){
+	var param = [];
+	param.push('operateStr='+GLOBAL_PARAM.operateLogo);
+	param.push('method=detail');
+	param.push('id='+GLOBAL_PARAM.id);
+	ajax({
+		url:'/php/action/WorkOrderAction.php',
+		type: 'post',
+		data: param.join('&'),
+		dataType: 'json',
+		async: true,
+		cache: false,
+		timeout: 30000,
+		error: function(){},
+		success: getWorkOrderDetailSuccess
+	});
+}
+function getWorkOrderDetailSuccess(data){
+	if(data.msgCode != 1){ return; }
+	var result = data.entity.list[0];
+	if(GLOBAL_PARAM.operateLogo == 'forgetCard'){	//忘打卡
+		$('.workorder_forget_detail').show();
+		var type = result.type == 1 ? '上班' : (result.type == 2 ? '下班' : '暂无'),
+				remark = result.remark ? result.remark : '暂无',
+				auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
+		$('#type_fc').text();
+		$('#createTime_fc').text(result.createTime);
+		$('#forgetTime_fc').text(result.forgetTime);
+		$('#inTime_fc').text(result.inTime);
+		$('#remark_fc').text(remark);
+		$('#auditStatus_fc').text(auditStatus);
+		$('#currentUserName_fc').text(result.currentUserName);
+		$('#priviousUserName_fc').text(result.priviousUserName ? result.priviousUserName : '暂无');
+		$('#auditTime_fc').text(result.auditTime);
+		$('#auditRemark_fc').text(result.auditRemark);
+		if(result.auditStatus == 2 || result.auditStatus == 3){ $('#auditTime_fc_tr').show(); $('#auditRemark_fc_tr').show(); }
+	}else{
+		$('.workorder_leaves_detail').show();
+		var type = result.type == 1 ? '加班' : (result.type == 2 ? '请假/出差' : '暂无'),
+			leaveTypeName = leaveTypeNames(parseInt(result.leaveType)),
+			leaveType = result.leaveType == 10 ? ('其他假：' + result.leaveName) : leaveTypeName,
+			totalTime = result.totalTime ? (result.totalTime + '小时') : '暂无',
+			remark = result.remark ? result.remark : '暂无',
+			auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
+		$('#type_vr').text(type);
+		$('#createTime_vr').text(result.createTime);
+		$('#beginTime_vr').text(result.beginTime);
+		$('#endTime_vr').text(result.endTime);
+		$('#totalTime_vr').text(result.totalTime);
+		$('#reason_vr').text(leaveType);
+		$('#totalTime_vr').text(totalTime);
+		$('#remark_vr').text(remark);
+		$('#auditStatus_vr').text(auditStatus);
+		$('#auditTime_vr').text(result.auditTime);
+		$('#auditRemark_vr').text(result.auditRemark);
+		$('#currentUserName_vr').text(result.currentUserName);
+		$('#priviousUserName_vr').text(result.priviousUserName ? result.priviousUserName : '暂无');
+		
+		if(result.auditStatus == 2 || result.auditStatus == 3){ $('#auditTime_tr').show(); $('#auditRemark_tr').show(); }
+		if(result.type == 1){	//加班
+			$('#reason_tr').hide();
+		}
+	}
+}
+function leaveTypeNames(type){
+	var str = '';
+	switch(type){
+		case 1 : str = '事假'; break;
+		case 2 : str = '病假'; break;
+		case 3 : str = '调休'; break;
+		case 4 : str = '婚嫁'; break;
+		case 5 : str = '产假'; break;
+		case 6 : str = '计生假'; break;
+		case 7 : str = '年休假'; break;
+		case 8 : str = '丧假'; break;
+		case 9 : str = '工伤假'; break;
+		default : str = '';
+	}
+	return str;
+}
+/*关闭弹框*/
+function close_box(){
+	if(GLOBAL_PARAM.g_boxId!=''&&parent&&parent.closeBox)parent.closeBox(GLOBAL_PARAM.g_boxId);
+}
+/*加载页面信息*/
+$(function(){
+	getWorkOrderDetail();
+});
+</script>
+</head>
+<body>
+<div class="workorder_mng">
+<!-- 请假/出差单、加班申请单开始 -->
+   <div class="workorder_leaves_detail hide">
+   	<table width="100%" cellspacing="0" cellpadding="0" class="workorder_table grid-50">
+		<tr>
+			<td width="110">申请类型：</td>
+			<td id="type_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">创建时间：</td>
+			<td id="createTime_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">开始时间：</td>
+			<td id="beginTime_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">结束时间：</td>
+			<td id="endTime_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">总时间：</td>
+			<td id="totalTime_vr"></td>
+		</tr>
+		<tr id="reason_tr">
+			<td width="110">事由：</td>
+			<td id="reason_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">备注：</td>
+			<td id="remark_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">审核状态：</td>
+			<td id="auditStatus_vr"></td>
+		</tr>
+		<tr id="auditTime_tr" class="hide">
+			<td width="110">审核时间：</td>
+			<td id="auditTime_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">当前审核人：</td>
+			<td id="currentUserName_vr"></td>
+		</tr>
+		<tr>
+			<td width="110">前审核人：</td>
+			<td id="priviousUserName_vr"></td>
+		</tr>
+		
+		<tr id="auditRemark_tr" class="hide">
+			<td width="110">审核备注：</td>
+			<td id="auditRemark_vr"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="button" onclick="close_box()" class="mybtn btn_cancel" value="关闭" />
+			</td>
+		</tr>
+	</table>
+   </div>
+<!-- 请假/出差单、加班申请单结束 -->
+<!-- 忘打卡开始 -->          
+   <div class="workorder_forget_detail hide">
+    <table width="100%" cellspacing="0" cellpadding="0" class="workorder_table grid-50">
+		<tr>
+			<td width="110">忘记类型：</td>
+			<td id="type_fc"></td>
+		</tr>
+		<tr>
+			<td width="110">创建时间：</td>
+			<td id="createTime_fc"></td>
+		</tr>
+		<tr>
+			<td width="110">忘记时间：</td>
+			<td id="forgetTime_fc"></td>
+		</tr>
+		<tr>
+			<td width="110">到/离岗时间：</td>
+			<td id="inTime_fc"></td>
+		</tr>
+		<tr>
+			<td width="110">备注：</td>
+			<td id="remark_fc"></td>
+		</tr>
+		<tr>
+			<td width="110">审核状态：</td>
+			<td id="auditStatus_fc"></td>
+		</tr>
+		<tr>
+			<td width="110">当前审核人：</td>
+			<td id="currentUserName_fc"></td>
+		</tr>
+		<tr>
+			<td width="110">前审核人：</td>
+			<td id="priviousUserName_fc"></td>
+		</tr>
+		<tr id="auditTime_fc_tr" class="hide">
+			<td width="110">审核时间：</td>
+			<td id="auditTime_fc"></td>
+		</tr>
+		<tr id="auditRemark_fc_tr" class="hide">
+			<td width="110">审核备注：</td>
+			<td id="auditRemark_fc"></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="button" onclick="close_box()" class="mybtn btn_cancel" value="关闭" />
+			</td>
+		</tr>
+	</table>
+   </div>
+<!-- 忘打卡结束 -->
+</div>
+</body>
+</html>

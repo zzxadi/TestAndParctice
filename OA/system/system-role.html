@@ -1,0 +1,401 @@
+<!doctype html>
+<!--[if IE 6]>
+<html id="ie6" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 7]>
+<html id="ie7" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" dir="ltr" lang="zh-CN">
+<![endif]-->
+<!--[if !(IE 6) | !(IE 7) | !(IE 8)  ]><!-->
+<html dir="ltr" lang="zh-CN">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>百分百OA</title>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/module.js"></script>
+<link type="text/css" href="/css/base.css" rel="stylesheet" />
+<link type="text/css" href="/css/module.css" rel="stylesheet" />
+<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
+<script type="text/javascript">
+var roleInfo = {
+	role_id: '',
+	role_name : '',
+	role_des : '',
+	role_key : ''
+}
+function addRole(){
+	showBox('添加角色',"addSystemRole");
+	$("#submitType").val('addRecord');
+	bindEvent();
+}
+function editRole(id){
+	if(!id){return;}
+	getSingleRecord('id',id);
+}
+function roleMenu(id){
+	if(!id){return;}
+	getMenuList();
+	showBox('权限分配','roleMenu');
+	$("#menuRoleId").val(id);
+	getRoleMenu(id);
+}
+function getRoleMenu(id){
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/RoleMenuAction.php?type=getRecord',//必须,不能为空
+		type:'get',//非必须.默认get
+		data:'role_id='+id,//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				showBox('提示','获取角色信息失败，请稍后再试！','alert');
+				return;
+			}
+			for(var i=0,j=data.entity.length;i<j;i++){
+				$("#menu_"+data.entity[i].menuId).attr("checked",true);
+			}
+		}//非必须
+	});
+}
+function getSingleRecord(param,paramValue){
+	if(param){
+		ajax({
+			waitTagId:'bodyId',
+			url:'/php/action/SystemRoleAction.php?type=getSingleRecord',//必须,不能为空
+			type:'get',//非必须.默认get
+			data:'paramName='+param+'&paramValue='+paramValue,//非必须,默认空字符串
+			dataType:'json',//非必须.默认text
+			async:false,//非必须.默认true
+			cache:false,//非必须.默认false
+			timeout:30000,//非必须.默认30秒
+			error:function(){}, //非必须
+			success:function(data){
+				if(data.msgCode != 1){
+					showBox('提示','获取角色信息失败，请稍后再试！','alert');
+					return;
+				}else if(data.entity.length == 0){
+					showBox('提示','无此记录，请联系管理员！','alert');
+					return;
+				}
+				showBox('编辑角色',"addSystemRole");
+				$("#roleId").val(data.entity[0].id);
+				$("#submitType").val('updateRecord');
+				$("#roleName").val(data.entity[0].roleName);
+				$("#roleKey").val(data.entity[0].roleKey);
+				$("#roleDes").val(data.entity[0].roleDes);
+				bindEvent();
+			}//非必须
+		});
+	}
+}
+function paramQuery(obj){
+	var str = [];
+	for(var name in obj)
+	{
+		if(obj[name] != null && obj[name]!= undefined && obj[name]!= '')
+			str.push(name+'='+obj[name]);
+	}
+	return str.join('&')
+}
+function clearQuery(obj){
+	for(var name in obj)
+	{
+		obj[name] = '';
+	}
+	obj['menu_def'] = 1;
+	return obj;
+}
+function dataSubmit(submitType){
+	clearQuery(roleInfo);
+	if(submitType != 'addRecord' && submitType != 'updateRecord'){return;}
+	roleInfo.role_id = $("#roleId").val();
+	roleInfo.role_name = $("#roleName").val();
+	roleInfo.role_des = $("#roleDes").val();
+	roleInfo.role_key = $("#roleKey").val();
+	if(!validateData()){return;}
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/SystemRoleAction.php?type='+submitType,//必须,不能为空
+		type:'post',//非必须.默认get
+		data:paramQuery(roleInfo),//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				$("#error").html("添加失败，请稍后再试！");
+				return;
+			}
+			$("#roleReset").click();
+			closeBox();
+			showBox('提示','操作成功！','alert',function(){
+				getRoleList();
+			});
+		}//非必须
+	});
+}
+function systemRoleSubmit(id){
+	if(!id){return;}
+	var cArr = $("#canSet").find("input:checkbox:checked");
+	var rmArr = [];
+	for(var i=0,j=cArr.length;i<j;i++){
+		rmArr.push($(cArr[i]).val());
+	}
+	var rmStr = rmArr.join('_');
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/RoleMenuAction.php?type=updateRecord',//必须,不能为空
+		type:'post',//非必须.默认get
+		data:'role_id='+id+'&menu_id='+rmStr,//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				$("#rmError").html("操作失败，请稍后再试！");
+				return; 
+			}
+			closeBox();
+			showBox('提示','操作成功！','alert',function(){
+				getRoleList();
+			});
+		}//非必须
+	});
+}
+function getRoleList(){
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/SystemRoleAction.php?type=getRoleList',//必须,不能为空
+		type:'get',//非必须.默认get
+		data:'',//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				return;
+			}
+			var html = '';
+			var dataList = data.entity;
+			for(var i=0,j=dataList.length;i<j;i++){
+				html += '<tr'
+				if(i%2 == 1) html += ' class="odd"';
+				html += '><td>';
+				html += dataList[i].id;
+				html += '</td><td>';
+				html += dataList[i].roleName;
+				html += '</td><td>';
+				html += dataList[i].roleKey;
+				html += '</td><td>';
+				html += dataList[i].roleDes;
+				html += '</td><td><a href="javascript:void(0);" onclick="editRole(';
+				html += dataList[i].id;
+				html += ')">编辑</a><a href="javascript:void(0);" class="ml20" onclick="delRole(';
+				html += dataList[i].id;
+				html += ')">删除</a><a href="javascript:void(0);" class="ml20" onclick="roleMenu(';
+				html += dataList[i].id;
+				html += ')">权限分配</a></td></tr>';
+			}
+			$("#dataList").html(html);
+		}//非必须
+	});
+}
+function delRole(id){
+	if(!id){return;}
+	showBox('警告！','确定删除此记录？','confirm',function(){
+		ajax({
+			waitTagId:'bodyId',
+			url:'/php/action/SystemRoleAction.php?type=delRecord',//必须,不能为空
+			type:'post',//非必须.默认get
+			data:'paramName=id&paramValue='+id,//非必须,默认空字符串
+			dataType:'json',//非必须.默认text
+			async:false,//非必须.默认true
+			cache:false,//非必须.默认false
+			timeout:30000,//非必须.默认30秒
+			error:function(){}, //非必须
+			success:function(data){
+				if(data.msgCode != 1){
+					showBox('提示','操作失败！','alert');
+					return;
+				}
+				showBox('提示','操作成功！','alert',function(){
+					getRoleList();
+				});
+			}//非必须
+		});
+	});
+}
+function getMenuList(){
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/SystemMenuAction.php?type=getPartMenu',//必须,不能为空
+		type:'get',//非必须.默认get
+		data:'menu_level=&menu_supper=',//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				$("#canSet").html('<p class="p10">'+data.msg+'</p>');
+				return;
+			}
+			var html = '';
+			var dataList = data.entity;
+			var topMenu = [];
+			var subMenu = [];
+			for(var i=0,j=dataList.length;i<j;i++){
+				if(dataList[i].menuDef == 1){
+					if(dataList[i].menuLevel == 1){
+						topMenu.push({'name':dataList[i].menuName,'id': dataList[i].id})
+					}
+					if(dataList[i].menuLevel == 2){
+						subMenu.push({'name':dataList[i].menuName,'id': dataList[i].id,'menuSupper':dataList[i].menuSupper});
+					}
+				}
+			}
+			for(var n=0,m=topMenu.length;n<m;n++){
+				html += '<h4 id="menu_'+topMenu[n].id+'">'+topMenu[n].name+'</h4><ul>';
+				for(var a=0,s=subMenu.length;a<s;a++){
+					if(subMenu[a].menuSupper == topMenu[n].id)
+						html += '<li><label><input type="checkbox" value="'+subMenu[a].id+'" id="menu_'+subMenu[a].id+'" /> '+subMenu[a].name+'</label></li>';
+				}
+				html +='</ul>';
+			}
+			$("#canSet").html(html);
+		}//非必须
+	});
+}
+function bindEvent(){
+	$('#roleName').on('blur', validate.validateRoleName);
+}
+var validate = (function(){
+	return {
+		validateRoleName : function(){
+			var roleName = $.trim($('#roleName').val()),
+				$roleNameMsg = $('#roleNameMsg');
+			if(!roleName){
+				$roleNameMsg.html('角色名不能为空').attr('class', 'error');
+				return false;
+			}
+			$roleNameMsg.html('').attr('class', 'right');
+			return true;
+		}
+	}				
+})();
+function validateData(){
+	if(!validate.validateRoleName()){
+		return false;
+	}
+	return true;
+}
+$(document).ready(function(e) {
+	loadHtml("headerId","/include/header.html");
+	loadHtml("left_menu_content","/include/leftmenu.html");
+	loadHtml("footerId","/include/footer.html");
+	getRoleList();
+});
+</script>
+</head>
+
+<body id="bodyId">
+<div id="headerId"></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>系统角色管理</span></div>
+<div class="main">
+	<div class="clearfix">
+		<div class="content_box">
+			<div class="content">
+				<div class="page_title">系统角色管理</div>
+				<div class="complaint_main">
+					<div class="main_search">
+						<p class="main_search_btn">
+							<input type="button" class="mybtn" value="新增角色" id="addRole" onClick="addRole()" />
+						</p>
+					</div>
+					<div class="order_index_status mt10"><strong>系统角色列表</strong></div>
+					<table  class="simple_table mb10" cellpadding="0" cellspacing="0">
+						<thead>
+							<tr>
+								<th width="100">角色ID</th>
+								<th width="100">角色名称</th>
+								<th width="100">key值</th>
+								<th width="400">描述</th>
+								<th width="200">操作</th>
+							</tr>
+						</thead>
+						<tbody id="dataList"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="menu">
+			<div class="aside">
+				<h2 class="aside_title">DIGIONE</h2>
+				<div id="left_menu_content"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="footerId"></div>
+<div id="addSystemRole" class="hide">
+	<div class="p10" style="width:350px;">
+		<form method="post">
+			<input type="hidden" id="roleId" value="" />
+			<input type="hidden" id="submitType" value="" />
+			<dl class="tableLike">
+				<dt class="tr"><span class="cred">*</span>角色名：</dt>
+				<dd><input type="text" id="roleName" class="txt grid-10" value="" /><span id="roleNameMsg"></span></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">key值：</dt>
+				<dd><textarea id="roleKey" class="txt"></textarea></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt class="tr">描述：</dt>
+				<dd><textarea id="roleDes" class="txt"></textarea></dd>
+			</dl>
+			<dl class="tableLike">
+				<dt></dt>
+				<dd><input type="button" class="mybtn btn_search" onClick="dataSubmit($('#submitType').val());" value="提交"><input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/></dd>
+			</dl>
+			<button type="reset" id="roleReset" value="" class="hide" />
+		</form>
+		<dl class="tableLike">
+			<dt></dt>
+			<dd class="cred" id="error"></dd>
+		</dl>
+	</div>
+</div>
+<div id="roleMenu" class="hide">
+	<div class="p10 clearfix" style="width:350px;">
+		<div class="role_menu clearfix">
+			<input type="hidden" id="menuRoleId" value="" />
+			<div id="canSet"></div>
+		</div>
+		<dl class="tableLike">
+			<dt></dt>
+			<dd><input type="button" class="mybtn btn_search" onClick="systemRoleSubmit($('#menuRoleId').val());" value="提交"><input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/></dd>
+		</dl>
+		<dl class="tableLike">
+			<dt></dt>
+			<dd class="cred" id="rmError"></dd>
+		</dl>
+	</div>
+</div>
+</body>
+</html>
