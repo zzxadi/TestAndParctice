@@ -188,10 +188,49 @@ function loadInitEvent(){
 		else{ $('#otherReason').hide(); }
 	});
 }
+/*获得所有管理者*/
+function getApproveManger(){
+	ajax({
+		url:"/php/action/ApproveOrderInfo.php",
+		type:'post',
+		data:'method=managerList',
+		dataType:'json',
+		async:false,
+		cache:false,
+		timeout:30000,
+		error:function(){},
+		success:getApproveMangerSuccess
+	});	
+};
+function getApproveMangerSuccess(data){
+	if(parseInt(data.msgCode)==3){
+		locationHref('../index.html');
+	}else if(parseInt(data.msgCode)==4){
+		showBox("提示",data.msg,"alert");	
+		return;
+	}
+	var code=data.entity.list;
+	var html="";
+	if(code.length >= 1){
+		for(var i=0,j=code.length;i<j;i++){
+			html+='<option value="'+code[i].id+'">'+code[i].userName+'</option>';
+		}
+	}else{
+		html+='<option>暂无审批人</option>';	
+	}
+	if(GLOBAL_PARAM.operateLogo == 'leaveTrip'){
+		$('#leaveAuditId').html(html);
+	}else if(GLOBAL_PARAM.operateLogo == 'overtimeRequest'){
+		$('#overtimeAuditId').html(html);
+	}else if(GLOBAL_PARAM.operateLogo == 'forgetCard'){
+		$('#forgetCardAuditId').html(html);
+	}
+}
 /*加载页面信息*/
 $(function(){
 	loadTimeInput();
 	loadInitEvent();
+	getApproveManger();
 });
 </script>
 </head>
@@ -203,11 +242,7 @@ $(function(){
     <dl>
     	<dt><span class="cred">*</span>审批人：</dt>
     	<dd>
-    		<select id="leaveAuditId" class="txt grid-12">
-	    		<option value="1">张三</option>
-	    		<option value="2">李四</option>
-	    		<option value="3">王五</option>
-    		</select>
+    		<select id="leaveAuditId" class="txt grid-12"></select>
     	</dd>
     </dl>
    	<dl>
@@ -251,11 +286,7 @@ $(function(){
     <dl>
     	<dt><span class="cred">*</span>审批人：</dt>
     	<dd>
-    		<select id="overtimeAuditId" class="txt grid-12">
-	    		<option value="1">张三</option>
-	    		<option value="2">李四</option>
-	    		<option value="3">王五</option>
-    		</select>
+    		<select id="overtimeAuditId" class="txt grid-12"></select>
     	</dd>
     </dl>
    	<dl>
@@ -283,11 +314,7 @@ $(function(){
     <dl>
     	<dt><span class="cred">*</span>审批人：</dt>
     	<dd>
-    		<select id="forgetCardAuditId" class="txt grid-12">
-	    		<option value="1">张三</option>
-	    		<option value="2">李四</option>
-	    		<option value="3">王五</option>
-    		</select>
+    		<select id="forgetCardAuditId" class="txt grid-12"></select>
     	</dd>
     </dl>
    	<dl>

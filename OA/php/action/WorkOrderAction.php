@@ -1,25 +1,9 @@
 <?php
-	require_once("../utils/common.php");
-	require_once("../utils/module.php");
+	require_once("../utils/include.php");
+	require_once('../action/InterceptAction.php');
 	require_once("../dao/WorkOrderDao.php");
 	require_once("../class/VacationRecord.php");
 	require_once("../class/ForgetCard.php");
-	
-	$iDataType = getParam("DataType","0");
-	$stPrint = array();
-	$stPrint['fieldArray'] = array();
-	$stPrint['dataType'] = $iDataType;
-	$stPrint['entity'] = false;
-	$stPrint['msgCode'] = 2;
-	$stPrint['msg'] = '访问异常';
-	
-	if(!isLogin()){
-		$stPrint['entity'] = ''; 
-		$stPrint['msgCode'] = 3;
-		$stPrint['msg'] = '用户未登录';
-		dataPrint($stPrint);
-	}
-	
 	$requestMethod = getParam('method','0');
 	
 	/**

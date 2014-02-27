@@ -25,7 +25,7 @@ function getUserTopMenu(){
 	var tmpData = '';
 	ajax({
 		waitTagId:'bodyId',
-		url:'/php/action/SystemMenuAction.php?type=getPartMenu',//必须,不能为空
+		url:'/php/action/UserMenuAction.php?method=getPartMenu',//必须,不能为空
 		type:'get',//非必须.默认get
 		data:'menu_level=1&menu_supper=',//非必须,默认空字符串
 		dataType:'json',//非必须.默认text
@@ -46,7 +46,7 @@ function getUserSubMenu(){
 	var tmpData = '';
 	ajax({
 		waitTagId:'bodyId',
-		url:'/php/action/UserMenuAction.php?type=getUserMenu',//必须,不能为空
+		url:'/php/action/UserMenuAction.php?method=getUserMenu',//必须,不能为空
 		type:'get',//非必须.默认get
 		data:'',//非必须,默认空字符串
 		dataType:'json',//非必须.默认text

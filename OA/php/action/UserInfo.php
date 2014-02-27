@@ -1,8 +1,10 @@
 <?php
 	require_once("../utils/include.php");
 	require_once("../dao/UserInfoDAO.php");
+	require_once('../action/InterceptAction.php');
+
+	$type = getParamByName('method');
 	$iDataType = getParam("DataType","0");
-	$stMethod = getParam("method", "");
 	$id = getParam("id", getUserId());
 	$stUsername = getParam("username","");
 	$stLoginname = getParam("loginname", "");
@@ -21,13 +23,7 @@
 	$stPrint["entity"] = false;
 	$stPrint["msgCode"] = 2;
 	$stPrint["msg"] = '访问异常';
-	//权限判断
-	/*$iLoginUserID = (int)getUserID();
-	if($iLoginUserID <= 0){
-		$stPrint["msgCode"] = 3;
-		$stPrint["msg"] = '没有登录';
-		dataPrint($stPrint);	
-	}*/
+
 	$stInfo = array();
 	$stInfo['username'] = $stUsername;
 	$stInfo['loginname'] = $stLoginname;
@@ -41,32 +37,108 @@
 	$stInfo['id'] = $id;
 	$stInfo['count'] = $iPageSize;
 	$stInfo['page'] = $iPage;
-	$user = new UserInfoDAO();
-	if($stMethod == 'doAdd'){
-		$stData = $user->doAdd($stInfo);
-		$stPrint["msg"] = "添加用户成功";
-	}
-	else if($stMethod == 'getUserById'){
-		$stData = $user->getUserById($id);
-		$stPrint["msg"] = "查询用户成功";
-	}
-	else if($stMethod == 'doModify'){
-		$stData = $user->doModify($stInfo);
-	}
-	else if($stMethod == 'freezeUser'){
-		$stData = $user->doFreeze($id);
-		$stPrint["msg"] = "操作用户成功";
-	}
-	else{
-		$stData = $user->getUserList($stInfo);		
-		$stPrint["msg"] = "查询用户成功";
-	}
-	if($stData === false){
-		$stPrint["msg"] = "获取数据失败";
-		dataPrint($stPrint);
-	}
-	$stPrint["entity"] = $stData; 
-	$stPrint["msgCode"] = 1;
 
-	dataPrint($stPrint);
+	switch($type){
+		case 'doAdd':
+			doAdd($stInfo);
+			break;
+		case 'getUserById':
+			getUserById($id);
+			break;
+		case 'doModify':
+			doModify($stInfo);
+			break;
+		case 'freezeUser':
+			freezeUser($id);
+			break;
+		case 'getUserList':
+			getUserList($stInfo);
+			break;
+	}
+	
+
+	function doAdd($stInfo){
+		$user = new UserInfoDAO();
+		$stData = $user->doAdd($stInfo);
+		if($stData){
+			$stPrint["entity"] = $stData; 
+			$stPrint["msgCode"] = 1;
+			$stPrint["msg"] = "添加用户成功";
+			dataPrint($stPrint);
+		}
+		else{
+			$stPrint['entity'] = '';
+			$stPrint['msgCode'] = 2;
+			$stPrint['msg'] = '删除失败';
+			dataPrint($stPrint);	
+		}
+	}
+
+	function doModify($stInfo){
+		$user = new UserInfoDAO();
+		$stData = $user->doModify($stInfo);
+		if($stData){
+			$stPrint["entity"] = $stData; 
+			$stPrint["msgCode"] = 1;
+			$stPrint["msg"] = "添加用户成功";
+			dataPrint($stPrint);
+		}
+		else{
+			$stPrint['entity'] = '';
+			$stPrint['msgCode'] = 2;
+			$stPrint['msg'] = '删除失败';
+			dataPrint($stPrint);	
+		}
+	}
+
+	function getUserById($id){
+		$user = new UserInfoDAO();
+		$stData = $user->getUserById($id);
+		if($stData){
+			$stPrint["entity"] = $stData; 
+			$stPrint["msgCode"] = 1;
+			$stPrint["msg"] = "添加用户成功";
+			dataPrint($stPrint);
+		}
+		else{
+			$stPrint['entity'] = '';
+			$stPrint['msgCode'] = 2;
+			$stPrint['msg'] = '删除失败';
+			dataPrint($stPrint);	
+		}
+	}
+
+	function getUserList($stInfo){
+		$user = new UserInfoDAO();
+		$stData = $user->getUserList($stInfo);
+		if($stData){
+			$stPrint["entity"] = $stData; 
+			$stPrint["msgCode"] = 1;
+			$stPrint["msg"] = "添加用户成功";
+			dataPrint($stPrint);
+		}
+		else{
+			$stPrint['entity'] = '';
+			$stPrint['msgCode'] = 2;
+			$stPrint['msg'] = '删除失败';
+			dataPrint($stPrint);	
+		}		
+	}
+
+	function freezeUser($stInfo){
+		$user = new UserInfoDAO();
+		$stData = $user->freezeUser($id);
+		if($stData){
+			$stPrint["entity"] = $stData; 
+			$stPrint["msgCode"] = 1;
+			$stPrint["msg"] = "添加用户成功";
+			dataPrint($stPrint);
+		}
+		else{
+			$stPrint['entity'] = '';
+			$stPrint['msgCode'] = 2;
+			$stPrint['msg'] = '删除失败';
+			dataPrint($stPrint);	
+		}	
+	}
 ?>

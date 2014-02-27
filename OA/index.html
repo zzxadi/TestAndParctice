@@ -25,6 +25,28 @@ $(document).ready(function(e) {
 	loadHtml("headerId","/include/header.html");
 	loadHtml("left_menu_content","/include/leftmenu.html");
 	loadHtml("footerId","/include/footer.html");
+	var param = 'id';
+	var paramValue = 11;
+	ajax({
+		waitTagId:'bodyId',
+		url:'/php/action/SystemMenuAction.php?type=getSingleMenu',//必须,不能为空
+		type:'get',//非必须.默认get
+		data:'paramName='+param+'&paramValue='+paramValue,//非必须,默认空字符串
+		dataType:'json',//非必须.默认text
+		async:false,//非必须.默认true
+		cache:false,//非必须.默认false
+		timeout:30000,//非必须.默认30秒
+		error:function(){}, //非必须
+		success:function(data){
+			if(data.msgCode != 1){
+				showBox('提示','获取菜单信息失败，请稍后再试！','alert');
+				return;
+			}else if(data.entity.length == 0){
+				showBox('提示','无此记录，请联系管理员！','alert');
+				return;
+			}
+		}//非必须
+	});
 });
 </script>
 </head>
@@ -38,30 +60,7 @@ $(document).ready(function(e) {
 			<div class="content">
 				<div class="page_title">欢迎登录系统</div>
 				<div class="page_main">
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p> 
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
-					<p>&nbsp;</p>
+					<div id="data"></div>
 				</div>
 			</div>
 		</div>

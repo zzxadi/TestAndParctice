@@ -5,7 +5,6 @@ class UserMenuDao{
 	private $roleMenu;
 	private $sqlConn;
 	public function __construct(){
-		require_once('MysqlConn.php');
 		$this->sqlConn = new MysqlConn();
 	}
 	public function setUser($user){
@@ -52,7 +51,7 @@ class UserMenuDao{
 			return '';
 		}
 		$i=0;
-		$umSql = 'select * from SYSTEM_MENU where id in (';
+		$umSql = 'select * from SYSTEM_MENU where menu_def=1 and id in (';
 		for($i=0;$i<count($arr);$i++){
 			if($i != 0){ $umSql .= ',';}
 			$umSql .= "'".$arr[$i]['menu_id']."'";
@@ -66,6 +65,26 @@ class UserMenuDao{
 			$i++;
 		}
 		return $um;
+	}
+	public function getLevelRecord(){
+		$smSql = 'select * from SYSTEM_MENU ';
+		if($this->systemMenu->getMenuLevel() != '' || $this->systemMenu->getMenuSupper() != ''){
+			$smSql .= 'where 1=1 and menu_level = ';
+			$smSql .= "'".$this->systemMenu->getMenuLevel()."'";
+			$smSql .= ' and menu_supper = ';
+			$smSql .= "'".$this->systemMenu->getMenuSupper()."'";
+			$smSql .= 'and menu_def = ';
+			$smSql .= "'".$this->systemMenu->getMenuDef()."'";
+		}
+		$smSql .= 'order by menu_index';
+		$smQuery = $this->sqlConn->query($smSql);
+		$i = 0;
+		$sr = array();
+		while($row = $this->sqlConn->fetch_array($smQuery)) {
+			$sr[$i]=$row;
+			$i++;
+		}
+		return $sr;
 	}
 }
 ?>

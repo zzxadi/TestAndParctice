@@ -8,7 +8,14 @@ class MysqlConn{
 	//构造函数，连接数据库，并记录数据库操作日志
 	public function __construct(){
 		$this->time = $this->microtime_float();
-		require_once('../config.db.php');
+		$db_config["hostname"] = "192.168.2.238"; //服务器地址
+		$db_config["username"] = "dba238"; //数据库用户名
+		$db_config["password"] = "123456"; //数据库密码
+		$db_config["database"] = "DIGIONE_OA"; //数据库名称
+		$db_config["charset"] = "utf8";//数据库编码
+		$db_config["pconnect"] = 1;//开启持久连接
+		$db_config["log"] = 1;//开启日志
+		$db_config["logfilepath"] = '../log/';//开启日志
 		$this->connect($db_config["hostname"], $db_config["username"], $db_config["password"], $db_config["database"], $db_config["pconnect"]);
 		$this->is_log = $db_config["log"];
 		if($this->is_log){
@@ -134,7 +141,7 @@ class MysqlConn{
 		$this->write_log('释放结果集');
 	}
 	//关闭数据库连接
-	protected function close() {
+	public function close() {
 		$this->write_log('已关闭数据库连接');
 		return @mysql_close($this->link_id);
 	}

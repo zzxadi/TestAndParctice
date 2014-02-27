@@ -22,7 +22,7 @@
 <link type="text/css" href="/css/buyer.css" rel="stylesheet" />
 <script type="text/javascript">
 //审核状态	0：未审核，1：审核中，2：审核通过，3：审核不通过
-var CURRENTUSERID=1;
+var CURRENTUSERID;
 var params = {
 	currentPage: 1,			//页码
 	pageNo:1,
@@ -40,7 +40,8 @@ var params2 = {
 var GLOBAL = {
 	pageSize:5,
 	roleKey:'',
-	roleName:''
+	roleName:'',
+	rolePow:1// 0:无权限访问 1：有权限
 }	
 function showContactionBox(detailId,approveType,currentId){//查询信息的id，工单类型（忘打卡 2，请假 1）,当前审批人Id
 	getApproveDetail(detailId,approveType,currentId);
@@ -50,6 +51,7 @@ function tabContent(k,key,pageType){//k 确定标签   key：审核状态 pageTy
 	$(k).parent().addClass("cur").siblings().removeClass("cur");
 	params.currentPage=1;
 	params.pageState=key;
+	params.pageNo=1;
 	if(pageType==1){
 		params.pageType=1;
 		getApproveOrderData(key,pageType);
@@ -58,7 +60,6 @@ function tabContent(k,key,pageType){//k 确定标签   key：审核状态 pageTy
 		params2.pageType=2;
 		getForgetOrderData(key,pageType);
 	}
-	params.pageNo=1;
 	/*if(pageType==1){
 		getApproveOrderData(key,pageType);
 	}else if(pageType==2){
@@ -74,7 +75,6 @@ function getApproveOrderData(DataState,pageType){//pageType:用来判断是忘�
 	}else{
 		param.push("pageSize="+25);
 	}
-	param.push("userId="+1);
 	param.push("status="+DataState);
 	param.push("pageType="+pageType);
 	param.push("method=appOrderList");
@@ -91,9 +91,21 @@ function getApproveOrderData(DataState,pageType){//pageType:用来判断是忘�
 	});			
 }
 function getApproveOrderDataError(){
-	alert("出错")	
+	showBox("提示","接收数据失败!!!!","alert");
 }
 function getApproveOrderDataSuccess(data){
+	if(parseInt(data.msgCode)==3){
+		locationHref('../index.html');
+	}
+	if(GLOBAL.rolePow==0)
+	{
+		return;
+	}
+	if(parseInt(data.msgCode)==4){
+		showBox("提示",data.msg,"alert");
+		GLOBAL.rolePow=0;	
+		return;
+	}
 	var code=data.entity.list;
 	params.pageCount=parseInt(data.entity.pagetotal);
 	params.currentPage=parseInt(data.entity.currentpage);
@@ -108,7 +120,7 @@ function getApproveOrderDataSuccess(data){
 		var DepartMentType;
 		for(var i=0,j=code.length;i<j;i++){
 			html+='<tr><td>'+code[i].userName+'</td>';
-			var depart=parseInt(code[i].departmentType);
+			depart=parseInt(code[i].departmentType);
 			switch (depart){
 				case 1 : DepartMentType='信息技术部';break;
 				case 2 : DepartMentType='财务部';break;
@@ -167,7 +179,6 @@ function getForgetOrderData(DataState,pageType){
 	}else{
 		param.push("pageSize="+25);
 	}
-	param.push("userId="+1);
 	param.push("status="+DataState);
 	param.push("pageType="+pageType);
 	param.push("method=forOrderList");
@@ -184,9 +195,18 @@ function getForgetOrderData(DataState,pageType){
 	});			
 }
 function getForgetOrderDataError(){
-	alert("出错")	
+	showBox("提示","接收数据失败!!!!","alert");
 }
-function getForgetOrderDataSuccess(data){
+function getForgetOrderDataSuccess(data)
+{
+	if(parseInt(data.msgCode)==3){
+		locationHref('../index.html');
+	}else if(GLOBAL.rolePow==0){
+		return;
+	}else if(parseInt(data.msgCode)==4){
+		showBox("提示",data.msg,"alert");	
+		return;
+	}
 	var code=data.entity.list;
 	params2.pageCount=parseInt(data.entity.pagetotal);
 	params2.currentPage=parseInt(data.entity.currentpage);
@@ -227,7 +247,7 @@ function getForgetOrderDataSuccess(data){
 				gongDanZhuanTai='审核未通过';	
 			}
 			html+='<td>'+gongDanZhuanTai+'</td>';
-			html+='<td><a onclick="showContactionBox('+code[i].id+',2,'+CURRENTUSERID+')" href="javascript:void(0);" style=" color:#63adee;">查看</a></td>';
+			html+='<td><a onclick="showContactionBox('+code[i].id+',2)" href="javascript:void(0);" style=" color:#63adee;">查看</a></td>';
 			html+='</tr>';	
 		}
 	}
@@ -235,7 +255,7 @@ function getForgetOrderDataSuccess(data){
 	updatePageInfo2();
 }
 //活得单条信息的详情
-function getApproveDetail(id,approveType,currentId){
+function getApproveDetail(id,approveType){
 	var param=[];
 	param.push("approveId="+id);
 	param.push("method="+'dateDetail');
@@ -250,20 +270,49 @@ function getApproveDetail(id,approveType,currentId){
 		timeout:30000,//非必须.默认30秒秒
 		error:getApproveDetailError, //非必须
 		success:getApproveDetailSuccess//非必须
-	},approveType,currentId);	
+	},approveType);	
 }
 function getApproveDetailError(){}
-function getApproveDetailSuccess(data,approveType,currentId){
+function getApproveDetailSuccess(data,approveType){
+	if(parseInt(data.msgCode)==3){
+		locationHref('../index.html');
+	}else if(parseInt(data.msgCode)==4){
+		showBox("提示",data.msg,"alert");	
+		return;
+	}
 	var html='';
 	var code=data.entity.list;
 	if(code.length>0){
+			var depart;
+			var DepartMentType='';
 		for(var i=0,j=code.length;i<j;i++){
-		
+			depart=parseInt(code[i].departmentType);
+			switch (depart){
+				case 1 : DepartMentType='信息技术部';break;
+				case 2 : DepartMentType='财务部';break;
+				/*case 3 : DepartMentType='调休';break;
+				case 4 : DepartMentType='婚嫁';break;
+				case 5 : DepartMentType='产假';break;
+				case 6 : DepartMentType='计生假';break;
+				case 7 : DepartMentType='年休假';break;
+				case 8 : DepartMentType='丧假';break;
+				case 9 : DepartMentType='工伤假';break;
+				case 10 : DepartMentType='出差';break;
+				case 11 : DepartMentType='其他假';break;*/	
+			}
 			html+='<tr><td width="110">申请人：</td>';	
-			html+='<td>'+code[i].userName+'&nbsp;'+code[i].departmentType+'&nbsp;'+code[i].positionName+'</td></tr>';
+			html+='<td>'+code[i].userName+'&nbsp;';
+			html+=DepartMentType+'&nbsp;';
+			html+code[i].positionName+'</td></tr>';
 			html+='<tr><td width="110">申请类型：</td>';
 			if(approveType==1){
-				html+='<td>'+code[i].type+'</td></tr>';	
+				html+='<td>';
+				if(parseInt(code[i].type)==1){
+					html+='加班';
+				}else if(parseInt(code[i].type)==2){
+					html+='请假';
+				}
+				html+='</td></tr>';
 			}else if(approveType==2){
 				html+='<td>忘打卡</td></tr>';	
 			}
@@ -287,8 +336,7 @@ function getApproveDetailSuccess(data,approveType,currentId){
 			html+='	<tr><td width="110">备注：</td>';
 			
 			html+='<td>'+code[i].remark+'</td></tr>';
-			if(currentId == code[i].currentUserid && code[i].auditStatus!=2)
-			/*************************************************************************************************/
+			if(CURRENTUSERID == code[i].currentUserid && code[i].auditStatus!=2)
 			{
 				html+='<tr><td width="110">操作：</td>';
 				var roleK=GLOBAL.roleKey;
@@ -321,6 +369,10 @@ function updateApprove(id,type){//更新工单 或者忘打卡记录单
 	var param=[];
 	var ApproveRadioStatus=$('#approveDetailTable input[name="state"]:checked').val();
 	var ApproveOpinion=$('#ApproveOpinion').val();
+	if(ApproveRadioStatus==3 && trim(ApproveOpinion)=='' ){
+		showBox("提示","请填写驳回理由!!!!","alert")
+		return;
+	}
 	var ApproveMangerId=$('#ApproveMangerId').val();
 	param.push("approveId="+id);//工单ID
 	param.push("approveRadioStatus="+ApproveRadioStatus);//审核状态
@@ -347,9 +399,16 @@ function updateApprove(id,type){//更新工单 或者忘打卡记录单
 	},id,type);
 }
 function updateApproveError(){
-	alert("审批失败");	
+	showBox("提示","审批失败!!","alert");
+	closeBox();	
+	return;
 }
 function updateApproveSuccess(data,id,type){
+	if(parseInt(data.msgCode)==3){
+		locationHref('../index.html');
+	}else if(parseInt(data.msgCode)==4){
+		showBox("提示",data.msg,"alert");	
+	}
 	insertLog(id,type);
 	closeBox();
 	if(parseInt(type)==1){
@@ -400,6 +459,12 @@ function getApproveManger(){//获得所有管理者
 
 function getApproveMangerError(){};
 function getApproveMangerSuccess(data){
+	if(parseInt(data.msgCode)==3){
+		locationHref('../index.html');
+	}else if(parseInt(data.msgCode)==4){
+		showBox("提示",data.msg,"alert");	
+		return;
+	}
 	var code=data.entity.list;
 	var html="";
 	if(!code.length<1){
@@ -547,7 +612,6 @@ function CurentTime()
 function getUserRoleKey(){
 	var param=[];
 	param.push("method=userRoleKey");
-	param.push("userId="+1);
 	ajax({
 		url:"/php/action/ApproveOrderInfo.php",
 		type:'post',//非必须.默认get
@@ -560,11 +624,18 @@ function getUserRoleKey(){
 		success:getUserRoleKeySuccess//非必须
 	});	
 };
-function getUserRoleKeyError(){alert(1)}
+function getUserRoleKeyError(){
+	showBox("提示","查询出错!!","alert");
+	}
 function getUserRoleKeySuccess(data){
+	if(parseInt(data.msgCode)==4){
+		showBox("提示",data.msg,"alert");	
+		return;
+	}
 	if(data.entity.list.length>0){
 		GLOBAL.roleKey=data.entity.list[0].roleKey;
 		GLOBAL.roleName=data.entity.list[0].userName;
+		CURRENTUSERID=data.entity.list[0].id;
 	}
 }
 $(document).ready(function(e) {
@@ -717,7 +788,7 @@ $(document).ready(function(e) {
 									</tbody>   
 								</table>
 								<!-- 分页开始 -->
-								<dl class="main_pagination 2">
+								<dl class="main_pagination 2" id="fenye2">
 									<dd class="pagination">
 										<span id="pageItem2"></span>
 										<span class="page_no">共<span id="pageCount2"></span>页 到第<input id="pageObj2" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onclick="goPage2($.trim($('#pageObj').val()));" /></span>

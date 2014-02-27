@@ -31,7 +31,7 @@
 				if($stInfo['status'] != '4'){
 					$sCondition .=" and audit_status = ".$stInfo['status'];
 					if(!empty($stInfo['userId'])){
-					$sCondition .=" and user_id = ".$stInfo['userId'];	
+					$sCondition .=" and VACATION_RECORD.CURRENT_USERID = ".$stInfo['userId'];	
 				}
 			}
 			
@@ -58,7 +58,6 @@
 			from VACATION_RECORD , USER_INFO".$sCondition ."
 			ORDER BY VACATION_RECORD.create_time desc 
 			limit " .($stInfo['pageNo']-1)*$stInfo['pageSize']." , ".$stInfo['pageSize'];
-			//echo $sql;
 			$sql2=" select * from VACATION_RECORD , USER_INFO" .$sCondition ;	
 			$stConn = new MysqlConn();
 			$stResult = $stConn->query($sql);
@@ -85,7 +84,7 @@
 			if($stInfo['status'] != '4'){
 				$sCondition .=" and audit_status = ".$stInfo['status'];
 				if(!empty($stInfo['userId'])){
-				$sCondition .=" and user_id = ".$stInfo['userId'];	
+				$sCondition .=" and FORGET_CARD.CURRENT_USERID = ".$stInfo['userId'];	
 			}
 			}
 			
@@ -218,7 +217,7 @@
 		
 		function updateApproveDao(){
 			$stConn = new MysqlConn();
-			$smArr = array(	'audit_remark' => $this->vacationRecord->setAuditRemark(),
+			$smArr = array(	'audit_remark' => $this->vacationRecord->getAuditRemark(),
 							'audit_status' => $this->vacationRecord->getAuditStatus(),
 							'audit_time' => $this->vacationRecord->getAuditTime(),
 							'current_userid' => $this->vacationRecord->getCurrentUserid(),
@@ -253,7 +252,12 @@
 		}
 		
 		function getCurrentRoleKey($stInfo){
-			$sql='SELECT SYSTEM_ROLE.ROLE_KEY ,USER_INFO.ID , USER_INFO.USER_NAME FROM SYSTEM_ROLE ,USER_INFO where 0=0 AND  SYSTEM_ROLE.ID = USER_INFO.ROLE_ID  and USER_INFO.ID = ' . $stInfo['userId'];
+			$sql='SELECT SYSTEM_ROLE.ROLE_KEY ,
+			USER_INFO.ID ,
+			 USER_INFO.USER_NAME FROM SYSTEM_ROLE ,
+			 USER_INFO where 0=0 
+			 AND  SYSTEM_ROLE.ID = USER_INFO.ROLE_ID  
+			 and USER_INFO.ID = ' . $stInfo;
 			$stConn = new MysqlConn();
 			$stResult = $stConn->query($sql);
 			$stList = array();

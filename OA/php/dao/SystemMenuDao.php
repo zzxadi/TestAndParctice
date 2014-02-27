@@ -3,7 +3,6 @@ class SystemMenuDao{
 	private $systemMenu;
 	private $smConn;
 	public function __construct(){
-		require_once('MysqlConn.php');
 		$this->smConn = new MysqlConn();
 	}
 	public function setSystemMenu($systemMenu){
@@ -21,7 +20,8 @@ class SystemMenuDao{
 						'menu_reg' => $this->systemMenu->getMenuReg(),
 						'menu_index' => $this->systemMenu->getMenuIndex(),
 						'menu_remark' => $this->systemMenu->getMenuRemark());
-		return $this->smConn->insert('SYSTEM_MENU',$smArr);
+		$smResult = $this->smConn->insert('SYSTEM_MENU',$smArr);
+		return $smResult;
 	}
 	public function updateRecord(){
 		$smArr = array(	'menu_name' => $this->systemMenu->getMenuName(),
@@ -32,7 +32,8 @@ class SystemMenuDao{
 						'menu_reg' => $this->systemMenu->getMenuReg(),
 						'menu_index' => $this->systemMenu->getMenuIndex(),
 						'menu_remark' => $this->systemMenu->getMenuRemark());
-		return $this->smConn->update('SYSTEM_MENU',$smArr,'id = '.$this->systemMenu->getId());
+		$smResult = $this->smConn->update('SYSTEM_MENU',$smArr,'id = '.$this->systemMenu->getId());
+		return $smResult;
 	}
 	public function getLevelRecord(){
 		$smSql = 'select * from SYSTEM_MENU ';

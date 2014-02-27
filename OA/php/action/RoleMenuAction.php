@@ -1,13 +1,14 @@
 <?php
+require_once("../utils/include.php");
+//require_once('../action/InterceptAction.php');
 require_once('../class/RoleMenu.php');
+require_once('../class/SystemMenu.php');
 require_once('../dao/RoleMenuDao.php');
-require_once('../utils/common.php');
-require_once('../utils/module.php');
-$error = '';
-/*------------
-这里放用户登录验证。
--------------*/
-$type = getParamByName('type');
+$stPrint = array();
+$stPrint['entity'] = false;
+$stPrint['msgCode'] = 2;
+$stPrint['msg'] = '访问异常';
+$type = getParamByName('method');
 switch($type){
 	case 'getRecord':
 		getRecord();
@@ -27,32 +28,37 @@ function getRecord(){
 	$role_id = $rmMenu->setRoleId(getParam('role_id',''));
 	$rmList = $rmMenuDao->getRecord();
 	if($rmList != NULL && !is_array($rmList)){
-		$error = $rmList;
-		$rmData = jsonFrame(array(),2,$error);
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = $rmList;
+		dataPrint($stPrint);	
 	}else{
-		$rmData = jsonFrame($rmList,1,'');
+		$stPrint['entity'] = $rmList;
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '';
+		dataPrint($stPrint);	
 	}
-	return dataPrint($rmData);	
 }
 //添加、更新数据
 function updateRecord(){
 	$rmMenu = new RoleMenu();
+	$rmSystemMenu = new SystemMenu();
 	$rmMenuDao = new RoleMenuDao();
 	$rmMenuDao->setRoleMenu($rmMenu);
-	$role_id = $rmMenu->setRoleId(getParam('role_id',''));
+	$rmMenuDao->setSystemMenu($rmSystemMenu);
+	$rmMenu->setRoleId(getParam('role_id',''));
+	$rmSystemMenu->setMenuDef(getParam('menu_def',''));
 	$menuStr = getParam('menu_id','');
 	$menu_id =  preg_split('/_/',$menuStr);
 	if($rmMenuDao->updateRecord($menu_id)){
-		echo '{"entity":"","msgCode":"1","msg":"编辑成功"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '编辑成功';
+		dataPrint($stPrint);	
 	}else{
-		echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = '编辑失败';
+		dataPrint($stPrint);	
 	}
-}
-function jsonFrame($arr,$msgCode=0,$msg=''){
-	$data = array('entity'=>NULL,'msgCode'=>NULL,'msg'=>NULL);
-	$data['entity'] = $arr;
-	$data['msgCode'] = $msgCode;
-	$data['msg'] = $msg;
-	return $data;
 }
 ?>

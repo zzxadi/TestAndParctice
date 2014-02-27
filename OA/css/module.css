@@ -41,7 +41,7 @@ a:hover{ color:#007bc7; text-decoration:underline;}
 .tab_content{ display:none;}
 .footer{ height:50px; line-height:50px; text-align:center;}
 
-.mybtn{background-color: #63ADEE;border: 0 none;color: #FFFFFF;cursor: pointer;font-weight: 700;height: 24px;overflow: visible;padding: 0 15px;}
+.mybtn{background-color: #63ADEE;border: 0 none;color: #FFFFFF;cursor: pointer;font-weight: 700;height: 29px;overflow: visible;padding: 0 15px;}
 .btn_cancel, .btn_back, .btn_close, .btn_reset{background-color: #949494;}
 .txt{border: 1px solid #E7E7E7;padding: 3px 5px;vertical-align: middle;}
 .cred {color: #E84244;}

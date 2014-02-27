@@ -1,11 +1,10 @@
 <div class="header">
 	<p class="meta">
-		<a href="#">我的考勤</a>
-		<a href="#">我的资料</a>
-		<a href="../index.html">返回首页</a>
+		<a href="../attendance/personal-info.html">我的考勤</a>
+		<a href="../attendance/passwd-modify.html">修改密码</a>
 	</p>
 	<a href="/"><img src="/images/base/oa_login_logo.png" width="180" height="50"></a>
-	<span class="welcome">您好 <strong>信息技术部-陈方贺</strong></span>
+	<span class="welcome">您好 <strong id="userPos"></strong></span>
 	<a href="javascript:void(0);" class="logout" id="logout">[退出]</a>
 </div>
 <script type="text/javascript">
@@ -29,5 +28,13 @@
 				}
 			}
 		})
-	}, false)
+	}, false);
+
+	$(function(){
+		var userInfo  = JSON.parse(getCookie('userInfo'));
+
+		if(userInfo){
+			$('#userPos').html(userInfo.positionName+'-'+userInfo.username);
+		}
+	})
 </script>

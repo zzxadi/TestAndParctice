@@ -42,7 +42,7 @@
 		/****剩余假期信息****/		
 		function loadRemainHoliday(){		
 			ajax({
-				url: '/php/action/PersonalRecordAction.php?Type=5',
+				url: '/php/action/PersonalRecordAction.php?method=getData&Type=5',
 				type: 'get',
 				data: '',
 				dataType: 'json',
@@ -50,7 +50,11 @@
 			})
 		}	
 		function loadRemainHolidaySuccess(data){		
-			checkJsonRight(data);
+			if(data.msgCode==3){
+				locationHref('../login.html');
+			}else if(data.msgCode== 4||data.msgCode==2){
+				showBox('提示',data.msg,'alert');return;
+			}
 			var html = '',records = data.entity.list;
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];
@@ -77,7 +81,12 @@
 			})
 		}	
 		function loadPersonalInfoSuccess(data){	
-			checkJsonRight(data);
+			if(data.msgCode==3){
+				locationHref('../login.html');
+			}else if(data.msgCode== 4||data.msgCode==2){
+				showBox('提示',data.msg,'alert');
+				return;
+			}
 			var html = null,result = data.entity.list[0];
 			if(!result) return;
 			switch(parseInt(result.departmentType)){ 			//待以后确定
@@ -102,7 +111,7 @@
 			if(type==1||!type){
 				param.push('pageSize='+4);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?Type=1',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=1',
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -112,7 +121,7 @@
 			if(type==2||!type){
 				param.push('pageSize='+4);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?Type=2',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=2',
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -122,7 +131,7 @@
 			if(type==3||!type){
 				param.push('pageSize='+2);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?Type=3',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=3',
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -132,7 +141,7 @@
 			if(type==4||!type){
 				param.push('pageSize='+2);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?Type=4',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=4',
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -142,6 +151,11 @@
 		}
 			
 		function loadCurrentRecordSuccess(data){
+			if(data.msgCode==3){
+				locationHref('../login.html');
+			}else if(data.msgCode== 4||data.msgCode==2){
+				showBox('提示',data.msg,'alert');return;
+			}
 			var html = '',records = data.entity.list;
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];
@@ -164,6 +178,11 @@
 		}		
 		
 		function CurrentForgetRecordSuccess(data){
+			if(data.msgCode==3){
+				locationHref('../login.html');
+			}else if(data.msgCode== 4||data.msgCode==2){
+				showBox('提示',data.msg,'alert');return;
+			}
 			var html = '',records = data.entity.list;
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];
@@ -181,6 +200,11 @@
 		}
 		
 		function loadPersonalRecordSuccess(data){
+			if(data.msgCode==3){
+				locationHref('../login.html');
+			}else if(data.msgCode== 4||data.msgCode==2){
+				showBox('提示',data.msg,'alert');return;
+			}
 			var html = '',records = data.entity.list;
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];
@@ -211,6 +235,11 @@
 		}
 		
 		function PersonalForgetRecordSuccess(data){
+			if(data.msgCode==3){
+				locationHref('../login.html');
+			}else if(data.msgCode== 4||data.msgCode==2){
+				showBox('提示',data.msg,'alert');return;
+			}
 			var html = '',records = data.entity.list;
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];

@@ -3,8 +3,11 @@ require_once('../class/SystemRole.php');
 require_once('../dao/SystemRoleDao.php');
 require_once('../utils/common.php');
 require_once('../utils/module.php');
-$error = '';
-$type = getParamByName('type');
+$stPrint = array();
+$stPrint['entity'] = false;
+$stPrint['msgCode'] = 2;
+$stPrint['msg'] = '访问异常';
+$type = getParamByName('method');
 switch($type){
 	case 'getRoleList':
 		getRoleList();
@@ -27,12 +30,15 @@ function getRoleList(){
 	$srRoleDao = new SystemRoleDao();
 	$roleList = $srRoleDao->getAllRecord();
 	if($roleList != NULL && !is_array($roleList)){
-		$error = $roleList;
-		$srData = jsonFrame(array(),2,$error);
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = $roleList;
+		dataPrint($stPrint);
 	}else{
-		$srData = jsonFrame($roleList,1,'');
+		$stPrint['entity'] = $roleList;
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '';
+		dataPrint($stPrint);
 	}
-	return dataPrint($srData);
 }
 //添加记录
 function addRecord(){
@@ -44,9 +50,15 @@ function addRecord(){
 	$srRole->setRoleKey(getParam('role_key',''));
 	$srRole->setRoleDes(getParam('role_des',''));
 	if($srRoleDao->addRecord()){
-		echo '{"entity":"","msgCode":"1","msg":"数据添加成功"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '数据添加成功';
+		dataPrint($stPrint);	
 	}else{
-		echo '{"entity":"","msgCode":"2","msg":"数据添加失败"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = '数据添加失败';
+		dataPrint($stPrint);	
 	}
 }
 //获取单条记录
@@ -56,12 +68,15 @@ function getSingleRecord(){
 	$srRoleDao = new SystemRoleDao();
 	$roleRecord = $srRoleDao->getSingleRecord($param,$paramValue);
 	if($roleRecord != NULL && !is_array($roleRecord)){
-		$error = $roleRecord;
-		$srData = jsonFrame(array(),2,$error);
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = $roleRecord;
+		dataPrint($stPrint);
 	}else{
-		$srData = jsonFrame($roleRecord,1,'');
+		$stPrint['entity'] = $roleRecord;
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '';
+		dataPrint($stPrint);
 	}
-	return dataPrint($srData);
 }
 //更新一条记录
 function updateRecord(){
@@ -73,9 +88,15 @@ function updateRecord(){
 	$srRole->setRoleKey(getParam('role_key',''));
 	$srRole->setRoleDes(getParam('role_des',''));
 	if($srRoleDao->updateRecord()){
-		echo '{"entity":"","msgCode":"1","msg":"编辑成功"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '编辑成功';
+		dataPrint($stPrint);	
 	}else{
-		echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = '编辑失败';
+		dataPrint($stPrint);	
 	}
 }
 //删除一条记录
@@ -85,17 +106,15 @@ function delRecord(){
 	$srRoleDao = new SystemRoleDao();
 	$roleRecord = $srRoleDao->delRecord($param,$paramValue);
 	if($roleRecord){
-		echo '{"entity":"","msgCode":"1","msg":"删除成功"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '删除成功';
+		dataPrint($stPrint);	
 	}else{
-		echo '{"entity":"","msgCode":"2","msg":"删除失败"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = '删除失败';
+		dataPrint($stPrint);	
 	}
 }
-function jsonFrame($arr,$msgCode=0,$msg=''){
-	$data = array('entity'=>NULL,'msgCode'=>NULL,'msg'=>NULL);
-	$data['entity'] = $arr;
-	$data['msgCode'] = $msgCode;
-	$data['msg'] = $msg;
-	return $data;
-}
-
 ?>

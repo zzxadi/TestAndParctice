@@ -33,7 +33,7 @@ function showDetail(id,operateLogo){
 function getWorkOrderList(currentPage,str){
 	str = str ? str : '';
 	currentPage = currentPage ? currentPage : 1;
-	GLOBAL_PARAM[str+'currentPage'] = currentPage;
+	GLOBAL_PARAM[str+'currentPage'] = parseInt(currentPage);
 	var param = [];
 	var operateMethod = str ? 'forgetCardList' : 'vacationList';
 	param.push('currentPage='+currentPage);
@@ -85,8 +85,8 @@ function getWorkOrderListSuccess(data,str){
 		html = '<tr><td colspan="'+colspan+'">暂无数据</td></tr>';
 	}
 	$('#'+str+'workOrderList').html(html);
-	GLOBAL_PARAM[str+'pageCount'] = data.entity.pagetotal;
-	GLOBAL_PARAM[str+'currentPage'] = data.entity.currentpage;	//当前页
+	GLOBAL_PARAM[str+'pageCount'] = parseInt(data.entity.pagetotal);
+	GLOBAL_PARAM[str+'currentPage'] = parseInt(data.entity.currentpage);	//当前页
 	updatePageInfo(str);
 }
 /****分页开始****/

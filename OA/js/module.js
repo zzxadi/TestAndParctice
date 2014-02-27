@@ -103,7 +103,7 @@ function setCookie(name,value,expires){
 	}else expires = '';
 	value = encodeURIComponent(value);
 	//sBaseAreaName来自common.js
-	document.cookie = name+'='+value+';path=/;domain='+sBaseAreaName+';'+expires;
+	document.cookie = name+'='+value+';path=/;'+expires;
 }
 function deleteCookie(name){
 	//sBaseAreaName来自common.js

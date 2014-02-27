@@ -1,19 +1,20 @@
 <?php
 	class LoginDAO {
 		function login($email, $passwd){
-			$sSql = "select id from USER_INFO where 0=0 ";
+			$sSql = "select id, user_name, position_name from USER_INFO where 0=0 ";
 			$sCondition = " and email = '" . $email . "@digione.cn' and password = '" . sha1($passwd) ."' limit 1 ";
 			$stConn = new MysqlConn();
 			$stResult = $stConn->query($sSql . $sCondition);
 			$isExist = (int)mysql_num_rows($stResult);
 			$result = false;
+			$stInfo = '';
 			if($isExist == 1){
 				$stInfo = mysql_fetch_assoc($stResult);
 				$userId = (int)$stInfo['id'];
 				$result = loginCookie($userId);
 			}
 			mysql_free_result($stResult);
-			return $result;
+			return $stInfo;
 		}
 
 		function logout(){

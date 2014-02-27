@@ -43,7 +43,7 @@ function getWorkOrderDetailSuccess(data){
 		var type = result.type == 1 ? '上班' : (result.type == 2 ? '下班' : '暂无'),
 				remark = result.remark ? result.remark : '暂无',
 				auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
-		$('#type_fc').text();
+		$('#type_fc').text(type);
 		$('#createTime_fc').text(result.createTime);
 		$('#forgetTime_fc').text(result.forgetTime);
 		$('#inTime_fc').text(result.inTime);

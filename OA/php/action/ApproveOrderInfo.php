@@ -1,65 +1,21 @@
 <?php
+	
 	require_once("../utils/include.php");
+	require_once( "../action/InterceptAction.php");
 	require_once("../class/VacationRecord.php");
 	require_once("../class/VacationLog.php");
 	require_once("../class/ForgetCard.php");
 	require_once("../dao/ApproveOrderDao.php");
 	$currentPage=getParam('currentPage','1');
-	$pageSize = $_POST['pageSize'];
-	$userId=$_POST['userId'];
-	$status=$_POST['status'];//代表 审核状态
-	$method=$_POST['method'];
-	$pageNo=$_POST['pageNo'];
-	$pageType=(int)$_POST['pageType'];//用来判断是忘打卡，还是普通请假类
-	$approveType=(int)$_POST['approveType'];
-	$approveId=(int)$_POST['approveId'];
-	$approveRadioStatus=(int)$_POST['approveRadioStatus'];
-	$approveOpinion=$_POST['approveOpinion'];
-	$approveMangerId=(int)$_POST['approveMangerId'];
-	$approveCurrentTime=$_POST['updateTime'];
-
-	$stPrint = array();
-	$stPrint["FieldArray"] = array();
-	$stPrint["DataType"] = $iDataType;
-	$stPrint["Entity"] = false;
-	$stPrint["MsgCode"] = 2;
-	$stPrint["Msg"] = '访问异常';
-	//权限判断
-	/*$iLoginUserID = (int)getUserID();
-	if($iLoginUserID <= 0){
-		$stPrint["MsgCode"] = 3;
-		$stPrint["Msg"] = '没有登录';
-		dataPrint($stPrint);	
-	}*/
-
-	$VacationInfo=array();
-	$VacationInfo['userId']=$userId;
-	$VacationInfo['status']= $status;
-	$VacationInfo['pageNo']= $pageNo;
-	$VacationInfo['pageSize']= $pageSize;
-	$VacationInfo['id']= $approveId;	
-	$VacationInfo['pageType']= $pageType;
-			   			
-	$VacationInfo['approveType']= $approveType;
-	$VacationInfo['approveRadioStatus']= $approveRadioStatus;
-	$VacationInfo['approveOpinion']= $approveOpinion;
-	$VacationInfo['approveMangerId']= $approveMangerId;
-	$VacationInfo['approveCurrentTime']= $approveCurrentTime;
-
-	//$VacationInfo['CurrentPage']= $CurrentPage;
-	
+	$method=getParam('method','');
 	switch($method){
-		case 'appOrderList':getOrderList($VacationInfo);break;
-		case 'forOrderList' :getForgetOrderList($VacationInfo);break;
-		case 'dateDetail' :getApproveDetail($VacationInfo);;break;
+		case 'appOrderList':getOrderList();break;
+		case 'forOrderList' :getForgetOrderList();break;
+		case 'dateDetail' :getApproveDetail();break;
 		case 'managerList': getApproveMangerList();break;
-		case 'updateAPP' :updateApprove($VacationInfo);
-							//insertVacationLog();
-							break;
-		case 'userRoleKey' :getCurrentRoleKey($VacationInfo);break;	
-		case 'updatefor': updateForgetCard();
-							//insertVacationLog();
-							break;
+		case 'updateAPP' :updateApprove();		break;
+		case 'userRoleKey' :getCurrentRoleKey();break;	
+		case 'updatefor': updateForgetCard();break;
 		case 'insert': insertVacationLog();break;
 	}
 	//更新工单 
@@ -70,9 +26,8 @@
 		$VacaBean->setAuditStatus( getParam('approveRadioStatus',' '));
 		$VacaBean->setAuditTime( getParam('updateTime',' '));
 		$VacaBean->setCurrentUserid( getParam('approveMangerId',' '));
-		$VacaBean->setPreviousUserid( getParam('userId',' '));
+		$VacaBean->setPreviousUserid((int)getUserId());
 		$VacaBean->setId( getParam('approveId',' '));
-		
 		$AppDao->setVacationRecord($VacaBean);
 		if($AppDao->updateApproveDao()){
 			echo '{"entity":"","msgCode":"1","msg":"编辑成功"}';
@@ -88,7 +43,7 @@
 		$forBean->setAuditStatus(getParam('approveRadioStatus',' '));
 		$forBean->setAuditTime(getParam('updateTime',' '));
 		$forBean->setCurrentUserid(getParam('approveMangerId',' '));
-		$forBean->setPreviousUserid( getParam('userId',' '));
+		$forBean->setPreviousUserid((int)getUserId());
 		$forBean->setId( getParam('approveId',' '));
 		$AppDao->setVacationRecord($VacaBean);
 		if($AppDao->updateApproveDao()){
@@ -112,7 +67,7 @@
 		 $LogBean->setContent("操作人：".getParam('currentName','')." 对工单号：".getParam('approveId',' ')." 进行了：".$approveRadioStatus,'');
 		 $LogBean->setCreateTime(getParam('updateTime',' '));
 		 $LogBean->setType((int)getParam('approveType',' '));
-		 $LogBean->setUserId((int)getParam('userId',' '));
+		 $LogBean->setUserId((int)getUserId());
 		 if($AppDao->insertVactionLog()){
 			echo '{"entity":"","msgCode":"1","msg":"编辑成功"}';
 		}else{
@@ -121,9 +76,15 @@
 	 }
 	
 	//查询工单
-	function getOrderList($kk){
+	function getOrderList(){
+		$VacationInfo=array();
+		$VacationInfo['userId']=(int)getUserId();
+		$VacationInfo['status']= getParam('status','');
+		$VacationInfo['pageNo']= getParam('pageNo','');
+		$VacationInfo['pageSize']= getParam('pageSize','');
+		$VacationInfo['pageType']= (int)getParam('pageType','');		   			
 		$AppDao=new ApproveOrderDao();
-		$stData=$AppDao->getList($kk);	
+		$stData=$AppDao->getList($VacationInfo);	
 		if($stData === false){
 			$stPrint["msg"] = $AppDao->lastError;
 			dataPrint($stPrint);	
@@ -135,10 +96,16 @@
 	}
 	
 	//查询忘打卡记录
-	function getForgetOrderList($kk){
+	function getForgetOrderList(){
+		$VacationInfo=array();
+		$VacationInfo['userId']=(int)getUserId();
+		$VacationInfo['status']= getParam('status','');
+		$VacationInfo['pageNo']= getParam('pageNo','');
+		$VacationInfo['pageSize']= getParam('pageSize','');
+		$VacationInfo['pageType']= (int)getParam('pageType','');		   			
 		$AppDao=new ApproveOrderDao();
-		$stData=$AppDao->getForgetOrderListDao($kk);	
-		if($stData === false){
+		$stData=$AppDao->getForgetOrderListDao($VacationInfo);
+		if($stData === false ){
 			$stPrint["msg"] = $AppDao->lastError;
 			dataPrint($stPrint);	
 		}
@@ -148,9 +115,12 @@
 		dataPrint($stPrint);
 	}
 	//获得工单详情
-	function getApproveDetail($kk){
+	function getApproveDetail(){
 		$AppDao=new ApproveOrderDao();
-		$stData=$AppDao->getApproveDetail($kk);	
+		$VacationInfo=array();
+		$VacationInfo['id']= (int)getParam('approveId','');	
+		$VacationInfo['approveType']= (int)getParam('approveType','');	
+		$stData=$AppDao->getApproveDetail($VacationInfo);	
 		if($stData === false){
 			$stPrint["msg"] = $AppDao->lastError;
 			dataPrint($stPrint);	
@@ -174,9 +144,9 @@
 		dataPrint($stPrint);
 	}
 	//查询当前用户key值
-	function getCurrentRoleKey($kk){
+	function getCurrentRoleKey(){
 		$AppDao = new ApproveOrderDao();
-		$stData = $AppDao->getCurrentRoleKey($kk);
+		$stData = $AppDao->getCurrentRoleKey(getUserId());
 		if($stData === false){
 			$stPrint["msg"] = $AppDao->lastError;
 			dataPrint($stPrint);	

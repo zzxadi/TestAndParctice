@@ -1,6 +1,7 @@
 <?php
 	require_once("../utils/include.php");
 	require_once("../dao/LoginDAO.php");
+	require_once('../action/InterceptAction.php');
 
 	$iDataType = getParam("dataType","0");
 	$oldPwd = getParam("oldPwd","");

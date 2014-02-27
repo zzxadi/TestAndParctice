@@ -35,7 +35,7 @@
 			var	username = $.trim($('#username').val()),
 				email = $.trim($('#email').val()),
 				roleId = $('#roleId').val(),
-				pageSize  = 2,
+				pageSize  = 10,
 				param = [];
 
 			if(tag == 'searchForm'){
@@ -54,6 +54,7 @@
 			params.currentPage = currentPage;
 			param.push('currentPage='+currentPage);
 			param.push('pageSize='+pageSize);
+			param.push('method=getUserList')
 			ajax({
 				url: '/php/action/UserInfo.php',
 				type: 'post',

@@ -1,5 +1,4 @@
 <?php
-require_once("MysqlConn.php");
 class WorkOrderDao{
 	/**
 	 * 新增请假/出差、加班单

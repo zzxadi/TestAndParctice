@@ -1,23 +1,16 @@
 <?php
+require_once("../utils/include.php");
+require_once('../action/InterceptAction.php');
 require_once('../class/SystemMenu.php');
 require_once('../dao/SystemMenuDao.php');
-require_once('../utils/common.php');
-require_once('../utils/module.php');
 $error = '';
-$type = getParamByName('type');
+$type = getParamByName('method');
+
 switch($type){
-	case 'addMenu':
-		addMenu();
-		break;
-	case 'updateMenu':
-		updateMenu();
-		break;
-	case 'getPartMenu':
-		getPartMenu();
-		break;
-	case 'getSingleMenu':
-		getSingleMenu();
-		break;
+	case 'addMenu':addMenu();break;
+	case 'updateMenu':updateMenu();break;
+	case 'getPartMenu':getPartMenu();break;
+	case 'getSingleMenu':getSingleMenu();break;
 }
 //添加菜单
 function addMenu(){
@@ -33,9 +26,15 @@ function addMenu(){
 	$smMenu->setMenuIndex(getParam('menu_index',''));
 	$smMenu->setMenuRemark(getParam('menu_remark',''));
 	if($smMenuDao->addRecord()){
-		echo '{"entity":"","msgCode":"1","msg":"数据添加成功"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '数据添加成功';
+		dataPrint($stPrint);
 	}else{
-		echo '{"entity":"","msgCode":"2","msg":"数据添加失败"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = '数据添加失败';
+		dataPrint($stPrint);
 	}
 }
 //更新菜单
@@ -53,9 +52,15 @@ function updateMenu(){
 	$smMenu->setMenuIndex(getParam('menu_index',''));
 	$smMenu->setMenuRemark(getParam('menu_remark',''));
 	if($smMenuDao->updateRecord()){
-		echo '{"entity":"","msgCode":"1","msg":"编辑成功"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '编辑成功';
+		dataPrint($stPrint);
 	}else{
-		echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = '编辑失败';
+		dataPrint($stPrint);
 	}
 }
 //获取一条记录
@@ -65,12 +70,16 @@ function getSingleMenu(){
 	$smMenuDao = new SystemMenuDao();
 	$menuRecord = $smMenuDao->getSingleRecord($param,$paramValue);
 	if($menuRecord != NULL && !is_array($menuRecord)){
-		$error = $menuRecord;
-		$smData = jsonFrame(array(),2,$error);
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = $menuRecord;
+		dataPrint($stPrint);
 	}else{
-		$smData = jsonFrame($menuRecord,1,'');
+		$stPrint['entity'] = $menuRecord;
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '获取成功';
+		dataPrint($stPrint);
 	}
-	return dataPrint($smData);
 }
 //获取部分菜单记录
 function getPartMenu(){
@@ -83,18 +92,15 @@ function getPartMenu(){
 	$smMenu->setMenuSupper(getParam('menu_supper',''));
 	$menuList = $smMenuDao->getLevelRecord();
 	if($menuList != NULL && !is_array($menuList)){
-		$error = $menuList;
-		$smData = jsonFrame(array(),2,$error);
+		$stPrint['entity'] = '';
+		$stPrint['msgCode'] = 2;
+		$stPrint['msg'] = $menuList;
+		dataPrint($stPrint);
 	}else{
-		$smData = jsonFrame($menuList,1,'');
+		$stPrint['entity'] = $menuList;
+		$stPrint['msgCode'] = 1;
+		$stPrint['msg'] = '获取成功';
+		dataPrint($stPrint);
 	}
-	return dataPrint($smData);
-}
-function jsonFrame($arr,$msgCode=0,$msg=''){
-	$data = array('entity'=>NULL,'msgCode'=>NULL,'msg'=>NULL);
-	$data['entity'] = $arr;
-	$data['msgCode'] = $msgCode;
-	$data['msg'] = $msg;
-	return $data;
 }
 ?>

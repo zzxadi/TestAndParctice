@@ -81,7 +81,12 @@
 				success: function(data){
 					if(data.msgCode == 1){
 						var url=decodeURIComponent(getUrlParam('tourl'));
-						url = url ? url : 'index.html';
+						url = url ? url : '/attendance/personal-info.html';
+						var userInfo = {
+							"username" :  data.entity.userName,
+							"positionName" : data.entity.positionName
+						}
+						setCookie('userInfo', JSON.stringify(userInfo));
 						location.href = url;
 					}
 					else if(data.msgCode == 5){
