@@ -1,0 +1,97 @@
+<!docType>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>JS 模板</title>
+<script type="text/javascript">
+function templet(id){
+	//删除两边空格
+	var trim = function(s){
+		return s.replace(/^\s*|\s*$/g,"");	
+	}
+	var stDom = document.getElementById(id);
+	if(!stDom)return "";
+	var sText = stDom.innerHTML;
+	var logicReg = /<%(=?)([\s\S]*?)%>/g;
+	sText = sText.replace(logicReg,function(text,$1,$2,index){
+		$2 = trim($2);
+		var sReturn = "";
+		if($1 == "="){
+			//匹配<%=表达式%>
+			$2 = $2.replace(/\s*\n\s*/g,"");
+			sReturn = "stHTML.push("+$2+");";
+			sReturn = "\n[[["+sReturn+"]]]\n";
+		}
+		else {
+			//匹配<%控制语句%>
+			var stLine = $2.split(/\n/);
+			for(var i = 0, length = stLine.length; i < length; i++){
+				stLine[i] = trim(stLine[i]);	
+			}
+			sReturn = '\n[[['+stLine.join('')+']]]\n';
+		}
+		//[[[内容]]],三个中括号是标记后面不参与 stHTML.push 处理
+		return sReturn;
+	});
+	var stFun = [];
+	stFun.push("var stHTML = [];");
+	var stLine = sText.split(/\n/);
+	for(var i = 0, length = stLine.length; i < length; i++){
+		//多个空格，只留一个；留一个的原因是标签属性之间有间隔
+		stLine[i] = stLine[i].replace(/^\s*|\s*$/g," ");
+		//整行都是空的,不处理
+		if(stLine[i] == "")continue;
+		var stMatch = stLine[i].match(/\[\[\[([\s\S]*)\]\]\]/);
+		if(stMatch){
+			//表达式和控制流程不进行 stHTML.push 处理
+			stFun.push(stMatch[1]);	
+		}else {
+			stLine[i] = stLine[i].replace(/(["'])/g,"\\$1");
+			stFun.push('stHTML.push("'+stLine[i]+'");');
+		}
+	}
+	stFun.push("return stHTML.join('');");
+	//删除第一个模板id参数
+	[].shift.call(arguments);
+	var executeFun = new Function(stFun.join("\n"));
+	return executeFun.apply(null,arguments);
+}
+window.onload = function(){
+	var st = [{id:1,name:"刘德华",st:[1,2,3]},{id:2,name:"张学友",st:[4,5,6]},{id:3,name:"谢霆锋",st:[7,8,9]}];
+	document.getElementById("box").innerHTML = templet("test",st);	
+}
+</script>
+<script id="test" type="text/html">
+<table width="200" border="1">
+<%
+	var stOrder = arguments[0];
+	for(var i = 0, length = stOrder.length; i < length; i++){
+%>     
+  <tr>
+  	<td><%=i%></td>
+    <td
+		<%if(stOrder[i].id == 1){%>n
+			 style="background-color:#FF0000"
+		<%} else if(stOrder[i].id == 3){%>
+			 style="background-color:#00FF00"
+		<%}%>
+	>&nbsp;</td>
+    <td <%=stOrder[i].id%> ><%=unescape(escape(stOrder[i].name))%></td>
+    <td width="50">
+		<table width="100%" border="1">
+		<%for(var j = 0, jlength = stOrder[i]["st"].length; j < jlength; j++){%>
+			<tr>
+				<td><%=stOrder[i]["st"][j]%></td>
+			</tr>
+		<%}%>
+		</table>
+	</td>
+  </tr>
+<%}%>
+</table>
+</script>
+</head>
+<body>
+<div id="box"></div>
+</body>
+</html>
