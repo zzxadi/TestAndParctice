@@ -8,7 +8,7 @@
 	}
 	function getData(){
 		$iDataType = getParam("DataType","0");
-		$Id = getUserId();
+		$Id = getParam("userInfoId", getUserId());
 		$Type = getParam("Type", "");	
 		$iPageSize = getParam("pageSize", "20");
 		$iPage = getParam("currentPage", "1");

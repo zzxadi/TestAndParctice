@@ -4,6 +4,7 @@ class WorkOrderDao{
 	 * 新增请假/出差、加班单
 	 */
 	function createWorkOrder($obj,$operateFlag){
+		date_default_timezone_set("Asia/Shanghai");
 		$param = array();
 		$param['USER_ID'] = $obj->getUserId();
 		$param['TYPE'] = $obj->getType();
@@ -15,7 +16,7 @@ class WorkOrderDao{
 		$param['TOTAL_TIME'] = $obj->getTotalTime();
 		if($operateFlag == 'addLeaveTrip'){
 			$param['LEAVE_TYPE'] = $obj->getLeaveType();
-			if($obj->getLeaveType() == 10){
+			if($obj->getLeaveType() == 11){
 				$param['LEAVE_NAME'] = $obj->getLeaveName();
 			}
 		}
@@ -29,6 +30,7 @@ class WorkOrderDao{
 	 * 新增忘打卡记录
 	 */
 	function createForgetCard($obj){
+		date_default_timezone_set("Asia/Shanghai");
 		$param = array();
 		$param['USER_ID'] = $obj->getUserId();
 		$param['TYPE'] = $obj->getType();
@@ -50,6 +52,7 @@ class WorkOrderDao{
 	function getWorkOrderList($searchParam,$operateFlag){
 		$currentPage = $searchParam['currentPage'];
 		$pageSize = $searchParam['pageSize'];
+		$userId = $searchParam['userId'];
 		
 		$currentPage = $currentPage <= 0 ? 1 : $currentPage;
 		if($pageSize <= 0){ $pageSize = 20; }
@@ -63,15 +66,15 @@ class WorkOrderDao{
 		if($operateFlag == 'vacationList'){	//请假/出差、加班
 			$sql .= 'SELECT VR.ID,VR.CREATE_TIME,VR.TYPE,VR.AUDIT_STATUS,u1.USER_NAME AS CURRENT_USER_NAME,u2.USER_NAME AS PRIVIOUS_USER_NAME ';
 			$sql .= 'FROM VACATION_RECORD VR LEFT JOIN USER_INFO u1 ON VR.CURRENT_USERID=u1.ID LEFT JOIN USER_INFO u2 ON VR.PREVIOUS_USERID=u2.ID';
-			$sqlcount .= 'SELECT ID FROM VACATION_RECORD WHERE 1=1';
+			$sqlcount .= 'SELECT ID FROM VACATION_RECORD WHERE 1=1 AND USER_ID=' . $userId;
 			$tableFlag = ' ORDER BY VR.ID DESC';
 		}else if($operateFlag == 'forgetCardList'){	//忘打卡
 			$sql .= 'SELECT FC.ID,FC.TYPE,FC.CREATE_TIME,FC.FORGET_TIME,FC.IN_TIME,FC.AUDIT_STATUS,u1.USER_NAME AS CURRENT_USER_NAME,u2.USER_NAME AS PRIVIOUS_USER_NAME ';
 			$sql .= 'FROM FORGET_CARD FC LEFT JOIN USER_INFO u1 ON FC.CURRENT_USERID=u1.ID LEFT JOIN USER_INFO u2 ON FC.PREVIOUS_USERID=u2.ID';
-			$sqlcount .= 'SELECT ID FROM FORGET_CARD WHERE 1=1';
+			$sqlcount .= 'SELECT ID FROM FORGET_CARD WHERE 1=1 AND USER_ID=' . $userId;
 			$tableFlag = ' ORDER BY FC.ID DESC';
 		}
-		
+		$conditions .= ' AND USER_ID=' . $userId;
 		$conn = new MysqlConn();
 		$countResult = $conn->query($sqlcount);	//查询记录总数
 		$totalCounts = (int)mysql_num_rows($countResult);

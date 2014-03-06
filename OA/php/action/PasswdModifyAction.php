@@ -3,6 +3,7 @@
 	require_once("../dao/LoginDAO.php");
 	require_once('../action/InterceptAction.php');
 
+	$type = getParamByName('method');
 	$iDataType = getParam("dataType","0");
 	$oldPwd = getParam("oldPwd","");
 	$newPwd = getParam("newPwd","");
@@ -23,15 +24,24 @@
 		$stPrint["msg"] = '新密码不能为空';
 		dataPrint($stPrint);
 	}
-	$dao = new LoginDAO();
-	$stData = $dao->updatePwd($oldPwd, $newPwd);
-	if($stData){
-		$stPrint["entity"] = $stData;
-		$stPrint["msgCode"] = 1;
-		$stPrint["msg"] = "修改密码成功";
-	}else{
-		$stPrint["msgCode"] = 5;
-		$stPrint["msg"] = "修改密码失败，请仔细核对旧密码是否正确";
+
+	if($type == 'updatePwd'){
+		updatePwd($oldPwd, $newPwd);		
 	}
-	dataPrint($stPrint);
+
+	function updatePwd($oldPwd, $newPwd){
+		$dao = new LoginDAO();
+		$stData = $dao->updatePwd($oldPwd, $newPwd);
+		if($stData){
+			$stPrint["entity"] = $stData;
+			$stPrint["msgCode"] = 1;
+			$stPrint["msg"] = "修改密码成功";
+			dataPrint($stPrint);
+		}else{
+			$stPrint["entity"] = '';
+			$stPrint["msgCode"] = 5;
+			$stPrint["msg"] = "修改密码失败，请核对旧密码是否正确";
+			dataPrint($stPrint);
+		}
+	}
 ?>

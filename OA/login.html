@@ -33,6 +33,11 @@
 					   $(this).removeClass('warning').siblings("p").html('');
 					})
 				   .on('click', '#login', loginForm);
+		$(document).keypress(function(e){
+			if(e.which == 13){
+				$('#login').click();
+			}
+		})
 	}
 
 	var validate = (function(){
@@ -64,9 +69,15 @@
 				return true;					
 			}
 		}
-	})()
+	})();
 
 	function loginForm(){
+		if(!validate.validateEmail()){
+			return false;
+		}
+		if(!validate.validatePasswd()){
+			return false;
+		}
 		var email = $.trim($('#email').val()),
 			passwd = $.trim($('#passwd').val()),
 			param = [];
@@ -91,6 +102,9 @@
 					}
 					else if(data.msgCode == 5){
 						$('#passwdMsg').html('邮箱或用户名不正确').attr('class', 'warningTips');
+					}
+					else if(data.msgCode == 6){
+						$('#passwdMsg').html('该用户已经被冻结，登录失败').attr('class', 'warningTips');
 					}
 				}
 			})

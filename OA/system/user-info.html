@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="/js/module.js"></script>
 	<script type="text/javascript" src="/js/jquery.min.js"></script>
 	<script type="text/javascript">
+		var userInfo_currentPage =getUrlParam("currentPage") ? getUrlParam("currentPage") : "";
 		var params = {
 			currentPage: 1			//页码
 		}
@@ -21,10 +22,16 @@
 			loadHtml("headerId","/include/header.html");
 			loadHtml("left_menu_content","/include/leftmenu.html");
 			loadHtml("footerId","/include/footer.html");
+			selectNavigation("userInfo");//菜单高亮
 
 			bindEvent();
 			loadUserInfo();
+			selectNavigation("userInfo");//菜单高亮
 		});
+		
+		function selectNavigation(navigationID){
+			$("#"+navigationID).addClass("cur");	
+		}
 
 		function bindEvent(){
 			$('.page_main').on('click', '#addUser', addUser)
@@ -37,6 +44,20 @@
 				roleId = $('#roleId').val(),
 				pageSize  = 10,
 				param = [];
+			if(userInfo_currentPage&&!tag){//查看个人信息返回上次页面
+				if(!username&&getUrlParam("username")){
+					$('#username').val(unescape(getUrlParam("username")));
+					param.push('username='+unescape(getUrlParam("username")));				
+				}
+				if(!email&&getUrlParam("email")){
+					$('#email').val(getUrlParam("email"));
+					param.push('email='+getUrlParam("email"));
+				}
+				if(!roleId&&getUrlParam("roleId")){
+					$('#roleId').val(getUrlParam("roleId"));
+					param.push('roleId='+getUrlParam("roleId"));
+				}
+			}
 
 			if(tag == 'searchForm'){
 				if(username){
@@ -50,11 +71,12 @@
 				}
 			}
 
-			currentPage = currentPage?currentPage:1;
+			userInfo_currentPage = userInfo_currentPage?userInfo_currentPage:1;
+			currentPage = currentPage?currentPage:userInfo_currentPage;
 			params.currentPage = currentPage;
 			param.push('currentPage='+currentPage);
 			param.push('pageSize='+pageSize);
-			param.push('method=getUserList')
+			param.push('method=getUserList');
 			ajax({
 				url: '/php/action/UserInfo.php',
 				type: 'post',
@@ -65,21 +87,25 @@
 		}
 
 		function loadUserInfoSuccess(data){
+		
+			var	searchForm_username = $.trim($('#username').val()),
+				searchForm_email = $.trim($('#email').val()),
+				searchForm_roleId = $('#roleId').val();
 			var html = [],
 				records = data.entity.list;
-
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];
 				html.push('<tr>');
 				html.push('<td>'+record.userName+'</td>');
-				html.push('<td>'+(record.roleId == 0 ? '普通员工' : '管理者')+'</td>');
+				html.push('<td>'+getRole(record.roleId)+'</td>');
 				html.push('<td>'+record.loginName+'</td>');
 				html.push('<td>'+record.mobile+'</td>');
 				html.push('<td>'+record.email+'</td>');
 				html.push('<td>'+(record.sex == 0 ? '男' : '女')+'</td>');
-				html.push('<td>'+record.departmentType+'</td>');
+				html.push('<td>'+getDept(record.departmentType)+'</td>');
 				html.push('<td>'+record.positionName+'</td>');
-				html.push('<td><a href="javascript:void(0)" onclick="modifyUserInfo('+record.id+')" id="modifyUserInfo" class="ablue">修改</a>&nbsp;&nbsp;');
+				html.push('<td><a href="javascript:void(0)" onclick="locationHref(\'../attendance/personal-info.html?userInfoId='+record.id+'&currentPage='+params.currentPage+'&username='+escape(searchForm_username)+'&email='+searchForm_email+'&roleId='+searchForm_roleId+'\')"  class="ablue">查看</a>&nbsp;&nbsp;');
+				html.push('<a href="javascript:void(0)" onclick="modifyUserInfo('+record.id+')" id="modifyUserInfo" class="ablue">修改</a>&nbsp;&nbsp;');
 				html.push('<a href="javascript:void(0)" onclick="freezeUserInfo('+record.id+')" id="freezeUserInfo" class="ablue">');
 				if(record.status==0){
 					html.push('冻结');
@@ -108,7 +134,7 @@
 				ajax({
 					url: '/php/action/UserInfo.php',
 					type: 'post',
-					data: 'id='+id+'&method=freezeUser',
+					data: 'id='+id+'&method=doFreeze',
 					dataType: 'json',
 					success: function(data){
 						if(data.msgCode==1){		
@@ -140,7 +166,7 @@
 			if(pageNo>GLOBAL['pageCount']){
 				return;	
 			}
-			loadUserInfo(pageNo);
+			loadUserInfo(pageNo, 'searchForm');
 		}
 		function updatePageInfo(){
 			if(GLOBAL['pageCount'] < 2) {$(".main_pagination").hide(); return;}else{
@@ -182,7 +208,7 @@
 </head>
 <body>
 <div id="headerId"></div>
-<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>人员管理</span></div>
 <div class="main clearfix">
 	<div class="clearfix">
 	<div class="content_box">
@@ -201,7 +227,12 @@
 						</dl>
 						<dl>
 							<dt>角色：</dt>
-							<dd><select class="select" id="roleId"><option value="">--请选择--</option><option value="0">普通员工</option><option value="1">管理者</option></select></dd>
+							<dd><select class="select" id="roleId">
+							<option value="" selected>--请选择--</option>
+							<option value="1">普通员工</option>
+							<option value="2">管理员</option>
+							<option value="5">工单终结者</option>
+							<option value="9">超级管理员</option></select></dd>
 						</dl>
 						 <p class="main_search_btn"><input type="button" value="搜索" class="mybtn btn_search" id="orderSearch" />
 						                  <input type="button" class="mybtn" value="新增用户" id="addUser" /></p>
@@ -231,7 +262,7 @@
                    <dl class="main_pagination">
 		                 <dd class="pagination">
                          <span id="pageItem"></span>
-                         <span class="page_no">共<span id="pageCount"></span>页 到第<input id="pageObj" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onclick="goPage($.trim($('#pageObj').val()));" /></span>
+                         <span class="page_no">共<span id="pageCount"></span>页 到第<input id="pageObj" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj').val()));" /></span>
                       </dd>
                    </dl>
                  <!-- 分页结束 -->  

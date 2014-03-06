@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>人员管理</title>
+	<title>修改密码</title>
 	<link rel="stylesheet" type="text/css" href="/css/base.css">
 	<link rel="stylesheet" type="text/css" href="/css/module.css">
 	<link rel="stylesheet" type="text/css" href="/css/buyer.css">
@@ -14,6 +14,7 @@
 			loadHtml("headerId","/include/header.html");
 			loadHtml("left_menu_content","/include/leftmenu.html");
 			loadHtml("footerId","/include/footer.html");
+			selectNavigation("passwdModify");//菜单高亮
 
 			bindEvent();
 		});	
@@ -99,6 +100,7 @@
 
 			param.push('oldPwd='+oldPwd);
 			param.push('newPwd='+newPwd);
+			param.push('method=updatePwd');
 
 			ajax({
 				url:"/php/action/PasswdModifyAction.php",
@@ -116,20 +118,22 @@
 			checkJsonRight(data);
 			if(data.msgCode!=1){
 				showBox('系统提示',data.msg,'alert');
+				resetInput();
 				return;
 			}
 			showBox('系统提示',data.msg,'alert');	
-			resetInput();
+			$('#reset').click();
 		}
 
 		function resetInput(){//清空表单
 			$('.user_form dd span').html('').attr('class', '');
-		}	
+		}
+
 	</script>
 </head>
 <body>
 <div id="headerId"></div>
-<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>修改密码</span></div>
 <div class="main">
 	<div class="clearfix">
 		<div class="content_box">

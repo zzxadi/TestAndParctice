@@ -1,8 +1,8 @@
 <?php
+require_once("../utils/include.php");
+require_once('../action/InterceptAction.php');
 require_once('../class/SystemRole.php');
 require_once('../dao/SystemRoleDao.php');
-require_once('../utils/common.php');
-require_once('../utils/module.php');
 $stPrint = array();
 $stPrint['entity'] = false;
 $stPrint['msgCode'] = 2;

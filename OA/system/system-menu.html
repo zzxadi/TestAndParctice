@@ -63,10 +63,17 @@ function getSingleRecord(type,param,paramValue){
 			timeout:30000,//非必须.默认30秒
 			error:function(){}, //非必须
 			success:function(data){
-				if(data.msgCode != 1){
+				if(data.msgCode == 3){
+					locationHref('/login.html');
+				}else if(data.msgCode == 4){
+					showBox('警告！','你没有权限查看此页面！','alert',function(){
+						locationHref('/attendance/personal-info.html');
+					})
+				}else if(data.msgCode != 1){
 					showBox('提示','获取菜单信息失败，请稍后再试！','alert');
 					return;
-				}else if(data.entity.length == 0){
+				}
+				if(data.entity.length == 0){
 					showBox('提示','无此记录，请联系管理员！','alert');
 					return;
 				}
@@ -152,7 +159,13 @@ function menuSubmit(type,submitType){
 		timeout:30000,//非必须.默认30秒
 		error:function(){}, //非必须
 		success:function(data){
-			if(data.msgCode != 1){
+			if(data.msgCode == 3){
+				locationHref('/login.html');
+			}else if(data.msgCode == 4){
+				showBox('警告！','你没有权限查看此页面！','alert',function(){
+					locationHref('/attendance/personal-info.html');
+				})
+			}else if(data.msgCode != 1){
 				$("#topError").html("添加失败，请稍后再试！");
 				return;
 			}
@@ -188,7 +201,13 @@ function getMenuList(type,supper){
 		timeout:30000,//非必须.默认30秒
 		error:function(){}, //非必须
 		success:function(data){
-			if(data.msgCode != 1){
+			if(data.msgCode == 3){
+				locationHref('/login.html');
+			}else if(data.msgCode == 4){
+				showBox('警告！','你没有权限查看此页面！','alert',function(){
+					locationHref('/attendance/personal-info.html');
+				})
+			}else if(data.msgCode != 1){
 				$("#"+type+"MenuList").html('<tr><td colspan="5">'+data.msg+'</td></tr>');
 				return;
 			}
@@ -308,11 +327,15 @@ function validateSubData(){
 	}
 	return true;
 }
+function selectNavigation(navigationID){
+	$("#"+navigationID).addClass("cur");
+}
 $(document).ready(function(e) {
 	loadHtml("headerId","/include/header.html");
 	loadHtml("left_menu_content","/include/leftmenu.html");
 	loadHtml("footerId","/include/footer.html");
 	getMenuList('top','');
+	selectNavigation("systemMenu");
 });
 </script>
 </head>

@@ -85,6 +85,33 @@ function inputOnBlur(ob){
 	if(val=='')$(sib).show();
 	else $(sib).hide();
 }
+function getRole(index){
+	var ret = '';
+	switch(+index){
+		case 1: ret ='普通员工';break;
+		case 2: ret ='管理员';break;
+		case 5: ret ='工单终结者';break;
+		case 9: ret ='超级管理员';break;
+		default : ret ='无记录';
+	}
+	return ret;
+}
+function getDept(index){
+   var ret = ''; 
+   switch(+index){ 
+		case 1: ret ='信息技术部';break;
+		case 2: ret ='人力资源部';break;
+		case 3: ret ='财务部';break;
+		case 4: ret ='市场部';break;
+		case 5: ret ='售后部';break;
+		case 6: ret ='产品部';break;
+		default : ret ='无记录';
+	}
+	return ret;
+}
+function selectNavigation(navigationID){//菜单高亮
+	$("#"+navigationID).addClass("cur");
+}	
 /**************************************************** 设置cookie **********************************************/
 function getCookie(name){
 	var start=document.cookie.indexOf(name+"=");

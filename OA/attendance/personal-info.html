@@ -10,6 +10,7 @@
 	<link type="text/css" href="/css/module.css" rel="stylesheet" />
 	<link type="text/css" href="/css/buyer.css" rel="stylesheet" />
 	<script type="text/javascript">
+		var userInfoId =getUrlParam("userInfoId") ? getUrlParam("userInfoId") : "";	
 		var params = {
 			currentPage: 1,			//页码
 			currentPage1: 1,	
@@ -26,23 +27,43 @@
 		}
 		function tabContent(obj){			//页面切换
 			var index = $(obj).parent().index();
+			if(index==0){
+				loadRemainHoliday();
+				loadPersonalRecord('',3);
+				loadPersonalRecord('',4);
+			}else if (index==1){
+				loadPersonalRecord('',1);
+				loadPersonalRecord('',2);
+			}else if(index==2){
+				loadPersonalInfo();
+			}
 			$(".tab_content").eq(index).show().siblings(".tab_content").hide();
-			$(obj).parent().addClass("cur").siblings().removeClass("cur")
+			$(obj).parent().addClass("cur").siblings().removeClass("cur");
+			
 		}
 		$(document).ready(function(e) {
 			loadHtml("headerId","/include/header.html");
 			loadHtml("left_menu_content","/include/leftmenu.html");
-			loadHtml("footerId","/include/footer.html");
+			loadHtml("footerId","/include/footer.html");		
 			
-			loadRemainHoliday();
 			loadPersonalInfo();
-			loadPersonalRecord();
+			loadRemainHoliday();
+			loadPersonalRecord('',3);
+			loadPersonalRecord('',4);
+			
+			
+			if(!userInfoId)selectNavigation("personalInfo");
+			if(userInfoId)selectNavigation("userInfo");		
 		});
+		/****菜单高亮****/	
+		function selectNavigation(navigationID){
+			$("#"+navigationID).addClass("cur");	
+		}
 	
 		/****剩余假期信息****/		
-		function loadRemainHoliday(){		
+		function loadRemainHoliday(){	
 			ajax({
-				url: '/php/action/PersonalRecordAction.php?method=getData&Type=5',
+				url: '/php/action/PersonalRecordAction.php?method=getData&Type=5&userInfoId='+userInfoId,
 				type: 'get',
 				data: '',
 				dataType: 'json',
@@ -75,7 +96,7 @@
 			ajax({
 				url: '/php/action/UserInfo.php?',
 				type: 'post',
-				data: 'method=getUserById',
+				data: 'method=getUserById&id='+userInfoId,
 				dataType: 'json',
 				success: loadPersonalInfoSuccess
 			})
@@ -89,17 +110,14 @@
 			}
 			var html = null,result = data.entity.list[0];
 			if(!result) return;
-			switch(parseInt(result.departmentType)){ 			//待以后确定
-				case 1: result.departmentType ='信息技术部';break;
-				case 2: result.departmentType ='人力资源部';break;
-				case 3: result.departmentType ='财务部';break;
-				case 4: result.departmentType ='市场部';break;
-				case 5: result.departmentType ='售后部';break;
-				case 6: result.departmentType ='产品部';break;
-				default : result.departmentType ='无记录';
-			}
-			html += '<tr><td>'+result.userName+'</td><td>'+result.mobile+'</td><td>'+result.email+'</td><td>'+result.inductionTime+'</td><td>'+result.departmentType+'</td><td>'+result.positionName+'</td></tr>';						
+			html += '<tr><td>'+result.userName+'</td><td>'+result.mobile+'</td><td>'+result.email+'</td><td>'+result.inductionTime+'</td><td>'+getDept(result.departmentType)+'</td><td>'+result.positionName+'</td></tr>';						
 			$('#personal_info').html(html);
+			
+			if(!userInfoId)$('#header_title').html('个人信息查询');
+			if(userInfoId)$('#header_title').html('人员管理');
+			$('#page_title').html('[ '+result.userName+' ]个人信息');
+			if(userInfoId)$('#page_title').append('<input type="button" value="返回" class="btn_back" onclick="locationHref(\'../system/user-info.html?currentPage='+getUrlParam("currentPage")+'&username='+getUrlParam("username")+'&email='+getUrlParam("email")+'&roleId='+getUrlParam("roleId")+'\')"/>');
+			
 		}
 		/****个人工单申请记录****/			
 		function loadPersonalRecord(currentPage,type){
@@ -109,9 +127,9 @@
 			param.push('currentPage='+currentPage);
 			
 			if(type==1||!type){
-				param.push('pageSize='+4);
+				param.push('pageSize='+5);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?method=getData&Type=1',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=1&userInfoId='+userInfoId,
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -119,9 +137,9 @@
 				})
 			}
 			if(type==2||!type){
-				param.push('pageSize='+4);
+				param.push('pageSize='+5);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?method=getData&Type=2',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=2&userInfoId='+userInfoId,
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -129,9 +147,9 @@
 				})
 			}
 			if(type==3||!type){
-				param.push('pageSize='+2);
+				param.push('pageSize='+3);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?method=getData&Type=3',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=3&userInfoId='+userInfoId,
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -139,9 +157,9 @@
 				})
 			}
 			if(type==4||!type){
-				param.push('pageSize='+2);
+				param.push('pageSize='+3);
 				ajax({
-					url: '/php/action/PersonalRecordAction.php?method=getData&Type=4',
+					url: '/php/action/PersonalRecordAction.php?method=getData&Type=4&userInfoId='+userInfoId,
 					type: 'get',
 					data: param.join('&'),
 					dataType: 'json',
@@ -217,7 +235,7 @@
 				else if(record.auditStatus==2) record.auditStatus='审核通过';
 				else if(record.auditStatus==3) record.auditStatus='审核不通过';	
 				else record.auditStatus='未审核';	
-				html += '<tr><td>'+record.type+(record.type=="请假" ? " ("+record.leaveType+")" : "")+'</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
+				html += '<tr><td>'+record.type+(record.type=="请假" ? " ("+record.leaveType+")" : "")+'</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+(record.currentUserName?record.currentUserName:"无")+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
 			}
 			if(records.length == 0){
 				html += '<tr><td colspan="6">暂无记录</td></tr>';
@@ -249,7 +267,7 @@
 				else if(record.auditStatus==2) record.auditStatus='审核通过';
 				else if(record.auditStatus==3) record.auditStatus='审核不通过';	
 				else record.auditStatus='未审核';			
-				html += '<tr><td>'+record.type+'忘打卡</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
+				html += '<tr><td>'+record.type+'忘打卡</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+(record.currentUserName?record.currentUserName:"无")+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
 			}
 			if(records.length == 0){
 				html += '<tr><td colspan="6">暂无记录</td></tr>';
@@ -273,11 +291,11 @@
 			}if(type==2){
 				html +='<table width="100%" cellspacing="0" cellpadding="0" class="simple_table grid-50"><tr><td width="110">申请人：</td><td>'+record.userName+'</td></tr><tr><td width="110">申请类型：</td><td>'+record.type+'忘打卡</td></tr><tr><td width="110">提交时间：</td><td>'+record.createTime+'</td></tr><tr><td width="110">忘记时间：</td><td>'+record.forgetTime+'</td></tr><tr><td width="110">到/离岗时间：</td><td>'+record.inTime+'</td></tr><tr><td width="110">申请说明：</td><td>'+(record.remark ? record.remark: "无记录")+'</td></tr>';
 			}
-			if(record.previousUserid)html +='<tr><td width="110">前一审批人：</td><td>'+record.priviousUserName+'</td></tr>';
+			if(parseInt(record.previousUserid))html +='<tr><td width="110">前一审批人：</td><td>'+record.priviousUserName+'</td></tr>';
 			
-			html +='<tr><td width="110">当前审批人：</td><td>'+record.currentUserName+'</td></tr><tr><td width="110">审批意见：</td><td>'+(record.auditRemark ? record.auditRemark : "无记录")+'</td></tr><tr><td width="110">审批状态：</td><td>'+record.auditStatus+'</td></tr>';
+			html +='<tr><td width="110">当前审批人：</td><td>'+(record.currentUserName?record.currentUserName:"无")+'</td></tr><tr><td width="110">审批意见：</td><td>'+(record.auditRemark ? record.auditRemark : "无记录")+'</td></tr><tr><td width="110">审批状态：</td><td>'+record.auditStatus+'</td></tr>';
 			
-			if(record.auditTime)html +='<tr><td width="110">审批时间：</td><td>'+record.auditTime+'</td></tr>';
+			if(record.auditTime&&parseInt(record.auditTime))html +='<tr><td width="110">审批时间：</td><td>'+record.auditTime+'</td></tr>';
 			
 			html +='<tr><td colspan="2"></td></tr><tr><td colspan="2"><input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="关闭"/></td></tr></table>';
 
@@ -373,12 +391,12 @@
 
 <body>
 <div id="headerId"></div>
-<div class="bread"><a href="/">首页</a> &gt; <span>个人信息查询</span></div>
+<div class="bread"><a href="/">首页</a> &gt; <span id="header_title"></span></div>
 <div class="main">
 	<div class="clearfix">
 		<div class="content_box">
 			<div class="content">
-				<div class="page_title">个人信息查询</div>
+				<div class="page_title" id="page_title"></div>
 				<div class="complaint_main">
 					<ul class="complaint_title">
 						<li class="cur"><a onClick="tabContent(this)" href="javascript:;">综合数据</a></li>
@@ -399,7 +417,7 @@
 							<tbody id="Remain_holiday">
 							</tbody>
 						</table>
-						<div class="order_index_status mt10"><strong>待审批的请假/加班申请</strong></div>
+						<div class="order_index_status mt10"><strong>待审批的请假/出差/加班申请</strong></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
 							<thead>
 								<tr>
@@ -420,7 +438,7 @@
                          	<span id="pageItem3"></span>
                          	<span class="page_no">共<span id="pageCount3"></span>页 到第<input id="pageObj3" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj3').val()),3);" /></span>
                       		</dd>
-                   		</dl><br/>
+                   		</dl>
                  		<!-- 分页结束 --> 
 						<div class="order_index_status mt10"><strong>待审批的忘打卡申请</strong></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
@@ -441,11 +459,11 @@
                          	<span id="pageItem4"></span>
                          	<span class="page_no">共<span id="pageCount4"></span>页 到第<input id="pageObj4" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj4').val()),4);" /></span>
                       		</dd>
-                   		</dl><br/>
+                   		</dl>
                  		<!-- 分页结束 --> 
 					</div>
 					<div class="tab_content cb">
-						<div class="order_index_status mt10"><strong>请假/加班申请记录</strong></div>
+						<div class="order_index_status mt10"><strong>请假/出差/加班申请记录</strong></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
 							<thead>
 								<tr>
@@ -466,7 +484,7 @@
                          	<span id="pageItem1"></span>
                          	<span class="page_no">共<span id="pageCount1"></span>页 到第<input id="pageObj1" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj1').val()),1);" /></span>
                       		</dd>
-                   		</dl><br/>
+                   		</dl>
                  		<!-- 分页结束 --> 							
 						<div class="order_index_status mt10"><strong>忘打卡申请记录</strong></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
@@ -489,7 +507,7 @@
                          	<span id="pageItem2"></span>
                          	<span class="page_no">共<span id="pageCount2"></span>页 到第<input id="pageObj2" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj2').val()),2);" /></span>
                       		</dd>
-                   		</dl><br/>
+                   		</dl>
                  		<!-- 分页结束 --> 	
 					</div>
 					<div class="tab_content cb">

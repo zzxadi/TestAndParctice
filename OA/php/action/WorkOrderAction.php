@@ -88,6 +88,7 @@
 		$searchParam = array();
 		$pageSize = getParam("pageSize", "20");
 		$currentPage = getParam("currentPage", "1");
+		$searchParam['userId'] = getUserId();
 		$searchParam['pageSize'] = $pageSize;
 		$searchParam['currentPage'] = $currentPage;
 		

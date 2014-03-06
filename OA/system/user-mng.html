@@ -16,6 +16,7 @@
 			loadHtml("headerId","/include/header.html");
 			loadHtml("left_menu_content","/include/leftmenu.html");
 			loadHtml("footerId","/include/footer.html");
+			selectNavigation("userInfo");//菜单高亮
 
 			bindEvent();
 			$('#indTime').datepicker({dateFormat: 'yy-mm-dd',constrainInput:true,maxDate: new Date(),onClose: validate.validateIndTime,});
@@ -54,6 +55,10 @@
 
 					if(!loginname){
 						$loginnameMsg.html('登录名不能为空').attr('class', 'error');
+						return false;
+					}
+					else if(!checkLoginnameMul() && !$.data(document, 'id')){
+						$loginnameMsg.html('登录名已经被使用').attr('class', 'error');
 						return false;
 					}
 					$loginnameMsg.html('').attr('class', 'right');
@@ -195,6 +200,30 @@
 			})
 		}
 
+		function checkLoginnameMul(){
+			var param = [], 
+				pass ={ state: false};
+
+			param.push('loginname='+$('#loginname').val());
+			param.push('method=checkLoginnameMul');
+			ajax({
+				url:'/php/action/LoginAction.php',
+				type:'post',//非必须.默认get
+				data:param.join('&'),
+				async:false,
+				dataType:'json',//非必须.默认text
+				success:function(data, pass){
+					if(data.msgCode==1){
+						pass.state = true;
+					}
+					else{
+						pass.state = false;
+					}
+				}
+			}, pass)
+			return pass.state;
+		}
+
 		function resetForm(){
 			$('.user_form dd span').html('').attr('class', '');
 		}
@@ -202,7 +231,7 @@
 </head>
 <body>
 <div id="headerId"></div>
-<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>人员管理</span></div>
 <div class="main">
 	<div class="clearfix">
 		<div class="content_box">
@@ -212,7 +241,11 @@
 					<form method="post" class="user_form">
 						<dl>
 							<dt><em class="cred">*</em>角色：</dt>
-							<dd><select class="select" id="roleId"><option value="0" selected>普通员工</option><option value="1">管理者</option></select></dd>
+							<dd><select class="select" id="roleId">
+							<option value="1" selected>普通员工</option>
+							<option value="2">管理员</option>
+							<option value="5">工单终结者</option>
+							<option value="9">超级管理员</option></select></dd>
 						</dl>
 						<dl>
 							<dt><em class="cred">*</em>姓名：</dt>
@@ -238,8 +271,13 @@
 							<dt><em class="cred">*</em>部门：</dt>
 							<dd>
 							<select class="select" id="dept">
-								<option value="1">IT</option>
-								<option value="2">HR</option>
+								<option value="1">信息技术部</option>
+								<option value="2">人力资源部</option>
+								<option value="3">财务部</option>
+								<option value="4">市场部</option>
+								<option value="5">售后部</option>
+								<option value="6">产品部</option>
+								<option value="0">无记录</option>
 							</select>
 							</dd>
 						</dl>
@@ -251,7 +289,7 @@
 							<dt><em class="cred">*</em>入职时间：</dt>
 							<dd><input type="text" class="txt grid-20" id="indTime" /> <span id="indTimeMsg"></span></dd>
 						</dl>
-						<p><input type="button" class="mybtn btn" value="提交" id="submit"><input type="reset" id="reset" class="btn reset" value="重置"></p>
+						<p><input type="button" class="mybtn btn" value="提交" id="submit"><input type="reset" id="reset" class="btn reset" value="重置"><input type="button" id="goBack" class="btn reset" value="返回" onclick="javascript:history.go(-1);"></p>
 					</form>
 				</div>
 			</div>

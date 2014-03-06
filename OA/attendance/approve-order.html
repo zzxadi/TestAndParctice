@@ -13,7 +13,7 @@
 <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<title>无标题文档</title>
+<title>工单审批</title>
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
 <script type="text/javascript" src="/js/module.js"></script>
@@ -43,8 +43,8 @@ var GLOBAL = {
 	roleName:'',
 	rolePow:1// 0:无权限访问 1：有权限
 }	
-function showContactionBox(detailId,approveType,currentId){//查询信息的id，工单类型（忘打卡 2，请假 1）,当前审批人Id
-	getApproveDetail(detailId,approveType,currentId);
+function showContactionBox(detailId,approveType){//查询信息的id，工单类型（忘打卡 2，请假 1）
+	getApproveDetail(detailId,approveType);
 	showBox('工单审批',"contactionBox");
 }
 function tabContent(k,key,pageType){//k 确定标签   key：审核状态 pageType:工单类型
@@ -102,6 +102,7 @@ function getApproveOrderDataSuccess(data){
 		return;
 	}
 	if(parseInt(data.msgCode)==4){
+		locationHref('../attendance/personal-info.html')
 		showBox("提示",data.msg,"alert");
 		GLOBAL.rolePow=0;	
 		return;
@@ -135,11 +136,11 @@ function getApproveOrderDataSuccess(data){
 				case 11 : DepartMentType='其他假';break;*/	
 			}
 			html+='<td>'+DepartMentType+'</td>';
-			var type=parseInt(code[i].leaveType);
+			var type=parseInt(code[i].type);
 			switch (type){
-				case 1 : LType='事假';break;
-				case 2 : LType='病假';break;
-				case 3 : LType='调休';break;
+				case 1 : LType='加班';break;
+				case 2 : LType='请假';break;
+				/*case 3 : LType='调休';break;
 				case 4 : LType='婚嫁';break;
 				case 5 : LType='产假';break;
 				case 6 : LType='计生假';break;
@@ -147,7 +148,7 @@ function getApproveOrderDataSuccess(data){
 				case 8 : LType='丧假';break;
 				case 9 : LType='工伤假';break;
 				case 10 : LType='出差';break;
-				case 11 : LType='其他假';break;	
+				case 11 : LType='其他假';break;*/	
 			}
 			html+='<td>'+LType +'</td>';
 			html+='<td>'+code[i].createTime+'</td>';
@@ -162,7 +163,7 @@ function getApproveOrderDataSuccess(data){
 				gongDanZhuanTai='审核未通过';	
 			}
 			html+='<td>'+gongDanZhuanTai+'</td>';
-			html+='<td><a onclick="showContactionBox('+code[i].id+',1,'+CURRENTUSERID+')" href="javascript:void(0);" style=" color:#63adee;">查看</a></td>';
+			html+='<td><a onclick="showContactionBox('+code[i].id+',1)" href="javascript:void(0);" style=" color:#63adee;">查看</a></td>';
 			html+='</tr>';	
 		}
 	}
@@ -204,6 +205,7 @@ function getForgetOrderDataSuccess(data)
 	}else if(GLOBAL.rolePow==0){
 		return;
 	}else if(parseInt(data.msgCode)==4){
+		locationHref('../attendance/personal-info.html')
 		showBox("提示",data.msg,"alert");	
 		return;
 	}
@@ -277,6 +279,7 @@ function getApproveDetailSuccess(data,approveType){
 	if(parseInt(data.msgCode)==3){
 		locationHref('../index.html');
 	}else if(parseInt(data.msgCode)==4){
+		locationHref('../attendance/personal-info.html')
 		showBox("提示",data.msg,"alert");	
 		return;
 	}
@@ -320,14 +323,16 @@ function getApproveDetailSuccess(data,approveType){
 			html+='<td>'+code[i].priviousUserName+'</td></tr>';
 			html+='	<tr><td width="110">提交时间：</td>';
 			html+='	<td>'+code[i].createTime+'</td></tr>';
-			
+			html+='<tr><td id="leaveType" colspan="2" style="display:none">'+code[i].leaveType+'</td></tr>';
+			html+='<tr><td id="holidayType" colspan="2" style="display:none">'+code[i].type+'</td></tr>';
+			html+='<tr><td id="tiJiaoUserId" colspan="2" style="display:none">'+code[i].userId+'</td></tr>';
 			if(approveType==1){
 				html+='<tr><td width="110">起始时间：</td>';
 				html+='<td>'+code[i].beginTime+'</td></tr>';
 				html+='<tr><td width="110">结束时间：</td>';
 				html+='<td>'+code[i].endTime+'</td></tr>';
 				html+='<tr><td width="110">共计：</td>';
-				html+='<td>'+code[i].totalTime+'小时</td></tr>';
+				html+='<td><span id="totalTime">'+code[i].totalTime+'</span>小时</td></tr>';
 			}else if(approveType==2){
 				html+='<tr><td width="110">忘打卡时间：</td>';
 				html+='<td>'+code[i].forgetTime+'</td></tr>';	
@@ -341,18 +346,19 @@ function getApproveDetailSuccess(data,approveType){
 				html+='<tr><td width="110">操作：</td>';
 				var roleK=GLOBAL.roleKey;
 				if(roleK == 'FEND'){
-					html+='<td><label><input type="radio" name="state" class="approveRadio" value="2"/>&nbsp;批准</label>';
+					html+='<td><label><input type="radio" name="state" class="approveRadio" value="2" onclick="nextCheckManDisplay(this)"/>&nbsp;批准</label>';
 				}else{
-					html+='<td><label><input type="radio" name="state" class="approveRadio" value="1"/>&nbsp;批准</label>';
-				}
-				html+='<label><input type="radio" name="state" class="ml20 approveRadio" value="3"/>&nbsp;驳回</label></td></tr>';
-				html+='<tr><td width="110">审批意见：</td>';
-				html+='<td><dd><textarea class="grid-37" id="ApproveOpinion"></textarea></dd></td></tr>';
-				if(roleK != 'FEND'){
-					html+='<tr><td width="110">下一级审批人：</td>';
+					html+='<td><label><input type="radio" name="state" class="approveRadio" value="1" onclick="nextCheckManDisplay(this)"/>&nbsp;批准</label>';
+					}
+					html+='<label><input type="radio" name="state" class="ml20 approveRadio" value="3" onclick="nextCheckManDisplay(this)"/>&nbsp;驳回</label></td></tr>';
+					if(roleK != 'FEND'){
+					html+='<tr id="nextCheckMan"><td width="110">下一级审批人：</td>';
 					html+='<td><select style="width:100px;" id="ApproveMangerId">';
 					html+='</select></td></tr>';
-				}
+					}
+				html+='<tr><td width="110">审批意见：</td>';
+				html+='<td><dd><textarea class="grid-37" id="ApproveOpinion" onclick="clearTextArea()">请输入100字以内</textarea></td><dl style="position:relative"><strong id="tishi" style="float:right;"></strong></dl></tr>';
+				
 				html+='<tr><td colspan="2"><input type="button" class="mybtn btn_search" value="确定" onclick="updateApprove('+code[i].id+','+approveType+')">';
 				html+='<input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/></td></tr>';
 			}else{
@@ -365,7 +371,35 @@ function getApproveDetailSuccess(data,approveType){
 											
 };
 
+function clearTextArea(){
+	$("#ApproveOpinion").html("");	
+}
+function nextCheckManDisplay(k){
+	if($(k).val()==2||$(k).val()==3){
+		$("#nextCheckMan").hide();	
+	}else if($(k).val()==1){
+		$("#nextCheckMan").show();
+	}	
+}
+
+function checkOppion(){
+	var str=$("#ApproveOpinion").val();
+	if(str.length>100){
+		$("#tishi").val("您的输入字数已达到上限");
+		return false;
+	}
+	return true;
+	
+}
 function updateApprove(id,type){//更新工单 或者忘打卡记录单
+	if(!checkOppion()){
+		showBox("提示","输入字数超限","alert");
+		return;
+	}
+	if($("#ApproveMangerId").val()==""){
+		showBox("提示","请选择审批人","alert");
+		return;
+	}
 	var param=[];
 	var ApproveRadioStatus=$('#approveDetailTable input[name="state"]:checked').val();
 	var ApproveOpinion=$('#ApproveOpinion').val();
@@ -373,13 +407,27 @@ function updateApprove(id,type){//更新工单 或者忘打卡记录单
 		showBox("提示","请填写驳回理由!!!!","alert")
 		return;
 	}
+	 if(typeof(ApproveRadioStatus)=='undefined'){
+		showBox("提示","请选择‘批准’或者‘驳回’!!!","alert");
+		return;	
+	}
+	var tiJiaoUserId=$("#tiJiaoUserId").html();
 	var ApproveMangerId=$('#ApproveMangerId').val();
 	param.push("approveId="+id);//工单ID
 	param.push("approveRadioStatus="+ApproveRadioStatus);//审核状态
 	param.push("approveOpinion="+ApproveOpinion);//审核备注
-	param.push("approveMangerId="+ApproveMangerId);//当前指定审核人ID
+	if (ApproveRadioStatus==3){
+		param.push("approveMangerId=' '");
+	}else{
+		param.push("approveMangerId="+ApproveMangerId);//当前指定审核人ID
+	}
 	param.push("approveType="+type);//工单类型
 	param.push("updateTime="+CurentTime());//审核时间
+	param.push("totalTime="+$("#totalTime").html());
+	param.push("leaveType="+$("#leaveType").html());
+	param.push("holidayType="+$("#holidayType").html());
+	param.push("roleKey="+GLOBAL.roleKey);
+	param.push("tiJiaoUserId="+tiJiaoUserId);
 	if(type==1){
 		param.push("method=updateAPP");
 	}else if(type==2){
@@ -407,6 +455,7 @@ function updateApproveSuccess(data,id,type){
 	if(parseInt(data.msgCode)==3){
 		locationHref('../index.html');
 	}else if(parseInt(data.msgCode)==4){
+		locationHref('../attendance/personal-info.html')
 		showBox("提示",data.msg,"alert");	
 	}
 	insertLog(id,type);
@@ -462,11 +511,12 @@ function getApproveMangerSuccess(data){
 	if(parseInt(data.msgCode)==3){
 		locationHref('../index.html');
 	}else if(parseInt(data.msgCode)==4){
+		locationHref('../attendance/personal-info.html')
 		showBox("提示",data.msg,"alert");	
 		return;
 	}
 	var code=data.entity.list;
-	var html="";
+	var html="<option value=''>---请选择---</option>";
 	if(!code.length<1){
 		for(var i=0,j=code.length;i<j;i++){
 			html+='<option value="'+code[i].id+'">'+code[i].userName+'</option>';
@@ -629,6 +679,7 @@ function getUserRoleKeyError(){
 	}
 function getUserRoleKeySuccess(data){
 	if(parseInt(data.msgCode)==4){
+		locationHref('../attendance/personal-info.html')
 		showBox("提示",data.msg,"alert");	
 		return;
 	}
@@ -638,18 +689,22 @@ function getUserRoleKeySuccess(data){
 		CURRENTUSERID=data.entity.list[0].id;
 	}
 }
+function selectNavigation(navigationTD){
+	$("#"+navigationTD).addClass("cur");
+}
 $(document).ready(function(e) {
 	loadHtml("headerId","/include/header.html");
 	loadHtml("left_menu_content","/include/leftmenu.html");
 	loadHtml("footerId","/include/footer.html");
 	onloadFun();
+	selectNavigation("approveOrder");
 });
 </script>
 </head>
 
 <body>
 <div id="headerId"></div>
-<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>工单审批</span></div>
 <div class="main">
 	<div class="clearfix">
 		<div class="content_box">
@@ -669,7 +724,7 @@ $(document).ready(function(e) {
 										<tr>
 											<th width="100">申请人</th>
 											<th width="100">部门</th>
-											<th width="100">请假类型</th>
+											<th width="100">类型</th>
 											<th width="100">提交时间</th>
 											<th width="150">审批状态</th>
 											<th width="100">操作</th>
@@ -683,7 +738,7 @@ $(document).ready(function(e) {
 								<dl class="main_pagination" id="fenye1">
 									<dd class="pagination">
 										<span id="pageItem"></span>
-										<span class="page_no">共<span id="pageCount"></span>页 到第<input id="pageObj" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onclick="goPage($.trim($('#pageObj').val()));" /></span>
+										<span class="page_no">共<span id="pageCount"></span>页 到第<input id="pageObj" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onClick="goPage($.trim($('#pageObj').val()));" /></span>
 									</dd>
 								</dl>
 								<!-- 分页结束 -->
@@ -791,7 +846,7 @@ $(document).ready(function(e) {
 								<dl class="main_pagination 2" id="fenye2">
 									<dd class="pagination">
 										<span id="pageItem2"></span>
-										<span class="page_no">共<span id="pageCount2"></span>页 到第<input id="pageObj2" type="text" class="page_txt" onkeyup="this.value=this.value.replace(/^0+|\D/g,'')" />页 <input type="button" value="确定" class="page_btn" onclick="goPage2($.trim($('#pageObj').val()));" /></span>
+										<span class="page_no">共<span id="pageCount2"></span>页 到第<input id="pageObj2" type="text" class="page_txt" onKeyUp="this.value=this.value.replace(/^0+|\D/g,'')"/>页 <input type="button" value="确定" class="page_btn" onClick="goPage2($.trim($('#pageObj').val()));" /></span>
 									</dd>
 								</dl>
 								<!-- 分页结束 -->

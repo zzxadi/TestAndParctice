@@ -13,6 +13,7 @@ a:hover{ color:#007bc7; text-decoration:underline;}
 .header .welcome{color:#FFF; padding-left:30px;}
 .header a.logout{ color: #000; margin:0 4px; text-decoration:underline;}
 .header a.logout:hover{ text-decoration:underline;}
+.header .meta .logout:hover{ color:#CB180A;}
 .header .meta{ float:right; line-height:50px; padding-right:30px;}
 .header .meta a{ color:#fff; margin:0 10px;}
 .header .meta a:hover{ text-decoration:underline;}
@@ -45,6 +46,7 @@ a:hover{ color:#007bc7; text-decoration:underline;}
 .btn_cancel, .btn_back, .btn_close, .btn_reset{background-color: #949494;}
 .txt{border: 1px solid #E7E7E7;padding: 3px 5px;vertical-align: middle;}
 .cred {color: #E84244;}
+.gray{color:#AEAEAE}
 
 /*分页*/
 .main_pagination{padding:6px 10px 5px;overflow:hidden;zoom:1;background:#f0f0f0}

@@ -17,7 +17,8 @@ var GLOBAL_PARAM = {
 	operateLogo : $.trim(getUrlParam("operateLogo")),
 	leaveParamFlag : false,
 	overtimeParamFlag : false,
-	forgetParamFlag : false
+	forgetParamFlag : false,
+	countWordsFlag : true
 };
 /*保存工单*/
 function saveWorkOrder(operateFlag){
@@ -61,16 +62,17 @@ function leaveTripParam(){
 	var auditId = $('#leaveAuditId').val();
 	var leaveTimeBegin = $('#leaveTimeBegin').val();
 	var leaveTimeEnd = $('#leaveTimeEnd').val();
-	var leaveTotalTime = $('#leaveTotalTime').val();
+	var leaveTotalTime = countTime(1);
 	var reason = $('input[name=reason]:checked').val();
 	var remark = $('#remark').val();
 	
-	if(auditId && leaveTimeBegin && leaveTimeEnd && leaveTotalTime && reason){ GLOBAL_PARAM.overtimeParamFlag = true; }
+	if(auditId && leaveTimeBegin && leaveTimeEnd && leaveTotalTime && reason){ GLOBAL_PARAM.leaveParamFlag = true; }
+	else{ GLOBAL_PARAM.leaveParamFlag = false; }
 	
 	var param = [];
-	if(reason == 10){
+	if(reason == 11){
 		var otherReason = $('#otherReason').val();
-		if(!otherReason){ GLOBAL_PARAM.overtimeParamFlag = true; }
+		if(!otherReason){ GLOBAL_PARAM.leaveParamFlag = true; }
 		param.push('otherReason='+otherReason);
 	}
 	param.push('type=2');
@@ -88,9 +90,10 @@ function overtimeRequestParam(){
 	var overtimeReason = $('#overtimeReason').val();
 	var overtimeBegin = $('#overtimeBegin').val();
 	var overtimeEnd = $('#overtimeEnd').val();
-	var overtimeTotalTime = $('#overtimeTotalTime').val();
+	var overtimeTotalTime = countTime(2);
 	
-	if(auditId && overtimeReason && overtimeBegin && overtimeEnd && overtimeTotalTime){ GLOBAL_PARAM.forgetParamFlag = true; }
+	if(auditId && overtimeReason && overtimeBegin && overtimeEnd && overtimeTotalTime){ GLOBAL_PARAM.overtimeParamFlag = true; }
+	else{ GLOBAL_PARAM.overtimeParamFlag = false; }
 	
 	var param = [];
 	param.push('type=1');
@@ -115,12 +118,13 @@ function forgetCardParam(){
 	var inTime = forgetType == 1 ? (arriveTimeHour+':'+arriveTimeMin) : (forgetType == 2 ? (leaveTimeHour+':'+leaveTimeMin) : '');
 	var forgetCardRemark = $('#forgetCardRemark').val();
 	
-	if(auditId && forgetCardTime && forgetType && inTime){ GLOBAL_PARAM.leaveParamFlag = true; }
+	if(auditId && forgetCardTime && forgetType && inTime){ GLOBAL_PARAM.forgetParamFlag = true; }
+	else{ GLOBAL_PARAM.forgetParamFlag = false; }
 	
 	if(forgetType == 1){
-		if(!arriveTimeHour || !arriveTimeMin){ GLOBAL_PARAM.leaveParamFlag = false; }
+		if(!arriveTimeHour || !arriveTimeMin){ GLOBAL_PARAM.forgetParamFlag = false; }
 	}else if(forgetType == 2){
-		if(!leaveTimeHour || !leaveTimeMin){ GLOBAL_PARAM.leaveParamFlag = false; }
+		if(!leaveTimeHour || !leaveTimeMin){ GLOBAL_PARAM.forgetParamFlag = false; }
 	}
 	
 	var param = [];
@@ -184,9 +188,30 @@ function loadInitEvent(){
 		}
 	});
 	$('input[name=reason]').click(function(){
-		if($(this).val() == 10){ $('#otherReason').show(); }
+		if($(this).val() == 11){ $('#otherReason').show(); }
 		else{ $('#otherReason').hide(); }
 	});
+}
+function checkTime(obj){
+	var patternStr = /^(\d+(\.\d)?)(\d*)$/;
+	var value = $(obj).val();
+	if(!patternStr.test(value)){
+		$(obj).val('');
+	}
+}
+function countwords(id){
+	var inputLength = $("#"+id).val().length;
+	var maxCount = 50;
+	if(inputLength == 0){
+		GLOBAL_PARAM.countWordsFlag = true;
+		$("#"+id+"Err").html("还可以输入"+ maxCount + "个字");
+	}else if(inputLength > 0 && inputLength <= maxCount){
+		GLOBAL_PARAM.countWordsFlag = true;
+		$("#"+id+"Err").html("还可以输入"+(maxCount - inputLength) + "个字");
+	}else if(inputLength > maxCount){
+		GLOBAL_PARAM.countWordsFlag = false;
+		$("#"+id+"Err").html("<strong class='cred'>已经超过"+(inputLength - maxCount) + "个字</strong>");
+	}
 }
 /*获得所有管理者*/
 function getApproveManger(){
@@ -210,7 +235,7 @@ function getApproveMangerSuccess(data){
 		return;
 	}
 	var code=data.entity.list;
-	var html="";
+	var html="<option value=''>--请选择--</option>";
 	if(code.length >= 1){
 		for(var i=0,j=code.length;i<j;i++){
 			html+='<option value="'+code[i].id+'">'+code[i].userName+'</option>';
@@ -226,11 +251,106 @@ function getApproveMangerSuccess(data){
 		$('#forgetCardAuditId').html(html);
 	}
 }
-/*加载页面信息*/
+
+function get_person_department(){
+	ajax({
+		url: '/php/action/UserInfo.php?',
+		type: 'post',
+		data: 'method=getUserById',
+		dataType: 'json',
+		success: function(data){
+			$('#person_departmentType').val(data.entity.list[0].departmentType);	
+		}
+	})
+}
+function countTime(type){
+	var departmentType =$('#person_departmentType').val();
+	if(type==1){
+		var TimeBegin=$('#leaveTimeBegin').val();
+		var TimeEnd=$('#leaveTimeEnd').val();
+		var	TotalTime=$('#leaveTotalTime');
+	}
+	if(type==2){
+		var TimeBegin=$('#overtimeBegin').val();
+		var TimeEnd=$('#overtimeEnd').val();
+		var	TotalTime=$('#overtimeTotalTime');
+	}
+	if(!TimeBegin){
+		if(type==1)$('#leaveTimeErr').html('开始时间不能为空！');
+		if(type==2)$('#overtimeErr').html('开始时间不能为空！');
+	}
+	else if (!TimeEnd){
+		if(type==1)$('#leaveTimeErr').html('结束时间不能为空！');
+		if(type==2)$('#overtimeErr').html('结束时间不能为空！');
+	}
+	else if(TimeBegin>TimeEnd){
+		if(type==1)$('#leaveTimeErr').html('开始时间不能大于结束时间！');
+		if(type==2)$('#overtimeErr').html('开始时间不能大于结束时间！');
+	}else{
+		if(type==1)$('#leaveTimeErr').html('');
+		if(type==2)$('#overtimeErr').html('');
+		
+		var total=0;
+		var Begin = new Date(TimeBegin.replace(/-/g,"/"));
+		var End = new Date(TimeEnd.replace(/-/g,"/"));
+		
+		var morning = 9;//开始上班时间
+		var afternoon_end =12.5;//中午休息时间
+		if(departmentType==1)var afternoon_start = 14//IT部门中午上班时间
+		else var afternoon_start = 13.5//其他部门中午上班时间
+		if(departmentType==1)var evening = 18.5;//IT部门下班时间
+		else var evening = 18;//其他部门下班时间
+		
+		var day=Math.floor((End-Begin)/86400000);//相隔天数
+		var begin_hour = (Begin.getHours()*60+Begin.getMinutes())/60;//开始时间小时数
+		var end_hour = (End.getHours()*60+End.getMinutes())/60;//结束时间小时数
+		
+		if(begin_hour<morning)begin_hour=morning;
+		else if(afternoon_end<begin_hour&&begin_hour<afternoon_start)begin_hour=afternoon_start;
+		else if (begin_hour>evening)begin_hour=evening;
+		
+		if(end_hour<morning)end_hour=morning;
+		else if(afternoon_end<end_hour&&end_hour<afternoon_start)end_hour=afternoon_start;
+		else if (end_hour>evening)end_hour=evening;
+		
+		if(begin_hour<=end_hour){
+			if(begin_hour<=afternoon_end&&end_hour>=afternoon_start){
+				total += (end_hour-afternoon_start)+(afternoon_end-begin_hour);
+			}
+			else{
+				total += end_hour-begin_hour;
+			}
+		}
+		else {
+			if(end_hour<=afternoon_end)total += end_hour-morning;
+			else total += end_hour-afternoon_start+3.5;//3.5为上午工作时间
+			
+			if(begin_hour<=afternoon_end)total +=afternoon_end-begin_hour+4.5;//4.5为下午工作时间
+			else total +=evening-begin_hour;
+		}
+	
+		total += day*8;//一天按8小时工作时间	
+		total =Math.round(total*1000)/1000;
+		TotalTime.val(total);
+		return total;	
+	}
+}
+
+function countTime_remind(type){
+	if(type==1){
+		$('#leaveTotalTime').val('');
+	}
+	if(type==2){
+		$('#overtimeTotalTime').val('');
+	}
+}
+
+/*加载页面信息*/  
 $(function(){
 	loadTimeInput();
 	loadInitEvent();
 	getApproveManger();
+	get_person_department(); 
 });
 </script>
 </head>
@@ -247,11 +367,12 @@ $(function(){
     </dl>
    	<dl>
    		<dt><span class="cred">*</span>离岗时间：</dt>
-    	<dd><input type="text" id="leaveTimeBegin" class="txt grid-12" />
+    	<dd><input type="text" id="leaveTimeBegin" class="txt grid-12" onclick="countTime_remind(1)"/>
 			至
-			<input type="text" id="leaveTimeEnd" class="txt grid-12" />
-			<span>总时间<input type="text" id="leaveTotalTime" class="input_total_time" />小时</span>
+			<input type="text" id="leaveTimeEnd" class="txt grid-12" onclick="countTime_remind(1)"/>
+			<span>总时间<input type="text" id="leaveTotalTime" onclick="countTime(1)" onblur="checkTime(this)" class="input_total_time" maxlength="0" />小时</span>
 			&nbsp;&nbsp;<span id="leaveTimeErr" class="cred"></span>
+			<input id="person_departmentType" value=""  type="hidden"/>
 		</dd>
 	</dl>
 	<dl>
@@ -266,13 +387,17 @@ $(function(){
    			<input type="radio" value="7" id="reason_7" name="reason"><label for="reason_7">年休假</label>
    			<input type="radio" value="8" id="reason_8" name="reason"><label for="reason_8">丧假</label><br/>
    			<input type="radio" value="9" id="reason_9" name="reason"><label for="reason_9">工伤假</label>
-   			<input type="radio" value="10" id="reason_10" name="reason"><label for="reason_10">其他假</label>
+   			<!--<input type="radio" value="10" id="reason_10" name="reason"><label for="reason_10">出差</label>-->
+   			<input type="radio" value="11" id="reason_11" name="reason"><label for="reason_11">其他假</label>
    			<input type="text" id="otherReason" class="txt grid-12 hide" />
    		</dd>
    </dl>
    <dl>
       <dt>备注：</dt>
-      <dd><textarea type="text" id="remark" class="txt grid-45" rows="2"></textarea></dd>
+      <dd>
+      	<textarea type="text" id="remark" class="txt grid-45" rows="2" onkeyup="countwords('remark')"></textarea>
+      	<span id="remarkErr" class="gray">可以输入50个字</span>
+      </dd>
    </dl>
    <p class="workorder_save_button">
    	<input id="saveButton" type="button" onclick="saveWorkOrder('leaveTrip')" class="mybtn" value="提交" />
@@ -291,14 +416,17 @@ $(function(){
     </dl>
    	<dl>
       <dt><span class="cred">*</span>申请加班原因：</dt>
-      <dd><textarea type="text" id="overtimeReason" class="txt grid-45" rows="2"></textarea></dd>
+      <dd>
+      	<textarea type="text" id="overtimeReason" class="txt grid-45" rows="2" onkeyup="countwords('overtimeReason')"></textarea>
+      	<span id="overtimeReasonErr" class="gray">可以输入50个字</span>
+      </dd>
    	</dl>
    	<dl>
    		<dt><span class="cred">*</span>申请加班时间：</dt>
-    	<dd><input type="text" id="overtimeBegin" class="txt grid-12" />
+    	<dd><input type="text" id="overtimeBegin" class="txt grid-12" onclick="countTime_remind(2)" />
 			至
-			<input type="text" id="overtimeEnd" class="txt grid-12" />
-			<span>总时间<input type="text" id="overtimeTotalTime" class="input_total_time" />小时</span>
+			<input type="text" id="overtimeEnd" class="txt grid-12" onclick="countTime_remind(2)" />
+			<span>总时间<input type="text" id="overtimeTotalTime"  onclick="countTime(2)"  onblur="checkTime(this)" class="input_total_time" maxlength="0" />小时</span>
 			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
 		</dd>
 	</dl>
@@ -329,17 +457,20 @@ $(function(){
    		<dt><span class="cred">*</span>情况说明：</dt>
     	<dd>
     		<input type="checkbox" disabled="disabled" value="1" id="arriveTime" name="condition"><label for="arriveTime">到岗时间：</label>
-    		<input type="text" class="input_total_time" id="arriveTimeHour" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled" /> 时
-    		<input type="text" class="input_total_time" id="arriveTimeMin" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled" /> 分
+    		<input type="text" class="input_total_time" id="arriveTimeHour" maxlength="2" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled" /> 时
+    		<input type="text" class="input_total_time" id="arriveTimeMin" maxlength="2" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled" /> 分
     		<input type="checkbox" disabled="disabled" value="2" id="leaveTime" name="condition"><label for="leaveTime">离岗时间：</label>
-    		<input type="text" class="input_total_time" id="leaveTimeHour" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled"/> 时
-    		<input type="text" class="input_total_time" id="leaveTimeMin" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled"/> 分
+    		<input type="text" class="input_total_time" id="leaveTimeHour" maxlength="2" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled"/> 时
+    		<input type="text" class="input_total_time" id="leaveTimeMin" maxlength="2" onkeyup="this.value=this.value.replace(/\D/g,'')" disabled="disabled"/> 分
 			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
 		</dd>
 	</dl>
 	<dl>
       <dt>备注：</dt>
-      <dd><textarea type="text" id="forgetCardRemark" class="txt grid-45" rows="2"></textarea></dd>
+      <dd>
+      	<textarea type="text" id="forgetCardRemark" class="txt grid-45" rows="2" onkeyup="countwords('forgetCardRemark')"></textarea>
+      	<span id="forgetCardRemarkErr" class="gray">可以输入50个字</span>
+      </dd>
    	</dl>
    	<p class="workorder_save_button">
    		<input id="saveButton" type="button" onclick="saveWorkOrder('forgetCard')" class="mybtn" value="提交" />

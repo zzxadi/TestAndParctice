@@ -5,6 +5,7 @@
 	$iDataType = getParam("dataType","0");
 	$email = getParam("email","");
 	$passwd = getParam("passwd","");
+	$loginname = getParam("loginname","");
 	$method = getParam("method","");
 	$stPrint = array();
 	$stPrint["fieldArray"] = array();
@@ -20,10 +21,25 @@
 			$stPrint["entity"] = $stData;
 			$stPrint["msgCode"] = 1;
 			$stPrint["msg"] = "退出登录成功";
+			dataPrint($stPrint);
 		}else{
 			$stPrint["msgCode"] = 5;
 			$stPrint["msg"] = "退出登录失败";
+			dataPrint($stPrint);
 		}
+	}
+	else if($method == 'checkLoginnameMul'){
+		$stData = $dao->checkLoginnameMul($loginname);
+		if($stData){
+			$stPrint["entity"] = $stData;
+			$stPrint["msgCode"] = 1;
+			$stPrint["msg"] = "登录名不重复";
+			dataPrint($stPrint);
+		}else{
+			$stPrint["msgCode"] = 2;
+			$stPrint["msg"] = "登录名重复";
+			dataPrint($stPrint);
+		}		
 	}
 	else{
 		if(empty($email)){
@@ -37,14 +53,21 @@
 			dataPrint($stPrint);
 		}
 		$stData = $dao->login($email, $passwd);
-		if($stData){
+		if($stData && $stData['status'] == 0){
 			$stPrint["entity"] = $stData;
 			$stPrint["msgCode"] = 1;
 			$stPrint["msg"] = "登录成功";
-		}else{
+			dataPrint($stPrint);			
+		}
+		else if($stData && $stData['status'] == 1){
+			$stPrint["msgCode"] = 6;
+			$stPrint["msg"] = "该用户已经被冻结，登录失败";
+			dataPrint($stPrint);			
+		}
+		else{
 			$stPrint["msgCode"] = 5;
 			$stPrint["msg"] = "邮箱或用户名不正确，登录失败";
+			dataPrint($stPrint);			
 		}
 	}
-	dataPrint($stPrint);
 ?>

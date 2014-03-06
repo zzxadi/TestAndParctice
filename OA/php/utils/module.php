@@ -8,7 +8,7 @@ function loginCookie($userId){
 	$userId = (int)($userId);
 	if(empty($userId))return false;
 	$sCookie = authcode($userId,'ENCODE','google');
-	setcookie('login_id',$sCookie,time()+3600*24,'/');
+	setcookie('login_id',$sCookie, 0,'/');
 	return true;
 }
 

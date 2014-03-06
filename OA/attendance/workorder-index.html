@@ -65,7 +65,7 @@ function getWorkOrderListSuccess(data,str){
 				    auditStatus = resultList.auditStatus == 2 ? '审核通过' : (resultList.auditStatus == 3 ? '审核不通过' : (resultList.auditStatus == 1 ? '审核中' : '未审核'));
 					priviousUserName = resultList.priviousUserName ? resultList.priviousUserName : '暂无';
 				html += '<tr><td>'+type+'</td>' + '<td>'+resultList.createTime+'</td>' + '<td>' + resultList.forgetTime+'</td>' + '<td>'+resultList.inTime+'</td>'
-						+ '<td>'+auditStatus+'</td>' + '<td>'+priviousUserName+'</td>' + '<td>'+resultList.currentUserName+'</td>'
+						+ '<td>'+auditStatus+'</td>' + '<td>'+priviousUserName+'</td>' + '<td>'+(resultList.currentUserName?resultList.currentUserName:"无")+'</td>'
 						+ '<td><a class="ablue" href="javascript:void(0)" onclick="showDetail('+resultList.id+',\'forgetCard\')">查看</a></td></tr>';
 			}
 		}else{
@@ -76,7 +76,7 @@ function getWorkOrderListSuccess(data,str){
 					priviousUserName = resultList.priviousUserName ? resultList.priviousUserName : '暂无',
 					oprateStr = resultList.type == 1 ? 'overtimeRequest' : (resultList.type == 2 ? 'leaveTrip' : '');
 				html += '<tr><td>'+type+'</td>' + '<td>'+resultList.createTime+'</td>' 
-						+ '<td>'+auditStatus+'</td>' + '<td>'+priviousUserName+'</td>' + '<td>'+resultList.currentUserName+'</td>'
+						+ '<td>'+auditStatus+'</td>' + '<td>'+priviousUserName+'</td>' + '<td>'+(resultList.currentUserName?resultList.currentUserName:"无")+'</td>'
 						+ '<td><a class="ablue" href="javascript:void(0)" onclick="showDetail('+resultList.id+',\''+oprateStr+'\')">查看</a></td></tr>';
 			}
 		}
@@ -88,6 +88,10 @@ function getWorkOrderListSuccess(data,str){
 	GLOBAL_PARAM[str+'pageCount'] = parseInt(data.entity.pagetotal);
 	GLOBAL_PARAM[str+'currentPage'] = parseInt(data.entity.currentpage);	//当前页
 	updatePageInfo(str);
+}
+/****菜单高亮****/
+function selectNavigation(navigationID){
+	$("#"+navigationID).addClass("cur");	
 }
 /****分页开始****/
 function goPage(pageNo,str){
@@ -140,12 +144,13 @@ $(function(){
 	loadHtml("footerId","/include/footer.html");
 	getWorkOrderList();
 	getWorkOrderList(1,'forget_');
+	selectNavigation("workorderIndex");
 });
 </script>
 </head>
 <body>
 <div id="headerId"></div>
-<div class="bread"><a href="/">首页</a> &gt; <span>欢迎登录系统</span></div>
+<div class="bread"><a href="/">首页</a> &gt; <span>工单申请</span></div>
 <div class="main">
 	<div class="clearfix">
 		<div class="content_box">

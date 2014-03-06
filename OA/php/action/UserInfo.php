@@ -48,8 +48,8 @@
 		case 'doModify':
 			doModify($stInfo);
 			break;
-		case 'freezeUser':
-			freezeUser($id);
+		case 'doFreeze':
+			doFreeze($id);
 			break;
 		case 'getUserList':
 			getUserList($stInfo);
@@ -125,9 +125,9 @@
 		}		
 	}
 
-	function freezeUser($stInfo){
+	function doFreeze($id){
 		$user = new UserInfoDAO();
-		$stData = $user->freezeUser($id);
+		$stData = $user->doFreeze($id);
 		if($stData){
 			$stPrint["entity"] = $stData; 
 			$stPrint["msgCode"] = 1;

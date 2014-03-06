@@ -49,7 +49,7 @@ function getWorkOrderDetailSuccess(data){
 		$('#inTime_fc').text(result.inTime);
 		$('#remark_fc').text(remark);
 		$('#auditStatus_fc').text(auditStatus);
-		$('#currentUserName_fc').text(result.currentUserName);
+		$('#currentUserName_fc').text(result.currentUserName?result.currentUserName:'无');
 		$('#priviousUserName_fc').text(result.priviousUserName ? result.priviousUserName : '暂无');
 		$('#auditTime_fc').text(result.auditTime);
 		$('#auditRemark_fc').text(result.auditRemark);
@@ -58,7 +58,7 @@ function getWorkOrderDetailSuccess(data){
 		$('.workorder_leaves_detail').show();
 		var type = result.type == 1 ? '加班' : (result.type == 2 ? '请假/出差' : '暂无'),
 			leaveTypeName = leaveTypeNames(parseInt(result.leaveType)),
-			leaveType = result.leaveType == 10 ? ('其他假：' + result.leaveName) : leaveTypeName,
+			leaveType = result.leaveType == 11 ? ('其他假：' + result.leaveName) : leaveTypeName,
 			totalTime = result.totalTime ? (result.totalTime + '小时') : '暂无',
 			remark = result.remark ? result.remark : '暂无',
 			auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
@@ -73,7 +73,7 @@ function getWorkOrderDetailSuccess(data){
 		$('#auditStatus_vr').text(auditStatus);
 		$('#auditTime_vr').text(result.auditTime);
 		$('#auditRemark_vr').text(result.auditRemark);
-		$('#currentUserName_vr').text(result.currentUserName);
+		$('#currentUserName_vr').text(result.currentUserName?result.currentUserName:'无');
 		$('#priviousUserName_vr').text(result.priviousUserName ? result.priviousUserName : '暂无');
 		
 		if(result.auditStatus == 2 || result.auditStatus == 3){ $('#auditTime_tr').show(); $('#auditRemark_tr').show(); }
@@ -94,6 +94,7 @@ function leaveTypeNames(type){
 		case 7 : str = '年休假'; break;
 		case 8 : str = '丧假'; break;
 		case 9 : str = '工伤假'; break;
+		case 10 : str = '出差'; break;
 		default : str = '';
 	}
 	return str;
@@ -164,7 +165,7 @@ $(function(){
 		</tr>
 		<tr>
 			<td colspan="2">
-				<input type="button" onclick="close_box()" class="mybtn btn_cancel" value="关闭" />
+				<input type="button" onclick="close_box()" class="mybtn" value="关闭" />
 			</td>
 		</tr>
 	</table>
@@ -215,7 +216,7 @@ $(function(){
 		</tr>
 		<tr>
 			<td colspan="2">
-				<input type="button" onclick="close_box()" class="mybtn btn_cancel" value="关闭" />
+				<input type="button" onclick="close_box()" class="mybtn" value="关闭" />
 			</td>
 		</tr>
 	</table>

@@ -2,10 +2,11 @@
 	<p class="meta">
 		<a href="../attendance/personal-info.html">我的考勤</a>
 		<a href="../attendance/passwd-modify.html">修改密码</a>
+		<a href="javascript:void(0);" class="logout" id="logout">[退出]</a>
 	</p>
-	<a href="/"><img src="/images/base/oa_login_logo.png" width="180" height="50"></a>
+	<a href="../attendance/personal-info.html"><img src="/images/base/oa_login_logo.png" width="180" height="50"></a>
 	<span class="welcome">您好 <strong id="userPos"></strong></span>
-	<a href="javascript:void(0);" class="logout" id="logout">[退出]</a>
+
 </div>
 <script type="text/javascript">
 	var logout = document.getElementById('logout');
@@ -21,6 +22,8 @@
 			timeout:30000,//非必须.默认30秒秒
 			success:function(data){
 				if(data.msgCode==1){
+					deleteCookie('login_id');
+					deleteCookie('userInfo');
 					location.href = '../login.html';
 				}
 				else{
