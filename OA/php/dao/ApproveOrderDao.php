@@ -147,7 +147,7 @@
 					$sCondition .=" and VR.id = ".$stInfo['id'];	
 				}
 				$sql="SELECT
-				 u2.department_type ,
+				 u3.department_type ,
 				VR.REMARK ,
 				VR.CURRENT_USERID,
 				VR.BEGIN_TIME,
@@ -174,10 +174,11 @@
 				if(!empty($stInfo['id'])){
 					$sCondition .=" and VR.id = ".$stInfo['id'];	
 				}
-				$sql="SELECT u2.department_type,
+				$sql="SELECT u3.department_type,
 				VR.CURRENT_USERID,
 				VR.FORGET_TIME,VR.REMARK , 
-				u1.POSITION_NAME , 
+				u1.POSITION_NAME ,
+				VR.USER_ID, 
 				VR.ID , 
 				VR.CREATE_TIME , 
 				VR.TYPE ,

@@ -264,6 +264,7 @@ function get_person_department(){
 	})
 }
 function countTime(type){
+	$('#overtimeErr1').html("");
 	var departmentType =$('#person_departmentType').val();
 	if(type==1){
 		var TimeBegin=$('#leaveTimeBegin').val();
@@ -305,34 +306,55 @@ function countTime(type){
 		var begin_hour = (Begin.getHours()*60+Begin.getMinutes())/60;//开始时间小时数
 		var end_hour = (End.getHours()*60+End.getMinutes())/60;//结束时间小时数
 		
-		if(begin_hour<morning)begin_hour=morning;
-		else if(afternoon_end<begin_hour&&begin_hour<afternoon_start)begin_hour=afternoon_start;
-		else if (begin_hour>evening)begin_hour=evening;
-		
-		if(end_hour<morning)end_hour=morning;
-		else if(afternoon_end<end_hour&&end_hour<afternoon_start)end_hour=afternoon_start;
-		else if (end_hour>evening)end_hour=evening;
-		
-		if(begin_hour<=end_hour){
-			if(begin_hour<=afternoon_end&&end_hour>=afternoon_start){
-				total += (end_hour-afternoon_start)+(afternoon_end-begin_hour);
-			}
-			else{
-				total += end_hour-begin_hour;
-			}
-		}
-		else {
-			if(end_hour<=afternoon_end)total += end_hour-morning;
-			else total += end_hour-afternoon_start+3.5;//3.5为上午工作时间
+		if(type==1){
+			if(begin_hour<morning)begin_hour=morning;
+			else if(afternoon_end<begin_hour&&begin_hour<afternoon_start)begin_hour=afternoon_start;
+			else if (begin_hour>evening)begin_hour=evening;
 			
-			if(begin_hour<=afternoon_end)total +=afternoon_end-begin_hour+4.5;//4.5为下午工作时间
-			else total +=evening-begin_hour;
+			if(end_hour<morning)end_hour=morning;
+			else if(afternoon_end<end_hour&&end_hour<afternoon_start)end_hour=afternoon_start;
+			else if (end_hour>evening)end_hour=evening;
+			
+			if(begin_hour<=end_hour){
+				if(begin_hour<=afternoon_end&&end_hour>=afternoon_start){
+					total += (end_hour-afternoon_start)+(afternoon_end-begin_hour);
+				}
+				else{
+					total += end_hour-begin_hour;
+				}
+			}
+			else {
+				if(end_hour<=afternoon_end)total += end_hour-morning;
+				else total += end_hour-afternoon_start+3.5;//3.5为上午工作时间
+				
+				if(begin_hour<=afternoon_end)total +=afternoon_end-begin_hour+4.5;//4.5为下午工作时间
+				else total +=evening-begin_hour;
+			}
+		
+			total += day*8;//一天按8小时工作时间
+			total =Math.round(total*1000)/1000;
+			TotalTime.val(total);
+			return total;
 		}
-	
-		total += day*8;//一天按8小时工作时间	
-		total =Math.round(total*1000)/1000;
-		TotalTime.val(total);
-		return total;	
+		if(type==2){
+			var day_begin=Begin.getDay();
+			var day_end=End.getDay();
+			if(day>0||day_begin!=day_end)$('#overtimeErr').html('为确定您当天加班的上下班时间，加班申请时间段请在同一天。');
+			else{
+				if(day_begin!=0&&day_begin!=6){
+					$('#overtimeErr1').html('温馨提示：您的加班申请时间不在双休日，请确认是否为节假日，否则申请会被拒绝。');
+				}
+				if(begin_hour<=afternoon_end&&end_hour>=afternoon_start){
+					total += (end_hour-afternoon_start)+(afternoon_end-begin_hour);
+				}
+				else{
+					total += end_hour-begin_hour;
+				}
+				total =Math.round(total*1000)/1000;
+				TotalTime.val(total);
+				return total;	
+			}
+		}
 	}
 }
 
@@ -427,7 +449,7 @@ $(function(){
 			至
 			<input type="text" id="overtimeEnd" class="txt grid-12" onclick="countTime_remind(2)" />
 			<span>总时间<input type="text" id="overtimeTotalTime"  onclick="countTime(2)"  onblur="checkTime(this)" class="input_total_time" maxlength="0" />小时</span>
-			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span>
+			&nbsp;&nbsp;<span id="overtimeErr" class="cred"></span><span id="overtimeErr1" class="blue"></span>
 		</dd>
 	</dl>
 	<p class="workorder_save_button">

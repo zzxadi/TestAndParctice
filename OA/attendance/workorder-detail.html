@@ -40,9 +40,10 @@ function getWorkOrderDetailSuccess(data){
 	var result = data.entity.list[0];
 	if(GLOBAL_PARAM.operateLogo == 'forgetCard'){	//忘打卡
 		$('.workorder_forget_detail').show();
-		var type = result.type == 1 ? '上班' : (result.type == 2 ? '下班' : '暂无'),
+		var type = result.type == 1 ? '上班忘打卡' : (result.type == 2 ? '下班忘打卡' : '暂无'),
 				remark = result.remark ? result.remark : '暂无',
 				auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
+		$('#person_fc').text(result.userName);
 		$('#type_fc').text(type);
 		$('#createTime_fc').text(result.createTime);
 		$('#forgetTime_fc').text(result.forgetTime);
@@ -56,18 +57,18 @@ function getWorkOrderDetailSuccess(data){
 		if(result.auditStatus == 2 || result.auditStatus == 3){ $('#auditTime_fc_tr').show(); $('#auditRemark_fc_tr').show(); }
 	}else{
 		$('.workorder_leaves_detail').show();
-		var type = result.type == 1 ? '加班' : (result.type == 2 ? '请假/出差' : '暂无'),
-			leaveTypeName = leaveTypeNames(parseInt(result.leaveType)),
+		var leaveTypeName = leaveTypeNames(parseInt(result.leaveType)),
 			leaveType = result.leaveType == 11 ? ('其他假：' + result.leaveName) : leaveTypeName,
+			type = result.type == 1 ? '加班' : (result.type == 2 ? '请假 ('+leaveType+')' : '暂无'),
 			totalTime = result.totalTime ? (result.totalTime + '小时') : '暂无',
 			remark = result.remark ? result.remark : '暂无',
 			auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
+		$('#person_vr').text(result.userName);
 		$('#type_vr').text(type);
 		$('#createTime_vr').text(result.createTime);
 		$('#beginTime_vr').text(result.beginTime);
 		$('#endTime_vr').text(result.endTime);
 		$('#totalTime_vr').text(result.totalTime);
-		$('#reason_vr').text(leaveType);
 		$('#totalTime_vr').text(totalTime);
 		$('#remark_vr').text(remark);
 		$('#auditStatus_vr').text(auditStatus);
@@ -114,6 +115,10 @@ $(function(){
 <!-- 请假/出差单、加班申请单开始 -->
    <div class="workorder_leaves_detail hide">
    	<table width="100%" cellspacing="0" cellpadding="0" class="workorder_table grid-50">
+		<tr id="person_tr">
+			<td width="110">申请人：</td>
+			<td id="person_vr"></td>
+		</tr>
 		<tr>
 			<td width="110">申请类型：</td>
 			<td id="type_vr"></td>
@@ -134,10 +139,6 @@ $(function(){
 			<td width="110">总时间：</td>
 			<td id="totalTime_vr"></td>
 		</tr>
-		<tr id="reason_tr">
-			<td width="110">事由：</td>
-			<td id="reason_vr"></td>
-		</tr>
 		<tr>
 			<td width="110">备注：</td>
 			<td id="remark_vr"></td>
@@ -157,8 +158,7 @@ $(function(){
 		<tr>
 			<td width="110">前审核人：</td>
 			<td id="priviousUserName_vr"></td>
-		</tr>
-		
+		</tr>	
 		<tr id="auditRemark_tr" class="hide">
 			<td width="110">审核备注：</td>
 			<td id="auditRemark_vr"></td>
@@ -174,6 +174,10 @@ $(function(){
 <!-- 忘打卡开始 -->          
    <div class="workorder_forget_detail hide">
     <table width="100%" cellspacing="0" cellpadding="0" class="workorder_table grid-50">
+		<tr>
+			<td width="110">申请人：</td>
+			<td id="person_fc"></td>
+		</tr>
 		<tr>
 			<td width="110">忘记类型：</td>
 			<td id="type_fc"></td>

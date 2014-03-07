@@ -124,16 +124,16 @@ function getApproveOrderDataSuccess(data){
 			depart=parseInt(code[i].departmentType);
 			switch (depart){
 				case 1 : DepartMentType='信息技术部';break;
-				case 2 : DepartMentType='财务部';break;
-				/*case 3 : DepartMentType='调休';break;
-				case 4 : DepartMentType='婚嫁';break;
-				case 5 : DepartMentType='产假';break;
-				case 6 : DepartMentType='计生假';break;
-				case 7 : DepartMentType='年休假';break;
-				case 8 : DepartMentType='丧假';break;
+				case 2 : DepartMentType='人力资源部';break;
+				case 3 : DepartMentType='财务部';break;
+				case 4 : DepartMentType='市场部';break;
+				case 5 : DepartMentType='售后部';break;
+				case 6 : DepartMentType='产品部';break;
+				case 7 : DepartMentType='其他部门';break;
+				/*case 8 : DepartMentType='丧假';break;
 				case 9 : DepartMentType='工伤假';break;
 				case 10 : DepartMentType='出差';break;
-				case 11 : DepartMentType='其他假';break;*/	
+				case 11 : DepartMentType='其他假';break;*/		
 			}
 			html+='<td>'+DepartMentType+'</td>';
 			var type=parseInt(code[i].type);
@@ -224,13 +224,13 @@ function getForgetOrderDataSuccess(data)
 			depart=parseInt(code[i].departmentType);
 			switch (depart){
 				case 1 : DepartMentType='信息技术部';break;
-				case 2 : DepartMentType='财务部';break;
-				/*case 3 : DepartMentType='调休';break;
-				case 4 : DepartMentType='婚嫁';break;
-				case 5 : DepartMentType='产假';break;
-				case 6 : DepartMentType='计生假';break;
-				case 7 : DepartMentType='年休假';break;
-				case 8 : DepartMentType='丧假';break;
+				case 2 : DepartMentType='人力资源部';break;
+				case 3 : DepartMentType='财务部';break;
+				case 4 : DepartMentType='市场部';break;
+				case 5 : DepartMentType='售后部';break;
+				case 6 : DepartMentType='产品部';break;
+				case 7 : DepartMentType='其他部门';break;
+				/*case 8 : DepartMentType='丧假';break;
 				case 9 : DepartMentType='工伤假';break;
 				case 10 : DepartMentType='出差';break;
 				case 11 : DepartMentType='其他假';break;*/	
@@ -292,16 +292,16 @@ function getApproveDetailSuccess(data,approveType){
 			depart=parseInt(code[i].departmentType);
 			switch (depart){
 				case 1 : DepartMentType='信息技术部';break;
-				case 2 : DepartMentType='财务部';break;
-				/*case 3 : DepartMentType='调休';break;
-				case 4 : DepartMentType='婚嫁';break;
-				case 5 : DepartMentType='产假';break;
-				case 6 : DepartMentType='计生假';break;
-				case 7 : DepartMentType='年休假';break;
-				case 8 : DepartMentType='丧假';break;
+				case 2 : DepartMentType='人力资源部';break;
+				case 3 : DepartMentType='财务部';break;
+				case 4 : DepartMentType='市场部';break;
+				case 5 : DepartMentType='售后部';break;
+				case 6 : DepartMentType='产品部';break;
+				case 7 : DepartMentType='其他部门';break;
+				/*case 8 : DepartMentType='丧假';break;
 				case 9 : DepartMentType='工伤假';break;
 				case 10 : DepartMentType='出差';break;
-				case 11 : DepartMentType='其他假';break;*/	
+				case 11 : DepartMentType='其他假';break;*/		
 			}
 			html+='<tr><td width="110">申请人：</td>';	
 			html+='<td>'+code[i].userName+'&nbsp;';
@@ -328,9 +328,9 @@ function getApproveDetailSuccess(data,approveType){
 			html+='<tr><td id="tiJiaoUserId" colspan="2" style="display:none">'+code[i].userId+'</td></tr>';
 			if(approveType==1){
 				html+='<tr><td width="110">起始时间：</td>';
-				html+='<td>'+code[i].beginTime+'</td></tr>';
+				html+='<td>'+code[i].beginTime+'（'+getWeek(code[i].beginTime)+'）</td></tr>';
 				html+='<tr><td width="110">结束时间：</td>';
-				html+='<td>'+code[i].endTime+'</td></tr>';
+				html+='<td>'+code[i].endTime+'（'+getWeek(code[i].endTime)+'）</td></tr>';
 				html+='<tr><td width="110">共计：</td>';
 				html+='<td><span id="totalTime">'+code[i].totalTime+'</span>小时</td></tr>';
 			}else if(approveType==2){
@@ -691,6 +691,24 @@ function getUserRoleKeySuccess(data){
 }
 function selectNavigation(navigationTD){
 	$("#"+navigationTD).addClass("cur");
+}
+
+function getWeek(week){
+	var week =week.split(' ');
+	var param=[];
+	param=week[0].split('-');
+	week=param.join('/');
+	var date=new Date(param).getDay();
+  	switch (date){
+		case 0:   week='星期日';break;
+		case 1:   week='星期一';break;
+		case 2:   week='星期二';break;
+		case 3:   week='星期三';break;
+		case 4:   week='星期四';break;
+		case 5:   week='星期五';break;
+		case 6:   week='星期六';break;
+	}
+	return week;
 }
 $(document).ready(function(e) {
 	loadHtml("headerId","/include/header.html");

@@ -47,6 +47,7 @@ a:hover{ color:#007bc7; text-decoration:underline;}
 .txt{border: 1px solid #E7E7E7;padding: 3px 5px;vertical-align: middle;}
 .cred {color: #E84244;}
 .gray{color:#AEAEAE}
+.blue{color:#63ADEE}
 
 /*分页*/
 .main_pagination{padding:6px 10px 5px;overflow:hidden;zoom:1;background:#f0f0f0}
