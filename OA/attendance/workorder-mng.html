@@ -287,6 +287,9 @@ function countTime(type){
 	else if(TimeBegin>TimeEnd){
 		if(type==1)$('#leaveTimeErr').html('开始时间不能大于结束时间！');
 		if(type==2)$('#overtimeErr').html('开始时间不能大于结束时间！');
+	}else if(TimeBegin==TimeEnd){
+		if(type==1)$('#leaveTimeErr').html('开始时间和结束时间相同！');
+		if(type==2)$('#overtimeErr').html('开始时间和结束时间相同！');	
 	}else{
 		if(type==1)$('#leaveTimeErr').html('');
 		if(type==2)$('#overtimeErr').html('');

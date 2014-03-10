@@ -23,7 +23,10 @@ class WorkOrderDao{
 		$param['CREATE_TIME'] = date('Y-m-d H:i:s');
 		
 		$conn = new MysqlConn();
-		return $conn->insert('VACATION_RECORD',$param);
+		$result = array();
+		$result['result'] = $conn->insert('VACATION_RECORD',$param);
+		$result['createTime'] = $param['CREATE_TIME'];
+		return $result;
 	}
 	
 	/**
@@ -42,7 +45,10 @@ class WorkOrderDao{
 		$param['AUDIT_STATUS'] = $obj->getAuditStatus();
 		
 		$conn = new MysqlConn();
-		return $conn->insert('FORGET_CARD',$param);
+		$result = array();
+		$result['result'] = $conn->insert('FORGET_CARD',$param);
+		$result['createTime'] = $param['CREATE_TIME'];
+		return $result;
 	}
 	
 	/**
@@ -123,5 +129,24 @@ class WorkOrderDao{
 		$returnList['list'] = $list;
 		return $returnList;	
 	 }
+	 
+	 /**
+	 * 根据创建时间获取请假/出差、加班、忘打卡记录* 
+	 */
+	function getWorkOrderListByCreateTime($type,$createTime){
+		if($type==1)$table='  VACATION_RECORD  ';
+		if($type==2)$table='  FORGET_CARD  ';
+		$sql='select * from '.$table.' WHERE CREATE_TIME = '.'\''.$createTime.'\'';
+		$stConn = new MysqlConn();
+		$stResult = $stConn->query($sql);
+		$stList = array();
+		$i=0;
+		while($stInfo = mysql_fetch_array($stResult)){
+			$stList[$i] = $stInfo;	
+			$i++;
+		}
+		$stConn->free_result();//释放结果内存
+		return  $stList;
+	}
 }
 ?>
