@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script type="text/javascript" src="http://baidu.100gong.tk/js/jquery.min.js"></script>
+<script type="text/javascript">
+
+function isType( type ){
+	return function( obj ){
+	  return Object.prototype.toString.call( obj ) === '[object ' + type + ']';
+	}
+}
+
+var isString = isType('String'),
+	isArray = isType('Array'),
+	isBoolean = isType('Boolean'),
+	isNumber = isType('Number'),
+	isFun = isFun('Function');
+
+function makeTable(data){
+	if(!data)return;
+	var setNode = function(st,data,row,col,originData){
+		var sType = typeof st;
+		if(sType == "string" || sType == "number" || sType == "boolean" || sType == "function"){
+			var html = st;
+			if(sType == "function")html = st.call(this,data,row,col,originData);
+			if(typeof html == "string" || typeof html == "number" || typeof html == "boolean"){
+				html += '';
+				this.innerHTML = html.replace(/^\s*|\s*$/g,"");
+			}
+		}else if(sType == "object"){
+			var attr = st.attr;
+			if(typeof attr == "function")attr = attr.call(this,data,row,col,originData);
+			if(typeof attr == "object"){
+				for(var n in attr){
+					this.setAttribute(n,attr[n]);	
+				}	
+			}
+			if(typeof st.content != "undefined")setNode.call(this,st.content,data,row,col,originData);
+			if(typeof st.callback == "function")st.callback.call(this,data,row,col,originData);
+		}	
+	}
+	var stTable = document.createElement("table");
+	var list = data.list.concat();
+	var col = data.col.concat();
+	var stTitle = {};
+	for(var i = 0, length = col.length; i < length; i++){
+		stTitle[col[i].content] = col[i].title;
+	}
+	list.unshift(stTitle);
+	for(var i = 0, length = list.length; i < length; i++){
+		var stTr = document.createElement("tr");
+		setNode.call(stTr,data.row,list[i],i,0,data);
+		for(var j = 0, jlength = col.length; j < jlength; j++){
+			var newCol = function(){};
+			newCol.prototype = col[j];
+			newCol = new newCol();
+			var content = newCol.content;
+			if(typeof list[i][content] != "undefined")newCol.content = list[i][content];
+			var stDom = document.createElement("td");
+			setNode.call(stDom,newCol,list[i],i,j,data);
+			stTr.appendChild(stDom);
+		}
+		stTable.appendChild(stTr);
+	}
+	setNode.call(stTable,data,data);
+	return stTable;
+}
+$(function(){
+	//基本数据类型
+	/*{
+		attr://给元素设置属性；可以是{}对象，也可以是返回{}对象的函数
+		,content://可以是"普通字符串","字段名","返回字符串的函数",{attr:{},content:返回的内容,callback:function(data,row,rol,originData){}}对象	
+		,callback:function(data){
+			//创建元素成功的回调
+			//data传递过来的数据
+			//this创建的元素的dom对象
+		}
+	}*/
+	//基本用法
+	var st = {
+		list:[{id:1,name:"刘德华",st:[1,2,3]},{id:2,name:"张学友",st:[4,5,6]},{id:3,name:"谢霆锋",st:"222"}],
+		col:[
+				{
+					title:"ID",//列标题
+					content:'id'//列对应list数组里的字段,content可以是"字符串：如果内容是"数据行"的key，那就取该key对应的value"，"函数:返回内容数据","对象"
+				},
+				{
+					title:"名字",
+					content:'name'//对应数据行的name字段
+				}
+				/*,{
+					title:"名字",
+					content:'这是我自定义的字符串'
+				},
+				{
+					title:"名字",
+					content:function(data,row,rol,originData){
+						//this是当前td对象
+						//data是list的行数据
+						//row是行索引
+						//col是列索引
+						//originData是原始块数据集，这里是st
+						return "返回td要设置的内容"
+					}
+				},
+				{
+					title:"名字",
+					content:{
+							attr:{class:"yyyy",style:"color:#CCCCCC"}//给td原始设置属性，可以是{}对象，也可以是返回{}对象的函数
+							,attr:function(data,row,rol,originData){return {style:"color:#CCCCCC"}}
+							,content:基本数据类型
+							,callback:function(data,row,rol,originData){
+								//创建td成功回调
+							}
+				}*/
+			]
+			/*,attr:{class:"xxx",style:"color:#FF0000"}//设置表格的属性
+			,callback:function(data){
+				//data原始块数据集
+				//创建表格成功的回调
+			}
+			,row:{
+					attr:{class:"wwwww",style:"color:#00FF00"},//设置行的属性
+					callback:function(data,row){
+						//data是行数据
+						//row是行索引
+					}
+			}*/
+	};
+	$("body").html(makeTable(st));
+});
+</script>
+</head>
+
+
+
+<body>
+<div style="margin:0 auto;width:800px;"><textarea id="content" style="width:800px;height:400px"></textarea></div>
+<table>
+</table>
+</body>
+</html>
