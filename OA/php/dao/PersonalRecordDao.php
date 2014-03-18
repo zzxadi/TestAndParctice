@@ -39,7 +39,7 @@
 			if($Type==5){
 				$sSql = "select * from VACATION  where 1=1 ";
  				$sSqlById = "select USER_ID from VACATION  where 1=1 ";
-				$sCondition = " and USER_ID = '" .$Id. "' ";  
+				$sCondition = " and USER_ID = '" .$Id. "' ORDER BY VACATION_TYPE ";  
 			}
 			$stConn = new MysqlConn();
 			$sSqlById .= $sCondition;

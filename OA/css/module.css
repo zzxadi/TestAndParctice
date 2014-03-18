@@ -39,6 +39,17 @@ a:hover{ color:#007bc7; text-decoration:underline;}
 .page_title{height:31px;line-height:31px;text-indent:20px;font-weight:700;border-bottom:1px solid #E3E4E4}
 .page_subtitle{height:31px;line-height:31px;text-indent:15px;font-size:12px;font-weight:700;background:#e3e4e4}
 .page_main{padding:0 10px 10px}
+.user_table{margin-top:20px;}
+.user_table dl dt{float:left;margin-left:100px;line-height:40px;}
+.user_table dl dd{float:right;margin-right:400px;line-height:40px;}
+.user_table  p{margin-left:280px;line-height:80px;} 
+.user_table dl lable {float:right;margin-left:0px;margin-right:-290px;line-height:40px;}
+.user_table dl p{float:right;margin-left:-400px;margin-right:0px;line-height:40px;}
+.user_table dl lable.error{padding:0 0 0 27px;background:url(/images/base/icon_error.png) no-repeat 8px 14px;color:#f35b69;} 
+.user_table dl lable.right{padding:20px 20px 10px 110px;background:url(/images/base/icon_right.png) no-repeat 10px 14px;color:#77af00;}  
+.user_table span.error{padding:0 0 0 27px;background:url(/images/base/icon_error.png) no-repeat 10px 2px;color:#f35b69}
+.user_table span.right{padding:0 0 0 27px;background:url(/images/base/icon_right.png) no-repeat 10px 0;color:#77af00}
+
 .tab_content{ display:none;}
 .footer{ height:50px; line-height:50px; text-align:center;}
 

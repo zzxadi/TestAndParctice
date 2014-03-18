@@ -4,8 +4,8 @@
 	<meta charset="UTF-8">
 	<title>人员管理</title>
 	<link rel="stylesheet" type="text/css" href="/css/base.css">
-	<link rel="stylesheet" type="text/css" href="/css/module.css">
 	<link rel="stylesheet" type="text/css" href="/css/buyer.css">
+	<link rel="stylesheet" type="text/css" href="/css/module.css">
 	<link rel="stylesheet" type="text/css" href="/css/timepicker.css">
 	<script type="text/javascript" src="/js/common.js"></script>
 	<script type="text/javascript" src="/js/module.js"></script>
@@ -17,7 +17,8 @@
 			loadHtml("left_menu_content","/include/leftmenu.html");
 			loadHtml("footerId","/include/footer.html");
 			selectNavigation("userInfo");//菜单高亮
-
+			$('#submit').removeAttr("disabled");//提交按钮可点击
+			
 			bindEvent();
 			$('#indTime').datepicker({dateFormat: 'yy-mm-dd',constrainInput:true,maxDate: new Date(),onClose: validate.validateIndTime,});
 			var id = getUrlParam('id');
@@ -27,13 +28,23 @@
 		});
 
 		function bindEvent(){
-			$('.user_form').on('blur', '#username', validate.validateUsername)
+			$('.user_table').on('blur', '#username', validate.validateUsername)
 						   .on('blur', '#loginname', validate.validateLoginname)
 						   .on('blur', '#mobile', validate.validateMobile)
 						   .on('blur', '#email', validate.validateEmail)
 						   .on('blur', '#position', validate.validatePosition)
 						   .on('click', '#submit', submitForm)
-						   .on('click', '#reset', resetForm);
+						   .on('click', '#reset', resetForm)
+						   .on('blur', '#vacation_1', validate.validateVacation)
+						   .on('blur', '#vacation_2', validate.validateVacation)
+						   .on('blur', '#vacation_3', validate.validateVacation)
+						   .on('blur', '#vacation_4', validate.validateVacation)
+						   .on('blur', '#vacation_5', validate.validateVacation)
+						   .on('blur', '#vacation_6', validate.validateVacation)
+						   .on('blur', '#vacation_7', validate.validateVacation)
+						   .on('blur', '#vacation_8', validate.validateVacation)
+						   .on('blur', '#vacation_9', validate.validateVacation)
+						   .on('blur', '#vacation_10', validate.validateVacation);
 		}
 
 		var validate = (function(){
@@ -108,6 +119,16 @@
 					}
 					$indTimeMsg.html('').attr('class', 'right');
 					return true;					
+				},
+				validateVacation : function(){
+					var Id = $(this).attr('name');
+					var value = $.trim($(this).val());
+					if(isNaN(value)) {
+						$('#'+Id+'_Msg').html('请输入数字或不输入').attr('class', 'error');
+						return false;
+					}
+					$('#'+Id+'_Msg').html('').attr('class', 'right');
+					return true;	
 				},				
 			}				
 		})();
@@ -137,9 +158,25 @@
 				locationHash('indTime');
 				return false;
 			}
+			if(!validateVacation()){
+				return false;
+			}
 			return true;
 		}
 
+		function validateVacation(){
+			var flag = true;
+			for(var i=1;i<11;i++){
+				if(isNaN($('#vacation_'+i).val())){
+					$('#vacation_'+i+'_Msg').html('请输入数字或不输入').attr('class', 'error');
+					flag = false;
+					break;
+				}
+				else $('#vacation_'+i+'_Msg').html('').attr('class', 'right');
+			}
+			return flag;	
+		}
+		
 		function setData(id){
 			var param = [];
 				param.push('id='+id),
@@ -155,11 +192,27 @@
 					$('#roleId').val(record.roleId);
 					$('#username').val(record.userName);
 					$('#loginname').val(record.loginName);
+					if(record.sex==1){$('#sex_girl').attr('checked','checked');}
 					$('#mobile').val(record.mobile);
 					$('#email').val(record.email);
 					$('#dept').val(record.departmentType)
 					$('#position').val(record.positionName);
 					$('#indTime').val(record.inductionTime);
+				}
+			})
+			ajax({
+				url:'/php/action/UserInfo.php?method=getVacationById&id='+id,
+				type:'post',//非必须.默认get
+				dataType:'json',//非必须.默认text
+				success:function(data){
+					var list = data.entity.list;
+					var length = list.length;
+					if(length>0){
+						for(var i=0;i<length;i++){
+							var record = list[i];
+							$('#vacation_'+record.vacationType).val(record.remain);
+						}
+					}
 				}
 			})
 		}
@@ -168,6 +221,7 @@
 			if(!validateData()){
 				return false;
 			}
+			$('#submit').attr('disabled','disabled');
 			var param = [];
 			param.push('roleId='+$('#roleId').val());
 			param.push('username='+$('#username').val());
@@ -190,14 +244,83 @@
 				type:'post',//非必须.默认get
 				data:param.join('&'),
 				dataType:'json',//非必须.默认text
-				success:function(data){
-					if(data.msgCode==1){
-						showBox('提示', '操作成功', 'alert', function(){
-							 $('#reset').click();
-						});
+				error:function(){$('#submit').removeAttr("disabled");},
+				success:submitFormSuccess
+			},$('#loginname').val())
+		}
+		
+		function submitFormSuccess(data,loginname){
+			if($.data(document, 'id')){
+				ModifyVacation();
+			}else{
+				if(data.msgCode==1){
+					ajax({
+						url:'/php/action/UserInfo.php?method=getUserByLoginname&loginname='+loginname,
+						type:'get',//非必须.默认get
+						dataType:'json',//非必须.默认text
+						error:function(){$('#submit').removeAttr("disabled");},
+						success:addVacation
+					})
+				}else{
+					showBox('提示', '操作失败，请核对输入的数据！', 'alert');
+					$('#submit').removeAttr("disabled");
+				}
+			}
+		}
+		
+		function ModifyVacation(){
+			var flag=true;
+			var userId = $.data(document, 'id');
+			for(var i=1;i<11;i++){
+				var remain = $.trim($('#vacation_'+i).val());
+				if(!remain) remain = 0;
+				var vacationType = i;
+				ajax({
+					url:'/php/action/UserInfo.php?method=ModifyVacation&userId='+userId+'&vacationType='+vacationType+'&remain='+remain,
+					type:'get',//非必须.默认get
+					dataType:'json',//非必须.默认text
+					error:function(){$('#submit').removeAttr("disabled");},
+					success:function(data){
+						if(data.msgCode!=1)flag=false;
+					}
+				})
+				if(i==10){
+					if(flag)showBox('提示', '修改成功', 'alert');
+					$('.user_table dl lable').html('').attr('class', '');
+					$('.user_table dt span').html('').attr('class', '');
+					$('#submit').removeAttr("disabled");
+				}
+			}
+		}
+		
+		function addVacation(data){
+			var flag=true;
+			if(data.msgCode==1)var userId=data.entity.list[0].id;
+			else {flag=false;$('#submit').removeAttr("disabled");}
+			if(flag){
+				for(var i=1;i<11;i++){
+					var remain = $.trim($('#vacation_'+i).val());
+					if(!remain) remain =0;		
+					var vacationType = i;
+					ajax({
+						url:'/php/action/UserInfo.php?method=updateVacation&userId='+userId+'&vacationType='+vacationType+'&remain='+remain,
+						type:'get',//非必须.默认get
+						dataType:'json',//非必须.默认text
+						error:function(){$('#submit').removeAttr("disabled");},
+						success:function(data){
+							if(data.msgCode!=1)flag=false;
+						}
+					})				
+					if(i==10){
+						if(flag){
+							showBox('提示', '添加成功', 'alert', function(){
+								 $('#reset').click();
+							});
+						}
+						$('#submit').removeAttr("disabled");
 					}
 				}
-			})
+			}
 		}
 
 		function checkLoginnameMul(){
@@ -225,7 +348,12 @@
 		}
 
 		function resetForm(){
-			$('.user_form dd span').html('').attr('class', '');
+			$('.user_table dl lable').html('').attr('class', '');
+			$('.user_table dt span').html('').attr('class', '');
+		}
+		
+		function backUserInfo(){
+			locationHref('user-info.html?currentPage='+getUrlParam("currentPage")+'&username='+getUrlParam("username")+'&email='+getUrlParam("email")+'&roleId='+getUrlParam("roleId"));		
 		}
 	</script>
 </head>
@@ -238,39 +366,43 @@
 			<div class="content">
 				<div class="page_title">人员管理</div>
 				<div class="page_main">
-					<form method="post" class="user_form">
+					<form method="post" class="user_table">
 						<dl>
-							<dt><em class="cred">*</em>角色：</dt>
-							<dd><select class="select" id="roleId">
+							<dt><em class="cred">*</em>角色：<select class="select" id="roleId">
 							<option value="1" selected>普通员工</option>
 							<option value="2">管理员</option>
 							<option value="5">工单终结者</option>
-							<option value="9">超级管理员</option></select></dd>
+							<option value="9">超级管理员</option></select></dt>
+							<dd>事假：<input type="text" name="vacation_1" class="txt grid-10" id="vacation_1"></dd>
+							<lable class="cred" id="vacation_1_Msg"></lable>
+						</dl>		
+						<dl>
+							<dt><em class="cred">*</em>姓名：<input type="text" name="username" class="txt grid-20" id="username"><span id="usernameMsg"></span></dt>
+							<dd>病假：<input type="text" name="vacation_2" class="txt grid-10" id="vacation_2"></dd>
+							<lable class="cred" id="vacation_2_Msg"></lable>
 						</dl>
 						<dl>
-							<dt><em class="cred">*</em>姓名：</dt>
-							<dd><input type="text" name="username" class="txt grid-20" id="username"><span id="usernameMsg"></span></dd>
+							<dt><em class="cred">*</em>登录名：<input type="text" name="loginname" class="txt grid-20" id="loginname"><span id="loginnameMsg"></span></dt>
+							<dd>调休：<input type="text" name="vacation_3" class="txt grid-10" id="vacation_3"></dd>
+							<lable class="cred" id="vacation_3_Msg"></lable>
 						</dl>
 						<dl>
-							<dt><em class="cred">*</em>登录名：</dt>
-							<dd><input type="text" name="loginname" class="txt grid-20" id="loginname"><span id="loginnameMsg"></span></dd>
+							<dt><em class="cred">*</em>手机号码：<input type="text" name="mobile" class="txt grid-20" id="mobile" maxlength="11"><span id="mobileMsg"></span></dt>
+							<dd>婚假：<input type="text" name="vacation_4" class="txt grid-10" id="vacation_4"></dd>
+							<lable class="cred" id="vacation_4_Msg"></lable>
 						</dl>
 						<dl>
-							<dt><em class="cred">*</em>手机号码：</dt>
-							<dd><input type="text" name="mobile" class="txt grid-20" id="mobile" maxlength="11"><span id="mobileMsg"></span></dd>
+							<dt><em class="cred">*</em>电子邮箱：<input type="text" name="email" class="txt grid-20" id="email"><span id="emailMsg"></span></dt>
+							<dd>产假：<input type="text" name="vacation_5" class="txt grid-10" id="vacation_5"></dd>
+							<lable class="cred" id="vacation_5_Msg"></lable>
 						</dl>
 						<dl>
-							<dt><em class="cred">*</em>电子邮箱：</dt>
-							<dd><input type="text" name="email" class="txt grid-20" id="email"><span id="emailMsg"></span></dd>
+							<dt><em class="cred">*</em>性别：<input type="radio" name="sex" value="0" checked id="sex">男&nbsp;&nbsp;<input type="radio" name="sex" value="1" id="sex_girl">女</dt>
+							<dd>计生假：<input type="text" name="vacation_6" class="txt grid-10" id="vacation_6"></dd>
+							<lable class="cred" id="vacation_6_Msg"></lable>
 						</dl>
 						<dl>
-							<dt><em class="cred">*</em>性别：</dt>
-							<dd><input type="radio" name="sex" value="0" checked id="sex">男&nbsp;&nbsp;<input type="radio" name="sex" value="1">女</dd>
-						</dl>
-						<dl>
-							<dt><em class="cred">*</em>部门：</dt>
-							<dd>
-							<select class="select" id="dept">
+							<dt><em class="cred">*</em>部门：<select class="select" id="dept">
 								<option value="1">信息技术部</option>
 								<option value="2">人力资源部</option>
 								<option value="3">财务部</option>
@@ -278,18 +410,25 @@
 								<option value="5">售后部</option>
 								<option value="6">产品部</option>
 								<option value="0">无记录</option>
-							</select>
-							</dd>
+							</select></dt>
+							<dd>年休假：<input type="text" name="vacation_7" class="txt grid-10" id="vacation_7"></dd>
+							<lable class="cred" id="vacation_7_Msg"></lable>
 						</dl>
 						<dl>
-							<dt><em class="cred">*</em>职位：</dt>
-							<dd><input type="text" name="position" class="txt grid-20" id="position"><span id="positionMsg"></span></dd>
+							<dt><em class="cred">*</em>职位：<input type="text" name="position" class="txt grid-20" id="position"><span id="positionMsg"></span></dt>
+							<dd>丧假：<input type="text" name="vacation_8" class="txt grid-10" id="vacation_8"></dd>
+							<lable class="cred" id="vacation_8_Msg"></lable>
 						</dl>
 						<dl>
-							<dt><em class="cred">*</em>入职时间：</dt>
-							<dd><input type="text" class="txt grid-20" id="indTime" /> <span id="indTimeMsg"></span></dd>
+							<dt><em class="cred">*</em>入职时间：<input type="text" class="txt grid-20" id="indTime" /> <span id="indTimeMsg"></span></dt>
+							<dd>工伤假：<input type="text" name="vacation_9" class="txt grid-10" id="vacation_9"></dd>
+							<lable class="cred " id="vacation_9_Msg"></lable>					
 						</dl>
-						<p><input type="button" class="mybtn btn" value="提交" id="submit"><input type="reset" id="reset" class="btn reset" value="重置"><input type="button" id="goBack" class="btn reset" value="返回" onclick="javascript:history.go(-1);"></p>
+						<dl>
+							<p class="cred flag">备注：假期以天为单位(1天=8小时)默认值为0</p>
+							<dd>出差：<input type="text" name="vacation_10" class="txt grid-10" id="vacation_10"></dd>				 							<lable class="cred" id="vacation_10_Msg"></lable>
+						</dl>
+						<p><input type="button" class="mybtn btn" value="提交" id="submit"><input type="reset" id="reset" class="btn reset" value="重置"><input type="button" id="goBack" class="btn reset" value="返回" onClick="backUserInfo()"></p>
 					</form>
 				</div>
 			</div>

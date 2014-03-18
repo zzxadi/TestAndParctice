@@ -19,7 +19,7 @@ var GLOBAL_PARAM = {
 	forget_pageCount : 0
 };
 function operateWorkOrder(operateLogo){
-	var message = operateLogo == 'leaveTrip'? '请假/出差单' : (operateLogo == 'overtimeRequest' ? '加班申请单' : '忘打卡');
+	var message = operateLogo == 'leaveTrip'? '请假申请单' : (operateLogo == 'overtimeRequest' ? '加班申请单' : '忘打卡');
 	showBox(message,'/attendance/workorder-mng.html?width=680&height=430&operateLogo='+operateLogo);
 }
 function showDetail(id,operateLogo){
@@ -27,7 +27,7 @@ function showDetail(id,operateLogo){
 		showBox('提示信息','信息错误,请查看其他信息','alert');
 		return;
 	}
-	var message = operateLogo == 'leaveTrip'? '请假/出差单详情' : (operateLogo == 'overtimeRequest' ? '加班申请单详情' : '忘打卡详情');
+	var message = operateLogo == 'leaveTrip'? '请假申请单详情' : (operateLogo == 'overtimeRequest' ? '加班申请单详情' : '忘打卡详情');
 	showBox(message,'/attendance/workorder-detail.html?width=530&height=450&operateLogo='+operateLogo+'&id='+id);
 }
 function getWorkOrderList(currentPage,str){
@@ -62,7 +62,7 @@ function getWorkOrderListSuccess(data,str){
 			for(var i=0,len=list.length; i<len; i++){
 				var resultList = list[i],
 					type = resultList.type == 1 ? '上班忘打卡' : (resultList.type == 2 ? '下班忘打卡' : '暂无'),
-				    auditStatus = resultList.auditStatus == 2 ? '审核通过' : (resultList.auditStatus == 3 ? '审核不通过' : (resultList.auditStatus == 1 ? '审核中' : '未审核'));
+				    auditStatus = resultList.auditStatus == 2 ? '通过' : (resultList.auditStatus == 3 ? '拒绝' : (resultList.auditStatus == 1 ? '审核中' : '未审核'));
 					priviousUserName = resultList.priviousUserName ? resultList.priviousUserName : '暂无';
 				html += '<tr><td>'+type+'</td>' + '<td>'+resultList.createTime+'</td>' + '<td>' + resultList.forgetTime+'</td>' + '<td>'+resultList.inTime+'</td>'
 						+ '<td>'+auditStatus+'</td>' + '<td>'+priviousUserName+'</td>' + '<td>'+(resultList.currentUserName?resultList.currentUserName:"无")+'</td>'
@@ -71,8 +71,8 @@ function getWorkOrderListSuccess(data,str){
 		}else{
 			for(var i=0,len=list.length; i<len; i++){	//请假/出差单、加班申请单
 				var resultList = list[i],
-					type = resultList.type == 1 ? '加班' : (resultList.type == 2 ? '请假 ('+leaveTypeName(parseInt(resultList.leaveType))+')' : '暂无'),
-					auditStatus = resultList.auditStatus == 2 ? '审核通过' : (resultList.auditStatus == 3 ? '审核不通过' : (resultList.auditStatus == 1 ? '审核中' : '未审核')),
+					type = resultList.type == 1 ? '加班' : (resultList.type == 2 ? '请假 ('+getVacationType(parseInt(resultList.leaveType))+')' : '暂无'),
+					auditStatus = resultList.auditStatus == 2 ? '通过' : (resultList.auditStatus == 3 ? '拒绝' : (resultList.auditStatus == 1 ? '审核中' : '未审核')),
 					priviousUserName = resultList.priviousUserName ? resultList.priviousUserName : '暂无',
 					oprateStr = resultList.type == 1 ? 'overtimeRequest' : (resultList.type == 2 ? 'leaveTrip' : '');
 				html += '<tr><td>'+type+'</td>' + '<td>'+resultList.createTime+'</td>' 
@@ -90,24 +90,6 @@ function getWorkOrderListSuccess(data,str){
 	updatePageInfo(str);
 }
 
-function leaveTypeName(leaveType){
-			var record_leaveType = '';
-			switch(leaveType){
-				case 1: record_leaveType ='事假';break;
-				case 2: record_leaveType ='病假';break;
-				case 3: record_leaveType ='调休';break;
-				case 4: record_leaveType ='婚假';break;
-				case 5: record_leaveType ='产假';break;
-				case 6: record_leaveType ='计生假';break;
-				case 7: record_leaveType ='年休假';break;
-				case 8: record_leaveType ='丧假';break;
-				case 9: record_leaveType ='工伤假';break;
-				case 10: record_leaveType ='出差';break;
-				case 11: record_leaveType ='其他假';break;
-				default :record_leaveType ='无记录';
-			}
-			return record_leaveType;
-}
 /****菜单高亮****/
 function selectNavigation(navigationID){
 	$("#"+navigationID).addClass("cur");	
@@ -177,7 +159,7 @@ $(function(){
 				<div class="page_title">工单申请管理</div>
 				<div class="page_main">
 				<div class="workorder_operate_button">
-					<input type="button" value="请假/出差单" onclick="operateWorkOrder('leaveTrip')" class="mybtn" />
+					<input type="button" value="请假申请单" onclick="operateWorkOrder('leaveTrip')" class="mybtn" />
 					<input type="button" value="加班申请单" onclick="operateWorkOrder('overtimeRequest')" class="mybtn" />
 					<input type="button" value="忘打卡" onclick="operateWorkOrder('forgetCard')" class="mybtn" />
 				</div>

@@ -50,7 +50,6 @@ function showContactionBox(detailId,approveType){//查询信息的id，工单类
 function tabContent(k,key,pageType){//k 确定标签   key：审核状态 pageType:工单类型
 	$(k).parent().addClass("cur").siblings().removeClass("cur");
 	params.currentPage=1;
-	params.pageState=key;
 	params.pageNo=1;
 	if(pageType==1){
 		params.pageType=1;
@@ -60,12 +59,7 @@ function tabContent(k,key,pageType){//k 确定标签   key：审核状态 pageTy
 		params2.pageType=2;
 		getForgetOrderData(key,pageType);
 	}
-	/*if(pageType==1){
-		getApproveOrderData(key,pageType);
-	}else if(pageType==2){
-		getForgetOrderData(key,pageType);
-	}
-*/}
+}
 function getApproveOrderData(DataState,pageType){//pageType:用来判断是忘打卡，还是普通请假类 DataState:是未审核还是已审核
 	params.pageState=DataState;
 	var param=[];
@@ -122,33 +116,13 @@ function getApproveOrderDataSuccess(data){
 		for(var i=0,j=code.length;i<j;i++){
 			html+='<tr><td>'+code[i].userName+'</td>';
 			depart=parseInt(code[i].departmentType);
-			switch (depart){
-				case 1 : DepartMentType='信息技术部';break;
-				case 2 : DepartMentType='人力资源部';break;
-				case 3 : DepartMentType='财务部';break;
-				case 4 : DepartMentType='市场部';break;
-				case 5 : DepartMentType='售后部';break;
-				case 6 : DepartMentType='产品部';break;
-				case 7 : DepartMentType='其他部门';break;
-				/*case 8 : DepartMentType='丧假';break;
-				case 9 : DepartMentType='工伤假';break;
-				case 10 : DepartMentType='出差';break;
-				case 11 : DepartMentType='其他假';break;*/		
-			}
+			DepartMentType = getDept(depart);
+
 			html+='<td>'+DepartMentType+'</td>';
 			var type=parseInt(code[i].type);
 			switch (type){
 				case 1 : LType='加班';break;
-				case 2 : LType='请假';break;
-				/*case 3 : LType='调休';break;
-				case 4 : LType='婚嫁';break;
-				case 5 : LType='产假';break;
-				case 6 : LType='计生假';break;
-				case 7 : LType='年休假';break;
-				case 8 : LType='丧假';break;
-				case 9 : LType='工伤假';break;
-				case 10 : LType='出差';break;
-				case 11 : LType='其他假';break;*/	
+				case 2 : LType='请假 ('+getVacationType(parseInt(code[i].leaveType))+')';break;
 			}
 			html+='<td>'+LType +'</td>';
 			html+='<td>'+code[i].createTime+'</td>';
@@ -158,9 +132,9 @@ function getApproveOrderDataSuccess(data){
 			}else if(code[i].auditStatus==1){
 				gongDanZhuanTai='审核中';	
 			}else if(code[i].auditStatus==2){
-				gongDanZhuanTai='审核通过';	
+				gongDanZhuanTai='通过';	
 			}else if(code[i].auditStatus==3){
-				gongDanZhuanTai='审核未通过';	
+				gongDanZhuanTai='拒绝';	
 			}
 			html+='<td>'+gongDanZhuanTai+'</td>';
 			html+='<td><a onclick="showContactionBox('+code[i].id+',1)" href="javascript:void(0);" style=" color:#63adee;">查看</a></td>';
@@ -222,19 +196,8 @@ function getForgetOrderDataSuccess(data)
 		for(var i=0,j=code.length;i<j;i++){
 			html+='<tr><td>'+code[i].userName+'</td>';
 			depart=parseInt(code[i].departmentType);
-			switch (depart){
-				case 1 : DepartMentType='信息技术部';break;
-				case 2 : DepartMentType='人力资源部';break;
-				case 3 : DepartMentType='财务部';break;
-				case 4 : DepartMentType='市场部';break;
-				case 5 : DepartMentType='售后部';break;
-				case 6 : DepartMentType='产品部';break;
-				case 7 : DepartMentType='其他部门';break;
-				/*case 8 : DepartMentType='丧假';break;
-				case 9 : DepartMentType='工伤假';break;
-				case 10 : DepartMentType='出差';break;
-				case 11 : DepartMentType='其他假';break;*/	
-			}
+			DepartMentType = getDept(depart);
+
 			html+='<td>'+DepartMentType+'</td>';
 			//html+='<td>'+code[i].leaveType +'</td>';
 			html+='<td>'+code[i].createTime+'</td>';
@@ -244,9 +207,9 @@ function getForgetOrderDataSuccess(data)
 			}else if(code[i].auditStatus==1){
 				gongDanZhuanTai='审核中';	
 			}else if(code[i].auditStatus==2){
-				gongDanZhuanTai='审核通过';	
+				gongDanZhuanTai='通过';	
 			}else if(code[i].auditStatus==3){
-				gongDanZhuanTai='审核未通过';	
+				gongDanZhuanTai='拒绝';	
 			}
 			html+='<td>'+gongDanZhuanTai+'</td>';
 			html+='<td><a onclick="showContactionBox('+code[i].id+',2)" href="javascript:void(0);" style=" color:#63adee;">查看</a></td>';
@@ -290,19 +253,8 @@ function getApproveDetailSuccess(data,approveType){
 			var DepartMentType='';
 		for(var i=0,j=code.length;i<j;i++){
 			depart=parseInt(code[i].departmentType);
-			switch (depart){
-				case 1 : DepartMentType='信息技术部';break;
-				case 2 : DepartMentType='人力资源部';break;
-				case 3 : DepartMentType='财务部';break;
-				case 4 : DepartMentType='市场部';break;
-				case 5 : DepartMentType='售后部';break;
-				case 6 : DepartMentType='产品部';break;
-				case 7 : DepartMentType='其他部门';break;
-				/*case 8 : DepartMentType='丧假';break;
-				case 9 : DepartMentType='工伤假';break;
-				case 10 : DepartMentType='出差';break;
-				case 11 : DepartMentType='其他假';break;*/		
-			}
+			DepartMentType = getDept(depart);
+
 			html+='<tr><td width="110">申请人：</td>';	
 			html+='<td>'+code[i].userName+'&nbsp;';
 			html+=DepartMentType+'&nbsp;';
@@ -313,14 +265,14 @@ function getApproveDetailSuccess(data,approveType){
 				if(parseInt(code[i].type)==1){
 					html+='加班';
 				}else if(parseInt(code[i].type)==2){
-					html+='请假';
+					html+='请假 ('+getVacationType(parseInt(code[i].leaveType))+')';
 				}
 				html+='</td></tr>';
 			}else if(approveType==2){
-				html+='<td>忘打卡</td></tr>';	
+				html+='<td>'+(code[i].type == 1 ? "上班":"下班")+'忘打卡</td></tr>';	
 			}
 			html+='<tr><td width="110">上级审批人：</td>';
-			html+='<td>'+code[i].priviousUserName+'</td></tr>';
+			html+='<td>'+(code[i].priviousUserName?code[i].priviousUserName:"暂无")+'</td></tr>';
 			html+='	<tr><td width="110">提交时间：</td>';
 			html+='	<td>'+code[i].createTime+'</td></tr>';
 			html+='<tr><td id="leaveType" colspan="2" style="display:none">'+code[i].leaveType+'</td></tr>';
@@ -332,10 +284,16 @@ function getApproveDetailSuccess(data,approveType){
 				html+='<tr><td width="110">结束时间：</td>';
 				html+='<td>'+code[i].endTime+'（'+getWeek(code[i].endTime)+'）</td></tr>';
 				html+='<tr><td width="110">共计：</td>';
-				html+='<td><span id="totalTime">'+code[i].totalTime+'</span>小时</td></tr>';
+				html+='<td><span id="totalTime">'+code[i].totalTime+'小时</span>';
+				if(code[i].type==2&&code[i].leaveType!=1&&code[i].leaveType!=10){
+					if(code[i].auditStatus==0||code[i].auditStatus==1){
+					html+='<span class="blue"> ( '+code[i].userName+'剩余的'+getVacationType(parseInt(code[i].leaveType))+'为'+getVacationRmain(code[i].userId,code[i].leaveType)+'小时 )</span>';
+					}
+				}
+				html+='</td></tr>';
 			}else if(approveType==2){
 				html+='<tr><td width="110">忘打卡时间：</td>';
-				html+='<td>'+code[i].forgetTime+'</td></tr>';	
+				html+='<td>'+code[i].forgetTime+'（'+getWeek(code[i].forgetTime)+'）</td></tr>';	
 			}
 
 			html+='	<tr><td width="110">备注：</td>';
@@ -359,7 +317,7 @@ function getApproveDetailSuccess(data,approveType){
 				html+='<tr><td width="110">审批意见：</td>';
 				html+='<td><dd><textarea class="grid-37" id="ApproveOpinion" onclick="clearTextArea()">请输入100字以内</textarea></td><dl style="position:relative"><strong id="tishi" style="float:right;"></strong></dl></tr>';
 				
-				html+='<tr><td colspan="2"><input type="button" class="mybtn btn_search" value="确定" onclick="updateApprove('+code[i].id+','+approveType+')">';
+				html+='<tr><td colspan="2"><input type="button" id="update_Approve" class="mybtn btn_search" value="确定" onclick="updateApprove('+code[i].id+','+approveType+')">';
 				html+='<input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/></td></tr>';
 			}else{
 				html+='<tr><td  colspan="2"><input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="关闭"/></td></tr>';
@@ -370,6 +328,21 @@ function getApproveDetailSuccess(data,approveType){
 	}
 											
 };
+
+function getVacationRmain(userId,leaveType){
+	var remain = '';
+	ajax({
+		url:'/php/action/UserInfo.php?method=getVacationByIdTYPE&id='+userId+'&vacationType='+leaveType,
+		type:'post',//非必须.默认get
+		dataType:'json',//非必须.默认text
+		async:false,
+		success:function(data){
+			var list = data.entity.list[0];	
+			remain = (list.remain)*8;
+		}
+	})
+	return remain;	
+}
 
 function clearTextArea(){
 	$("#ApproveOpinion").html("");	
@@ -396,10 +369,6 @@ function updateApprove(id,type){//更新工单 或者忘打卡记录单
 		showBox("提示","输入字数超限","alert");
 		return;
 	}
-	if($("#ApproveMangerId").val()==""){
-		showBox("提示","请选择审批人","alert");
-		return;
-	}
 	var param=[];
 	var ApproveRadioStatus=$('#approveDetailTable input[name="state"]:checked').val();
 	var ApproveOpinion=$('#ApproveOpinion').val();
@@ -407,10 +376,17 @@ function updateApprove(id,type){//更新工单 或者忘打卡记录单
 		showBox("提示","请填写驳回理由!!!!","alert")
 		return;
 	}
-	 if(typeof(ApproveRadioStatus)=='undefined'){
+	if(typeof(ApproveRadioStatus)=='undefined'){
 		showBox("提示","请选择‘批准’或者‘驳回’!!!","alert");
 		return;	
 	}
+	if(ApproveRadioStatus!=3&&ApproveRadioStatus!=2){
+		if($("#ApproveMangerId").val()==""){
+			showBox("提示","请选择审批人","alert");
+			return;
+		}
+	}
+	$('#update_Approve').attr('disabled','disabled');//避免多次点击提交
 	var tiJiaoUserId=$("#tiJiaoUserId").html();
 	var ApproveMangerId=$('#ApproveMangerId').val();
 	param.push("approveId="+id);//工单ID
@@ -423,7 +399,7 @@ function updateApprove(id,type){//更新工单 或者忘打卡记录单
 	}
 	param.push("approveType="+type);//工单类型
 	param.push("updateTime="+CurentTime());//审核时间
-	param.push("totalTime="+$("#totalTime").html());
+	param.push("totalTime="+Math.round((($("#totalTime").html())/8)*1000)/1000);
 	param.push("leaveType="+$("#leaveType").html());
 	param.push("holidayType="+$("#holidayType").html());
 	param.push("roleKey="+GLOBAL.roleKey);
@@ -448,27 +424,33 @@ function updateApprove(id,type){//更新工单 或者忘打卡记录单
 }
 function updateApproveError(){
 	showBox("提示","审批失败!!","alert");
+	$('#update_Approve').removeAttr("disabled");
 	closeBox();	
 	return;
 }
 function updateApproveSuccess(data,id,type){
 	if(parseInt(data.msgCode)==3){
+		$('#update_Approve').removeAttr("disabled");
 		locationHref('../index.html');
 	}else if(parseInt(data.msgCode)==4){
+		$('#update_Approve').removeAttr("disabled");
 		locationHref('../attendance/personal-info.html')
 		showBox("提示",data.msg,"alert");	
 	}
 	insertLog(id,type);
-	closeBox();
-	if(parseInt(type)==1){
-		getApproveOrderData(params.pageState,params.pageType);
-	}else{
-		getForgetOrderData(params2.pageState,params2.pageType);
-	}
+	showBox("提示","审批成功!!","alert",function(){
+			$('#update_Approve').removeAttr("disabled"); 
+			closeBox();
+			if(parseInt(type)==1){
+				getApproveOrderData(params.pageState,params.pageType);
+			}else{
+				getForgetOrderData(params2.pageState,params2.pageType);
+			}
+	});
 }
 function insertLog(id,type){
 	var param=[];
-	var ApproveRadioStatus=$('#approveDetailTable input[name="state"]:checked').val();
+	var ApproveRadioStatus=$('#approveDetailTable input[name="state"]:checked').val();//拒绝or通过
 	var ApproveOpinion=$('#ApproveOpinion').val();
 	var ApproveMangerId=$('#ApproveMangerId').val();
 	param.push("approveId="+id);//工单ID
@@ -489,7 +471,7 @@ function insertLog(id,type){
 		timeout:30000//非必须.默认30秒秒
 		//error:updateApproveError, //非必须
 		//success:updateApproveSuccess//非必须
-	});
+	});	
 }
 
 function getApproveManger(){//获得所有管理者
@@ -764,68 +746,6 @@ $(document).ready(function(e) {
 							<div class="hide" id="contactionBox" id="fenye2">
 								<div style=" padding:30px 20px;">	
 									<table id="approveDetailTable" width="100%" cellspacing="0" cellpadding="0" class="simple_table grid-50">
-										<!--<tr>
-											<td width="110">申请人：</td>
-											<td>陈翔&nbsp;信息技术部—产品组&nbsp;需求工程师</td>
-										</tr>
-										<tr>
-											<td width="110">申请类型：</td>
-											<td>事假</td>
-										</tr>
-										<tr>
-											<td width="110">上级审批人：</td>
-											<td>张剑</td>
-										</tr>
-										<tr>
-											<td width="110">提交时间：</td>
-											<td>2014年02月10日9:00</td>
-										</tr>
-										<tr>
-											<td width="110">忘打卡时间：</td>
-											<td>2014年02月10日9:00(忘打卡单显示)</td>
-										</tr>
-										<tr>
-											<td width="110">起始时间：</td>
-											<td>2014年02月10日9:00(忘打卡单隐藏)</td>
-										</tr>
-										<tr>
-											<td width="110">结束时间：</td>
-											<td>2014年02月10日18:30(忘打卡单隐藏)</td>
-										</tr>
-										<tr>
-											<td width="110">共计：</td>
-											<td>8小时(一天)</td>
-										</tr>
-										<tr>
-											<td width="110">备注：</td>
-											<td>个人原因</td>
-										</tr>
-										<tr>
-											<td width="110">操作：</td>
-											<td>
-												<label><input type="radio" name="state"/>&nbsp;批准</label>
-												<label><input type="radio" name="state" class="ml20"/>&nbsp;驳回</label>
-											</td>
-										</tr>
-										<tr>
-											<td width="110">审批意见：</td>
-											<td><dd><textarea class="grid-37"></textarea></dd></td>
-										</tr>
-										<tr>
-											<td width="110">下一级审批人：</td>
-											<td>
-												<select style="width:100px;">
-													<option>赵长庚</option>
-													<option>张剑</option>
-												</select>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="2">
-												<input type="button" class="mybtn btn_search" value="确定">
-												<input type="button" class="mybtn btn_search ml20" onClick="closeBox()" value="取消"/>
-											</td>
-										</tr>-->
 									</table>
 								</div>
 							</div>

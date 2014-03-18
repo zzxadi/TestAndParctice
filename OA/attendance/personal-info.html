@@ -79,15 +79,8 @@
 			var html = '',records = data.entity.list;
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];
-				if(record.vacationType==1)var remain_rest=record.remain;
-				if(record.vacationType==2)var remain_year=record.remain;
-				if(record.vacationType==3)var remain_illness=record.remain;						
+				html += '<td>'+record.remain+'</td>';
 			}	
-			if(records.length == 0 || !(records.length)){			
-				html += '<tr><td colspan="4">暂无记录</td></tr>';			
-			}else{
-				html += '<tr><td>'+(remain_rest?remain_rest+"小时":"无记录")+'</td><td>'+(remain_year?remain_year+"天":"无记录")+'</td><td>'+(remain_illness?remain_illness+"天":"无记录")+'</td><td>3次</td></tr>';
-			}		
 			$('#Remain_holiday').html(html);
 		}		
 
@@ -180,9 +173,9 @@
 				if(record.type==1) record.type='加班';
 				if(record.type==2) {
 					record.type='请假';
-					record.leaveType=leaveTypeName(parseInt(record.leaveType));
+					record.leaveType=getVacationType(parseInt(record.leaveType));
 				}
-				if(record.auditStatus==1) record.auditStatus='正在审核';	
+				if(record.auditStatus==1) record.auditStatus='审核中';	
 				else record.auditStatus='未审核';	
 				html += '<tr><td>'+record.type+(record.type=="请假" ? " ("+record.leaveType+")" : "")+'</td><td>'+record.createTime+'</td><td>'+record.beginTime+'</td><td>'+record.endTime+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td></tr>';
 			}
@@ -204,7 +197,7 @@
 			var html = '',records = data.entity.list;
 			for(var i = 0, len = records.length; i < len; i++){
 				var record = records[i];
-				if(record.auditStatus==1) record.auditStatus='正在审核';	
+				if(record.auditStatus==1) record.auditStatus='审核中';	
 				else record.auditStatus='未审核';	
 				html += '<tr><td>'+record.createTime+'</td><td>'+record.forgetTime+'</td><td>'+record.currentUserName+'</td><td>'+record.auditStatus+'</td></tr>';
 			}
@@ -229,11 +222,11 @@
 				if(record.type==1) record.type='加班';
 				if(record.type==2) {
 					record.type='请假';
-					record.leaveType=leaveTypeName(parseInt(record.leaveType));
+					record.leaveType=getVacationType(parseInt(record.leaveType));
 				}
-				if(record.auditStatus==1) record.auditStatus='正在审核';	
-				else if(record.auditStatus==2) record.auditStatus='审核通过';
-				else if(record.auditStatus==3) record.auditStatus='审核不通过';	
+				if(record.auditStatus==1) record.auditStatus='审核中';	
+				else if(record.auditStatus==2) record.auditStatus='通过';
+				else if(record.auditStatus==3) record.auditStatus='拒绝';	
 				else record.auditStatus='未审核';	
 				html += '<tr><td>'+record.type+(record.type=="请假" ? " ("+record.leaveType+")" : "")+'</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+(record.currentUserName?record.currentUserName:"无")+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
 			}
@@ -263,9 +256,9 @@
 				var record = records[i];
 				if(record.type==1) record.type='上班';
 				if(record.type==2) record.type='下班';
-				if(record.auditStatus==1) record.auditStatus='正在审核';	
-				else if(record.auditStatus==2) record.auditStatus='审核通过';
-				else if(record.auditStatus==3) record.auditStatus='审核不通过';	
+				if(record.auditStatus==1) record.auditStatus='审核中';	
+				else if(record.auditStatus==2) record.auditStatus='通过';
+				else if(record.auditStatus==3) record.auditStatus='拒绝';	
 				else record.auditStatus='未审核';			
 				html += '<tr><td>'+record.type+'忘打卡</td><td>'+record.createTime+'</td><td>'+(record.priviousUserName ? record.priviousUserName : "暂无")+'</td><td>'+(record.currentUserName?record.currentUserName:"无")+'</td><td>'+record.auditStatus+'</td><td><a class="ablue" href="javascript:;" rel="'+i+'">查看详细</a></td></tr>';
 			}
@@ -302,25 +295,6 @@
 			$('#contactionBox_table').html(html);
 			if(type==1)showBox('请假/加班申请记录',"contactionBox");
 			if(type==2)showBox('忘打卡申请记录',"contactionBox");
-		}
-		
-		function leaveTypeName(leaveType){
-			var record_leaveType = '';
-			switch(leaveType){
-				case 1: record_leaveType ='事假';break;
-				case 2: record_leaveType ='病假';break;
-				case 3: record_leaveType ='调休';break;
-				case 4: record_leaveType ='婚假';break;
-				case 5: record_leaveType ='产假';break;
-				case 6: record_leaveType ='计生假';break;
-				case 7: record_leaveType ='年休假';break;
-				case 8: record_leaveType ='丧假';break;
-				case 9: record_leaveType ='工伤假';break;
-				case 10: record_leaveType ='出差';break;
-				case 11: record_leaveType ='其他假';break;
-				default :record_leaveType ='无记录';
-			}
-			return record_leaveType;
 		}
 	
 		/****分页开始****/
@@ -404,17 +378,25 @@
 						<li><a onClick="tabContent(this)" href="javascript:;">个人信息</a></li>
 					</ul>
 					<div class="tab_content cb" style="display:block;">
-						<div class="order_index_status"><strong>剩余假期信息</strong></div>
+						<div class="order_index_status"><strong>假期信息</strong><span class="blue" style="float:right">备注：假期以天为单位( 1天=8小时 )</span></div>
 						<table width="100%" cellspacing="0" cellpadding="0" class="simple_table mb10">
 							<thead>
 								<tr>
-									<th>调休假</th>
-									<th>年休假</th>
-									<th>全年剩余病假</th>
-									<th>本月剩余可迟到次数</th>
+									<th>共请事假</th>
+									<th>病假剩余</th>
+									<th>调休剩余</th>
+									<th>婚假剩余</th>
+									<th>产假剩余</th>
+									<th>计生假剩余</th>
+									<th>年休假剩余</th>
+									<th>丧假剩余</th>
+									<th>工伤假剩余</th>
+									<th>共计出差</th>
 								</tr>
 							</thead>
-							<tbody id="Remain_holiday">
+							<tbody>
+								<tr id="Remain_holiday">
+								</tr>
 							</tbody>
 						</table>
 						<div class="order_index_status mt10"><strong>待审批的假期申请</strong></div>

@@ -13,6 +13,49 @@
 			$stReturn['list'] = $stList;
 			return $stReturn;	
 		}
+		
+		function getVacationById($id){
+			$sSql = "select * from VACATION ";
+			$sCondition = " where 0=0 " . " and USER_ID = " . $id;
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql . $sCondition);
+			$stList = array();
+			while($stInfo = mysql_fetch_assoc($stResult)){
+				$stList[] = $stInfo;	
+			}
+			mysql_free_result($stResult);
+			$stReturn['list'] = $stList;
+			return $stReturn;	
+		}
+		
+		function  getVacationByIdTYPE($id,$vacationType){
+			$sSql = "select * from VACATION ";
+			$sCondition = " where 0=0 " . " and USER_ID = " . $id." and VACATION_TYPE = ".$vacationType;
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql . $sCondition);
+			$stList = array();
+			while($stInfo = mysql_fetch_assoc($stResult)){
+				$stList[] = $stInfo;	
+			}
+			mysql_free_result($stResult);
+			$stReturn['list'] = $stList;
+			return $stReturn;	
+		}
+		
+		function getUserByLoginname($stLoginname){
+			$sSql = "select * from USER_INFO";
+			$sCondition = " where 0=0 " . " and LOGIN_NAME = '" . $stLoginname."'";
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql . $sCondition);
+			$stList = array();
+			while($stInfo = mysql_fetch_assoc($stResult)){
+				$stList[] = $stInfo;	
+			}
+			mysql_free_result($stResult);
+			$stReturn['list'] = $stList;
+			return $stReturn;	
+		}
+		
 		function getUserList($stInfo){	
 			$iPage = (int)$stInfo['page'];
 			$iCount = (int)$stInfo['count'];
@@ -51,6 +94,29 @@
 			$stReturn['pageTotal'] = (int)ceil($iNumRows/$iCount);
 			$stReturn['list'] = $stList;
 			return $stReturn;	
+		}
+		
+		function updateVacation($vacationInfo){
+			$userId = $vacationInfo['userId'];
+			$vacationType = $vacationInfo['vacationType'];
+			$remain = $vacationInfo['remain'];
+
+			$sSql = "INSERT INTO VACATION(USER_ID, VACATION_TYPE, REMAIN) VALUES ( ";
+			$sSql .= $userId . ', "' . $vacationType . '", "' . $remain . '")'; 			
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql);
+			return $stResult;	 
+		}
+		
+		function ModifyVacation($vacationInfo){
+			$userId = $vacationInfo['userId'];
+			$vacationType = $vacationInfo['vacationType'];
+			$remain = $vacationInfo['remain'];
+			$sSql =	"Update VACATION Set  REMAIN ='".$remain."'  Where  USER_ID='".$userId."' AND VACATION_TYPE='".$vacationType."'";	
+			$stConn = new MysqlConn();
+			$stResult = $stConn->query($sSql);
+			echo $stResult;
+			return $stResult;	 
 		}
 
 		function doAdd($stInfo){

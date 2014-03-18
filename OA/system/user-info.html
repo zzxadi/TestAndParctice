@@ -105,7 +105,7 @@
 				html.push('<td>'+getDept(record.departmentType)+'</td>');
 				html.push('<td>'+record.positionName+'</td>');
 				html.push('<td><a href="javascript:void(0)" onclick="locationHref(\'../attendance/personal-info.html?userInfoId='+record.id+'&currentPage='+params.currentPage+'&username='+escape(searchForm_username)+'&email='+searchForm_email+'&roleId='+searchForm_roleId+'\')"  class="ablue">查看</a>&nbsp;&nbsp;');
-				html.push('<a href="javascript:void(0)" onclick="modifyUserInfo('+record.id+')" id="modifyUserInfo" class="ablue">修改</a>&nbsp;&nbsp;');
+				html.push('<a href="javascript:void(0)" onclick="locationHref(\'user-mng.html?id='+record.id+'&currentPage='+params.currentPage+'&username='+escape(searchForm_username)+'&email='+searchForm_email+'&roleId='+searchForm_roleId+'\')" id="modifyUserInfo" class="ablue">修改</a>&nbsp;&nbsp;');
 				html.push('<a href="javascript:void(0)" onclick="freezeUserInfo('+record.id+')" id="freezeUserInfo" class="ablue">');
 				if(record.status==0){
 					html.push('冻结');
@@ -123,10 +123,6 @@
 			GLOBAL['pageCount'] = data.entity.pagetotal;
 			params.currentPage = data.entity.page;	//当前页
 			updatePageInfo();
-		}
-
-		function modifyUserInfo(id){
-			locationHref('user-mng.html?id='+id);
 		}
 
 		function freezeUserInfo(id){

@@ -42,7 +42,7 @@ function getWorkOrderDetailSuccess(data){
 		$('.workorder_forget_detail').show();
 		var type = result.type == 1 ? '上班忘打卡' : (result.type == 2 ? '下班忘打卡' : '暂无'),
 				remark = result.remark ? result.remark : '暂无',
-				auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
+				auditStatus = result.auditStatus == 2 ? '通过' : (result.auditStatus == 3 ? '拒绝' : (result.auditStatus == 1 ? '审核中' : '未审核'));
 		$('#person_fc').text(result.userName);
 		$('#type_fc').text(type);
 		$('#createTime_fc').text(result.createTime);
@@ -57,12 +57,12 @@ function getWorkOrderDetailSuccess(data){
 		if(result.auditStatus == 2 || result.auditStatus == 3){ $('#auditTime_fc_tr').show(); $('#auditRemark_fc_tr').show(); }
 	}else{
 		$('.workorder_leaves_detail').show();
-		var leaveTypeName = leaveTypeNames(parseInt(result.leaveType)),
+		var leaveTypeName = getVacationType(parseInt(result.leaveType)),
 			leaveType = result.leaveType == 11 ? ('其他假：' + result.leaveName) : leaveTypeName,
 			type = result.type == 1 ? '加班' : (result.type == 2 ? '请假 ('+leaveType+')' : '暂无'),
 			totalTime = result.totalTime ? (result.totalTime + '小时') : '暂无',
 			remark = result.remark ? result.remark : '暂无',
-			auditStatus = result.auditStatus == 2 ? '审核通过' : (result.auditStatus == 3 ? '审核不通过' : (result.auditStatus == 1 ? '审核中' : '未审核'));
+			auditStatus = result.auditStatus == 2 ? '通过' : (result.auditStatus == 3 ? '拒绝' : (result.auditStatus == 1 ? '审核中' : '未审核'));
 		$('#person_vr').text(result.userName);
 		$('#type_vr').text(type);
 		$('#createTime_vr').text(result.createTime);
@@ -83,23 +83,7 @@ function getWorkOrderDetailSuccess(data){
 		}
 	}
 }
-function leaveTypeNames(type){
-	var str = '';
-	switch(type){
-		case 1 : str = '事假'; break;
-		case 2 : str = '病假'; break;
-		case 3 : str = '调休'; break;
-		case 4 : str = '婚嫁'; break;
-		case 5 : str = '产假'; break;
-		case 6 : str = '计生假'; break;
-		case 7 : str = '年休假'; break;
-		case 8 : str = '丧假'; break;
-		case 9 : str = '工伤假'; break;
-		case 10 : str = '出差'; break;
-		default : str = '';
-	}
-	return str;
-}
+
 /*关闭弹框*/
 function close_box(){
 	if(GLOBAL_PARAM.g_boxId!=''&&parent&&parent.closeBox)parent.closeBox(GLOBAL_PARAM.g_boxId);

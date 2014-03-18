@@ -109,6 +109,25 @@ function getDept(index){
 	}
 	return ret;
 }
+
+function getVacationType(index){
+   var ret = ''; 
+   switch(index){ 
+		case 1: ret ='事假';break;
+		case 2: ret ='病假';break;
+		case 3: ret ='调休';break;
+		case 4: ret ='婚假';break;
+		case 5: ret ='产假';break;
+		case 6: ret ='计生假';break;
+		case 7: ret ='年休假';break;
+		case 8: ret ='丧假';break;
+		case 9: ret ='工伤假';break;
+		case 10: ret ='出差';break;
+		default : ret ='其他假';
+	}
+	return ret;
+}
+
 function selectNavigation(navigationID){//菜单高亮
 	$("#"+navigationID).addClass("cur");
 }	

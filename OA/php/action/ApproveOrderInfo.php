@@ -36,6 +36,9 @@
 		$stList['status']=getParam('approveRadioStatus',' ');
 		$stList['type']=getParam('holidayType',' ');
 		$stList['approveType']=getParam('approveType','');
+		$stList['totalTime']=getParam('totalTime','');
+		$stList['leaveType']=getParam('leaveType',' ');
+		
 		
 		$AppDao=new ApproveOrderDao();
 		$VacaBean=new VacationRecord();	
@@ -54,7 +57,7 @@
 		
 		if((int)getParam('approveRadioStatus',' ')!=3){//如果非驳回
 			if(getParam('roleKey',' ')=='FEND'){//如果是工单终结者
-				fendAction($holiday,$leaveType,$vacationBean,$AppDao,$stList);
+				fendAction($stList,$AppDao);
 			}else{
 				if($AppDao->updateApproveDao()){
 					 $key=1;//发邮件给提交申请人
@@ -72,108 +75,36 @@
 		}
 	}
 	function refuse($AppDao,$stList){//驳回操作
-		
-			if(getParam('roleKey','')=='FEND'){
-				if($AppDao->updateApproveDao()){
-					$key=1;
-					$fanhui=sendEmail($key,$stList);
-					//$key=2;
-					//sendEmail($key,$stList);
-					if($fanhui){
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送成功"}';
-					}else{
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送失败"}';
-					}
-				}else{
-					echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
-				}	
+		if($AppDao->updateApproveDao()){
+			$key=1;
+			$fanhui=sendEmail($key,$stList);
+			if($fanhui){
+				echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送成功"}';
 			}else{
-			
-				if($AppDao->updateApproveDao()){
-					$key=1;
-					$fanhui=sendEmail($key,$stList);
-					$key=2;
-					sendEmail($key,$stList);
-					if($fanhui){
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送成功"}';
-					}else{
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送失败"}';
-					}
-				}else{
-					echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
-				}	
+				echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送失败"}';
 			}
+		}else{
+			echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
+		}
 	}
-	//工单终结者 操作方法集合
-	function fendAction($holiday,$leaveType,$vacationBean,$AppDao,$stList){
-		$vacationBean->setRemain((int)getParam('totalTime',' '));
-		$AppDao->updateApproveDao();
-		$flag=false;//用来判断更新vacation表的成功与否
-		if($holiday == 2){//如果是请假 
-			if($leaveType==1||$leaveType==3||$leaveType==7||$leaveType==11){ //1：事假，2：病假，3：调休，4：婚嫁，5：产假，6：计生假，7：年休假，8：丧假，9：工伤假，10：出差，11：其他假',
-				if($leaveType==3||$leaveType==1||$leaveType==11){	
-				
-					$vacationBean->setVacationType(1);	
-					$AppDao->setVacation($vacationBean);
-					if($AppDao->selectVacation()){
-						$AppDao->updateVaction(2);		
-					}else{	
-						$flag=$AppDao->insertVacation(2);	
-					}
-				}else if($leaveType==7){
-					$vacationBean->setVacationType(2);
-					$AppDao->setVacation($vacationBean);
-					if($AppDao->selectVacation()){
-						$AppDao->updateVaction(2);		
-					}else{
-						$flag=$AppDao->insertVacation(2);	
-					}
-				}
-				else if($leaveType==10||$leaveType==2||$leaveType==4||$leaveType==5||$leaveType==6||$leaveType==8||$leaveType==9){
-					$flag=true;//暂无操作
-				}
-				$AppDao->setVacation($vacationBean);
-				if($AppDao->updateApproveDao()&&$flag){
-					$key=1;
-					$fanhui=sendEmail($key,$stList);
-					//$key=2;
-					//sendEmail($key,$stList);
-					if($fanhui){
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送成功"}';
-					}else{
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送失败"}';
-					}
-				}else{
-					echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
-				}
+	//工单终结者通过
+	function fendAction($stList,$AppDao){
+		if($AppDao->updateApproveDao()){
+			$flag=false;$fanhui=false;
+			
+			$flag=$AppDao->updateVaction($stList);	
+	
+			if($flag){
+				$fanhui=sendEmail(1,$stList);
+			}		
+			if($flag&&!$fanhui){
+				echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送失败"}';
 			}
-		}else if($holiday == 1){//如果是加班
-				
-			$vacationBean->setVacationType(1);
-			$AppDao->setVacation($vacationBean);
-			if($AppDao->selectVacation()){
-				$flag=$AppDao->updateVaction(1);
-				if($flag){
-					$key=1;
-					$fanhui=sendEmail($key,$stList);
-					if($fanhui){
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送成功"}';
-					}else{
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送失败"}';
-					}
-				}
-						
-			}else{
-				$flag=$AppDao->insertVacation(1);
-				if($flag){
-					$key=1;
-					$fanhui=sendEmail($key,$stList);
-					if($fanhui){
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送成功"}';
-					}else{
-						echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送失败"}';
-					}
-				}	
+			if($flag&&$fanhui){
+				echo '{"entity":"","msgCode":"1","msg":"编辑成功,邮件发送成功"}';
+			}
+			if(!$flag&&!$fanhui){
+				echo '{"entity":"","msgCode":"2","msg":"编辑失败"}';
 			}
 		}	
 	}
@@ -341,7 +272,7 @@
 			//$mail->IsSendmail(); //如果没有sendmail组件就注释掉，否则出现“Could not execute: /var/qmail/bin/sendmail ”的错误提示
 			//$mail->AddReplyTo("phpddt1990@163.com","mckee");//回复地址
 			$mail->From = "wangjc@digione.cn";
-			$mail->FromName = "wangjc";
+			$mail->FromName = "DIGIONE_OA";
 			$to = $nList['to'];
 			$mail->addAddress($to);
 			$mail->Subject = "digioneOA系统邮件通知";
@@ -369,46 +300,67 @@
 			if($type==1){
 				$type="加班";	
 			}else if($type==2){
-				$type="请假";	
+				$type="请假 (".leaveTypeName($stList['leaveType']).")";	
 			}
 		}else if($stList['approveType']==2){
-			$type="忘打卡";	
+			if($type==1)$type="上班忘打卡";
+			if($type==2)$type="下班忘打卡";	
 		}
 		$VacationId=$stList['vacationId'];
 		$pName=$pArr[0]['USER_NAME'];
 		$status=(int)$stList['status'];
 		if($status!=3){
-			$status="通过";	
+			$status="通过";
+			if($stList['currentUserId']!=''){
+				$cArr= array();
+				$cArr=$app->getOnePersonDetail($stList['currentUserId']);
+				$cEmail=$cArr[0]['EMAIL'];
+				$currentUserName=$cArr[0]['USER_NAME'];
+				$cto=$cEmail;
+				$cTxt = $currentUserName." 您有新的来自于 ".$uUserName." 提交的 ".$type." 工单申请（工单号:".$VacationId.'）等待您的审批';
+			}	
 		}else if($status==3){
 			$status="驳回";	
 		}
-		$uEmail=$sArr[0]['EMAIL'];
-		if($stList['currentUserId']!=''){
-			$cArr= array();
-			$cArr=$app->getOnePersonDetail($stList['currentUserId']);
-			$cEmail=$cArr[0]['EMAIL'];
-			$currentUserName=$cArr[0]['USER_NAME'];
-			$cto=$cEmail;
-			$cTxt = $currentUserName." 您有新的来自于 ".$uUserName." 提交的 ".$type." 工单申请（工单号:".$VacationId.'）等待您的审批';
-		}
 		//给申请人发邮件
+		$uEmail=$sArr[0]['EMAIL'];
 		$uto=$uEmail;
 		$subject = "My subject";
 		
-		  $uTxt = $uUserName." 您的".$type." 工单申请（工单号:".$VacationId.'）被 '.$pName." ".$status;
+		$uTxt = $uUserName." 您的 ".$type." 工单申请（工单号:".$VacationId.'）被 '.$pName." ".$status;
 		$list= array();
 		if($key==1){
 			//$list['to']=$uto;
-			$list['to']='wangjc@digione.cn';
+			$list['to']='kuangj@digione.cn';//测试阶段申请人都发到此邮箱
 			$list['txt']=$uTxt;	
 		}else if($key==2){
-			$list['to']=$cto;
-			$list['txt']=$cTxt;
+			if($status!="驳回"){
+				//$list['to']=$cto;
+				$list['to']='kuangj@digione.cn';//测试阶段审批人都发到此邮箱
+				$list['txt']=$cTxt;
+			}
 		}
 		return $list;
 			
-		}
+	}
 		
-	
+	function leaveTypeName($leaveType){
+		$record_leaveType = '';
+		switch($leaveType){
+			case 1: $record_leaveType ='事假';break;
+			case 2: $record_leaveType ='病假';break;
+			case 3: $record_leaveType ='调休';break;
+			case 4: $record_leaveType ='婚假';break;
+			case 5: $record_leaveType ='产假';break;
+			case 6: $record_leaveType ='计生假';break;
+			case 7: $record_leaveType ='年休假';break;
+			case 8: $record_leaveType ='丧假';break;
+			case 9: $record_leaveType ='工伤假';break;
+			case 10: $record_leaveType ='出差';break;
+			case 11: $record_leaveType ='其他假';break;
+			default :$record_leaveType ='';
+		}
+		return $record_leaveType;
+	}
 
 ?>

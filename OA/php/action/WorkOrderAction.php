@@ -215,7 +215,8 @@
 		$cTxt .= " 工单申请（工单号:".$VacationId."）等待您的审批 ！";
 		  
 		$list= array();
-		$list['to']=$currentEmail;
+		//$list['to']=$currentEmail;
+		$list['to']='kuangj@digione.cn';
 		$list['txt']=$cTxt;
 		
 		return $list;	

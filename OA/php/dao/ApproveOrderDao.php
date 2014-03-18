@@ -269,32 +269,38 @@
 			
 		}
 		
-		function updateVaction($key){//更新剩余记录表
+		function updateVaction($stList){//更新假期记录表
+			$userId = $stList['userId'];
+			$type = $stList['type'];
+			$leaveType = $stList['leaveType'];
+			$totalTime = $stList['totalTime'];
 			$stConn = new MysqlConn();
-			if($key==1){
-				$sql = "update VACATION SET REMAIN = remain + ".$this->vacation->getRemain()
-					." where user_id = ".$this->vacation->getUserId()
-					." and VACATION_TYPE = ".$this->vacation->getVacationType();
-			}else if($key==2){
-				$sql = "update VACATION SET REMAIN = remain - ".$this->vacation->getRemain()
-						." where user_id = ".$this->vacation->getUserId()
-						." and VACATION_TYPE = ".$this->vacation->getVacationType();
+			
+			if($type==1){//加班
+				$sql = "update VACATION SET REMAIN = REMAIN + ".$totalTime;
+				$sql.= " where user_id = ".$userId;
+				$sql.= " and VACATION_TYPE = 3";
+			}else if($type==2){//请假
+				if($leaveType){
+					if($leaveType==1||$leaveType==10){
+						$sql = "update VACATION SET REMAIN = REMAIN + ".$totalTime;
+					}else{
+						$sql = "update VACATION SET REMAIN = REMAIN - ".$totalTime;
+					}
+					$sql.= " where user_id = ".$userId;
+					$sql.= " and VACATION_TYPE = ".$leaveType;
+				}else{
+					$sql='';	
+				}
 			}
 			$stResult = $stConn->query($sql);
-			/*$stList= array();
-			while($stInfo = mysql_fetch_assoc($stResult)){
-				$stList[] = $stInfo;	
-			}
-			$stConn->free_result();//释放结果内存
-			if(count($stList)>0) {
-				return true;}
-			else {return false;}*/
+
 			if(mysql_affected_rows()>0){
-			$stConn->free_result();;//释放结果内存
+				$stConn->free_result();;//释放结果内存
 				return true;	
 			}else{ 
-			$stConn->free_result();;//释放结果内存
-			return false;
+				$stConn->free_result();;//释放结果内存
+				return false;
 			}
 		}
 		function selectVacation(){
