@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title></title>
+<style type="text/css">
+html,body{
+	margin:0;
+	padding:0;
+	border:0;
+}
+iframe{
+	width:100%;
+	height:300px;
+	margin:10px auto;
+	border:1px solid #999999;	
+}
+</style>
+<script type="text/javascript">
+function trim(sStr){
+	if(typeof(sStr)!='string')return sStr;
+	return sStr.replace(/(^\s*)|(\s*$)/g,"");
+}
+function checkboxClick(){
+	var paramBox = document.getElementById("paramBox");
+	var method = document.getElementById("method");
+	if(method.checked)paramBox.style.display = "";
+	else paramBox.style.display = "none";
+}
+function onSubmit(){
+	var sUrl = trim(document.getElementById("url").value);	
+	var sParam = trim(document.getElementById("param").value);
+	var myForm = document.getElementById("myForm");
+	var method = document.getElementById("method");
+	if(sUrl == ""){
+		alert("地址不能为空!");
+		return;
+	}
+	myForm.innerHTML = "";
+	myForm.action = sUrl;
+	myForm.method = "get";
+	if(method.checked){
+		myForm.method = "post";
+		var stHTML = [];
+		var stParam = sParam.split("&");
+		var stFragment = document.createDocumentFragment();
+		for(var i = 0, length = stParam.length; i < length; i++){
+			var stName = stParam[i].split("=");
+			if(!stName || stName.length != 2 )break;
+			var sName = trim(stName[0]);
+			var sValue = trim(stName[1]);
+			if(sName == "")break;
+			var stInput = document.createElement("input");
+			stInput.type = "hidden";
+			stInput.name = sName;
+			stInput.value = sValue;
+			stFragment.appendChild(stInput);
+		}
+		myForm.appendChild(stFragment);
+	}
+	myForm.submit();
+}
+function onLoad(){
+	var paramBox = document.getElementById("paramBox");
+	var method = document.getElementById("method");
+	method.checked = false;
+	paramBox.style.display = "none";	
+}
+</script>
+<style type="text/css">
+html,body{
+	height:100%;
+	overflow:hidden;
+}
+</style>
+</head>
+<body onLoad="onLoad();">
+<div align="center"><span style="display:inline-block;width:60px;margin-right:10px"><label for="method">post</label><input id="method" type="checkbox" onclick="checkboxClick()"/></span><input id="url" type="text" style="overflow:auto; width:730px; height:30px; line-height:30px; margin:10px auto"/></div>
+<div align="center" id="paramBox" style="display:none"><textarea id="param" style="overflow:auto; width:800px; height:200px;margin-bottom:10px"></textarea></div>
+<div align="center"><button onClick="onSubmit()"> 提 交 </button></div>
+<form id="myForm" target="formIframe" style="display:none"></form>
+<iframe id="myDebug" contentEditable="true" name="formIframe"></iframe>
+</body>
+</html>
